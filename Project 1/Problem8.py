@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-"""
+
 for n in [10, 100, 1000, 10000]:
     exact = np.loadtxt(f"exact_solution_n_{n}.txt", delimiter = ", ", usecols = range(2)) 
     numeric = np.loadtxt(f"numeric_solution_n_{n}.txt", delimiter = ", ", usecols = range(2))
@@ -13,11 +13,13 @@ for n in [10, 100, 1000, 10000]:
 
 plt.legend()
 plt.grid()
+plt.title('Absolute error')
 plt.xlabel("x-values")
-plt.ylabel("log 10")        
-plt.savefig("problem_8a.pdf")
-plt.clf()
-"""
+plt.ylabel("log 10")
+plt.show()
+#plt.savefig("problem_8a.pdf")
+#plt.clf()
+
 
 
 for n in [10, 100, 1000, 10000]:
@@ -29,6 +31,7 @@ for n in [10, 100, 1000, 10000]:
 
 
 plt.grid()
+plt.title("relative error")
 plt.xlabel("x-values")
 plt.yscale("log")
 plt.ylabel("log 10")   
