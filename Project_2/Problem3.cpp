@@ -3,5 +3,5 @@
 int main(){
     arma::mat A(1,1);
     int k, l;
-    max_offdiag_symmetric(A, k, l);
+    test_max_offdiag_symmetric();
 }
