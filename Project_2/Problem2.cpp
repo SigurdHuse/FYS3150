@@ -3,6 +3,8 @@
 
 using namespace std; 
 
+const double PI = 3.14159265359;
+
 arma::mat generate_A(int n){
     arma::mat A = arma::mat(n,n);
     double h = 1./n;
@@ -16,21 +18,50 @@ arma::mat generate_A(int n){
     return A;
 }
 
-arma::mat solve(arma::mat A){
+pair<arma::mat, arma::vec> solve(arma::mat A){
     arma::vec eigval;
     arma::mat eigvec;
-    arma::eig_sym(eigval, eigvec, A);
+    arma::eig_sym(eigval, eigvec,A);
     int n = eigvec.n_cols;
+    
     for(int i = 0; i < n; ++i){
         eigvec.col(i) = arma::normalise(eigvec.col(i));
-    } 
-    return eigvec;
+    }
+    
+    return make_pair(eigvec, eigval);
 }
 
+arma::vec generate_v(int n, double i){
+    arma::vec v(n);
+    for(int j = 1; j <= n; ++j){
+        v[j-1] = sin((j*i*PI)/(n+1));
+    }
+    return arma::normalise(v);
+}
 
 int main()
-{
-	auto A = generate_A(6);
+{  
+    const int n = 6;
+	auto A = generate_A(n);
     auto ans = solve(A);
-    cout << ans << endl;    
+    arma::mat eigenvectors = ans.first;
+    arma::vec eigenvalues = ans.second;
+    arma::mat analytic_eigenvectors(n,n);
+    arma::vec analytic_eigenvalues(n);
+    for(int i = 1; i <= n; ++i){
+        analytic_eigenvectors.col(i-1) = generate_v(n,i);
+    }
+    const double h = 1./n;
+    const double d = 2./h/h, a = -1./h/h; 
+    for(int i = 1; i <= n; ++i){
+        analytic_eigenvalues(i-1) = d + 2*a*cos(i*PI/(n+1));
+    }
+    eigenvectors.print();
+    cout << endl;
+    analytic_eigenvectors.print();
+    cout << endl;
+    eigenvalues.raw_print();
+    cout << endl;
+    analytic_eigenvalues.raw_print();
+    cout << endl;
 }
