@@ -16,14 +16,14 @@ arma::mat generate_A(int n){
     return A;
 }
 
-double max_offdiag_symmetric(arma::mat A, int& k, int &l){
+double max_offdiag_symmetric(const arma::mat A, int& k, int &l){
     int n = A.n_cols;
     double mx = DBL_MIN;
     //std::cout << mx << std::endl;
     for(int i = 0; i < n; ++i){
         for(int j = i + 1; j < n; ++j){
-            if(abs(A(i,j)) > mx){
-                mx = abs(A(i,j));
+            if(std::abs(A(i,j)) > mx){
+                mx = std::abs(A(i,j));
                 k = i;
                 l = j;
             }
@@ -45,7 +45,7 @@ void jacobi_rotate(arma::mat& A, arma::mat& R, int k, int l){
     }
     else theta = 0.5*atan2(2*A(k,l),A(k,k) - A(l,l));
     R(k,k) = cos(theta); R(l,l) = R(k,k);
-    R(k,l) = sin(theta); R(l,k) = -R(k,l);
+    R(k,l) = -sin(theta); R(l,k) = -R(k,l);
     A = R.t() * A * R;
     return;
 }
@@ -63,12 +63,19 @@ void jacobi_eigensolver(arma::mat& A, double eps, arma::vec& eigenvalues, arma::
     int k, l;
     double mx = DBL_MAX;
     arma::mat R = arma::mat(A.n_cols,A.n_cols, arma::fill::eye);
-    while(mx >= eps){
+    while(mx >= eps && iterations < maxiter){
         mx = max_offdiag_symmetric(A,k,l);
         jacobi_rotate(A, R, k, l);
         eigenvectors = eigenvectors*R;
-        R(k,k) = 0; R(l,l) = 0;
+        R(k,k) = 1; R(l,l) = 1;
         R(k,l) = 0; R(l,k) = 0;
+        iterations++;
     }
-    A.print();
+    if(iterations == maxiter) converged = 0;    
+    for(int i = 0; i < A.n_cols; ++i){
+        eigenvalues[i] = A(i,i);
+        eigenvectors.col(i) = arma::normalise(eigenvectors.col(i));
+    }
+    eigenvalues.raw_print();
+    eigenvectors.raw_print();
 }

@@ -1,13 +1,14 @@
 #include <bits/stdc++.h>
 #include <armadillo>
 
-double max_offdiag_symmetric(arma::mat A, int& k, int &l){
+double max_offdiag_symmetric(const arma::mat A, int& k, int &l){
     int n = A.n_cols;
     double mx = DBL_MIN;
     for(int i = 0; i < n; ++i){
         for(int j = i + 1; j < n; ++j){
-            if(A(i,j) > mx){
-                mx = A(i,j);
+            if(std::abs(A(i,j)) > mx){
+                std::cout << A(i,j) << std::endl;
+                mx = std::abs(A(i,j));
                 k = i;
                 l = j;
             }
@@ -21,7 +22,7 @@ void test_max_offdiag_symmetric(){
     int k, l;
     double ans;
     ans = max_offdiag_symmetric(A, k, l);
-    assert (abs(ans - 0.5) < 1e-8);
-    assert (k == 0);
-    assert (l == 3);
+    assert (abs(ans - 0.7) < 1e-8);
+    assert (k == 1);
+    assert (l == 2);
 }
