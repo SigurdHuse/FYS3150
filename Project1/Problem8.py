@@ -7,9 +7,14 @@ for n in [10, 100, 1000, 10000]:
     exact = np.loadtxt(f"exact_solution_n_{n}.txt", delimiter = ", ", usecols = range(2)) 
     numeric = np.loadtxt(f"numeric_solution_n_{n}.txt", delimiter = ", ", usecols = range(2))
 
+<<<<<<< HEAD:Project 1/Problem8.py
     diff = np.log10((exact[1:-1,1] - numeric[1:-1,1]))
 
     #plt.plot(exact[1:-1,0], diff, label = f"N = {n}")
+=======
+    diff = np.log10(np.absolute(exact[:,1] - numeric[:,1]))
+    plt.plot(exact[1:-1,0], diff[1:-1], label = f"N = {n}")  
+>>>>>>> 87fda4de5f75f1da0e94a28b9b2ca67302456f62:Project1/Problem8.py
 
 plt.legend()
 plt.grid()
@@ -18,24 +23,32 @@ plt.xlabel("x-values")
 plt.ylabel("log 10")
 #plt.show()
 #plt.savefig("problem_8a.pdf")
-#plt.clf()
+plt.clf()
 
 
 
+<<<<<<< HEAD:Project 1/Problem8.py
 for n in [10, 100, 1000, 10000]:
     exact = np.loadtxt(f"exact_solution_n_{n}.txt", delimiter = ", ", usecols = range(2)) 
     numeric = np.loadtxt(f"numeric_solution_n_{n}.txt", delimiter = ", ", usecols = range(2))
     diff = np.log10(np.abs(((exact[1:-1,1] - numeric[1:-1,1]) / exact[1:-1,1])))
+=======
+for n in [10, 100,1000,10000]:
+    exact = np.loadtxt(f"exact_solution_n_{n}.txt", delimiter = ", ", usecols = range(2), dtype = "float128") 
+    numeric = np.loadtxt(f"numeric_solution_n_{n}.txt", delimiter = ", ", usecols = range(2), dtype = "float128")
+    diff = np.log10(np.absolute((exact[1:-1,1] - numeric[1:-1,1])/exact[1:-1,1]))
+>>>>>>> 87fda4de5f75f1da0e94a28b9b2ca67302456f62:Project1/Problem8.py
     #max_rel.append(np.max(10**diff))
     plt.plot(exact[1:-1,0], diff, label = f"N = {n}")
 
 
 plt.grid()
+plt.legend()
 plt.title("relative error")
+plt.xlim([0,1])
 plt.xlabel("x-values")
-plt.yscale("log")
 plt.ylabel("log 10")   
-plt.show() 
+#plt.show() 
 
 
 """

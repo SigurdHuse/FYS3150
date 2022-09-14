@@ -7,7 +7,7 @@ const double E = 2.71828182845904523536;
 const double val = pow(E, -10);
 
 double f(double x){
-    return 1.0 - (1 - val)*x - pow(E, -10*x); 
+    return 1.0 - (1.0 - val)*x - pow(E, -10*x); 
 }
 
 
