@@ -61,10 +61,7 @@ void jacobi_rotate(arma::mat &A, arma::mat &R, int k, int l)
     R(l, l) = R(k, k);
     R(k, l) = -sin(theta);
     R(l, k) = -R(k, l);
-    A = R * A;
-    R(l, k) = -R(l, k);
-    R(k, l) = -R(k, l);
-    A = A * R;
+    A = R.t() * A * R;
     return;
 }
 
@@ -100,6 +97,4 @@ void jacobi_eigensolver(arma::mat &A, double eps, arma::vec &eigenvalues, arma::
         eigenvalues[i] = A(i, i);
         eigenvectors.col(i) = arma::normalise(eigenvectors.col(i));
     }
-    eigenvalues.raw_print();
-    eigenvectors.raw_print();
 }
