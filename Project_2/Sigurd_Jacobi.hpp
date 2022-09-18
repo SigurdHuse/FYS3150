@@ -112,7 +112,27 @@ void jacobi_eigensolver(arma::mat &A, double eps, arma::vec &eigenvalues, arma::
         converged = 0;
     for (int i = 0; i < (int)A.n_cols; ++i)
     {
-        eigenvalues[i] = A(i, i);
+        eigenvalues(i) = A(i, i);
         eigenvectors.col(i) = arma::normalise(eigenvectors.col(i));
+    }
+    for (int i = 0; i < (int)A.n_cols; ++i)
+    {
+
+        int e = i;
+        for (int j = i + 1; j < (int)A.n_cols; ++j)
+        {
+            if (eigenvalues(j) < eigenvalues(e))
+            {
+                e = j;
+            }
+        }
+        if (i != e)
+        {
+
+            auto tmp = eigenvectors.col(i);
+            eigenvectors.col(i) = eigenvectors.col(e);
+            eigenvectors.col(e) = tmp;
+            std::swap(eigenvalues(i), eigenvalues(e));
+        }
     }
 }
