@@ -18,6 +18,6 @@ for n in n_values:
     plt.ylabel("$v_i$ (height of beam at point $x_i$)")
     plt.title("Plot of three first eigenvectors, when n = " + str(n))
     plt.rc("pgf", texsystem="pdflatex")  # or luatex, xelatex...
-    plt.savefig("plot_problem_6_n_" + str(n) + ".pgf")
-    # plt.show()
+    # plt.savefig("plot_problem_6_n_" + str(n) + ".pgf")
+    plt.show()
     plt.clf()
