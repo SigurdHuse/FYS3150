@@ -22,6 +22,24 @@ int main()
 
     for (int n : n_values)
     {
+        arma::mat A = arma::mat(n - 1, n - 1).randn();
+        A = arma::symmatu(A);
+        arma::vec eigval(n - 1);
+        arma::mat eigvectors = arma::mat(n - 1, n - 1, arma::fill::eye);
+        bool converged = 0;
+        const int maxiter = 1000;
+        int iterations = 0;
+        auto t1 = std::chrono::high_resolution_clock::now();
+        jacobi_eigensolver(A, 1e-4, eigval, eigvectors, maxiter, iterations, converged);
+        auto t2 = std::chrono::high_resolution_clock::now();
+        double duration_seconds = std::chrono::duration<double>(t2 - t1).count();
+        write_to_file(outfile, prec, width, n, duration_seconds);
+    }
+    outfile.close();
+    outfile.open("run_times_problem_5_dense.txt");
+
+    for (int n : n_values)
+    {
         arma::mat A = generate_A(n);
         arma::vec eigval(n - 1);
         arma::mat eigvectors = arma::mat(n - 1, n - 1, arma::fill::eye);
@@ -34,4 +52,5 @@ int main()
         double duration_seconds = std::chrono::duration<double>(t2 - t1).count();
         write_to_file(outfile, prec, width, n, duration_seconds);
     }
+    outfile.close();
 }
