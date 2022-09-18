@@ -1,6 +1,11 @@
 # Prerequisites
 *.d
 
+# Generated files
+*.txt
+*.pdf
+*.pgf
+
 # Compiled Object files
 *.slo
 *.lo
