@@ -66,7 +66,7 @@ int main()
     {
         analytic_eigenvalues(i - 1) = d + 2 * a * cos(i * PI / (n));
     }
-    eigenvectors.print();
+    eigenvectors.raw_print();
     cout << endl;
     analytic_eigenvectors.print();
     cout << endl;
