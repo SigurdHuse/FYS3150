@@ -102,6 +102,7 @@ void jacobi_eigensolver(arma::mat &A, double eps, arma::vec &eigenvalues, arma::
 {
     int k, l;
     double mx = max_offdiag_symmetric(A, k, l);
+    iterations = 0;
     while (mx >= eps && iterations < maxiter)
     {
         jacobi_rotate(A, eigenvectors, k, l);
@@ -128,7 +129,6 @@ void jacobi_eigensolver(arma::mat &A, double eps, arma::vec &eigenvalues, arma::
         }
         if (i != e)
         {
-
             auto tmp = eigenvectors.col(i);
             eigenvectors.col(i) = eigenvectors.col(e);
             eigenvectors.col(e) = tmp;

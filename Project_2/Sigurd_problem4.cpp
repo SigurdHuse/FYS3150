@@ -9,7 +9,7 @@ int main()
     bool converged = 0;
     const int maxiter = 1000;
     int iterations = 0;
-    jacobi_eigensolver(A, 1e-4, eig, eigvectors, maxiter, iterations, converged);
+    jacobi_eigensolver(A, 1e-6, eig, eigvectors, maxiter, iterations, converged);
     eig.raw_print();
     eigvectors.print();
 }
