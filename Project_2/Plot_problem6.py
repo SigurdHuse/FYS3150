@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+"""Script to plot"""
 
 n_values = [10, 100]
 

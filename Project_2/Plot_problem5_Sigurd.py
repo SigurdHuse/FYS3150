@@ -1,6 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+"""Script to plot"""
+
 main = np.loadtxt("run_times_problem_5_not_dense.txt", delimiter=",", usecols=range(2))
 
 fig = plt.figure()

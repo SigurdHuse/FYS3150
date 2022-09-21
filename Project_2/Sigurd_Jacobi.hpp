@@ -24,10 +24,12 @@ double max_offdiag_symmetric(const arma::mat A, int &k, int &l)
 {
     int n = A.n_cols;
     double mx = DBL_MIN;
+    // Loops through each row and column from one off the diagnonal
     for (int i = 0; i < n; ++i)
     {
         for (int j = i + 1; j < n; ++j)
         {
+            // Checks if the current element is larger than the previous
             if (std::abs(A(i, j)) > mx)
             {
                 mx = std::abs(A(i, j));
@@ -45,6 +47,7 @@ double max_offdiag_symmetric(const arma::mat A, int &k, int &l)
 // - Modifies the input matrices A and R
 void jacobi_rotate(arma::mat &A, arma::mat &R, int k, int l)
 {
+    // Compute the angle we need to rotate
     double tau = (A(l, l) - A(k, k)) / (2 * A(k, l));
     double t, c, s;
 
@@ -57,6 +60,7 @@ void jacobi_rotate(arma::mat &A, arma::mat &R, int k, int l)
     s = c * t;
 
     // Update A by performing A_(m+1) = S_m.T * A_(m) * R_(m)
+    // We use the fact that A is symmetric to reduce computations
     double tmp = A(k, k);
 
     A(k, k) = A(k, k) * c * c - 2 * A(k, l) * c * s + A(l, l) * s * s;
@@ -105,17 +109,23 @@ void jacobi_eigensolver(arma::mat &A, double eps, arma::vec &eigenvalues, arma::
     iterations = 0;
     while (mx >= eps && iterations < maxiter)
     {
+        // Applies one Jacobi rotation
         jacobi_rotate(A, eigenvectors, k, l);
         iterations++;
         mx = max_offdiag_symmetric(A, k, l);
     }
+    // Check if we converged
     if (iterations == maxiter)
         converged = 0;
+
+    // Normalises the eigenvectors
     for (int i = 0; i < (int)A.n_cols; ++i)
     {
         eigenvalues(i) = A(i, i);
         eigenvectors.col(i) = arma::normalise(eigenvectors.col(i));
     }
+
+    // Insertion sort to get the smallest eigenvalues first
     for (int i = 0; i < (int)A.n_cols; ++i)
     {
 

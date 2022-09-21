@@ -5,13 +5,14 @@ double max_offdiag_symmetric(const arma::mat A, int &k, int &l)
 {
     int n = A.n_cols;
     double mx = DBL_MIN;
+    // Loops through each row and column from one off the diagnonal
     for (int i = 0; i < n; ++i)
     {
         for (int j = i + 1; j < n; ++j)
         {
+            // Checks if the current element is larger than the previous
             if (std::abs(A(i, j)) > mx)
             {
-                std::cout << A(i, j) << std::endl;
                 mx = std::abs(A(i, j));
                 k = i;
                 l = j;
