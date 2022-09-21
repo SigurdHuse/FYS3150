@@ -24,7 +24,6 @@ int main()
         double h = 1. / n;
         ofstream outfile;
         outfile.open("values_problem_6_n_" + to_string(n) + ".txt");
-        write_to_file(outfile, 6, 14, {0, 0, 0, 0});
         arma::mat A = generate_A(n);
         arma::vec eigval(n - 1);
         arma::mat eigvec = arma::mat(n - 1, n - 1, arma::fill::eye);
