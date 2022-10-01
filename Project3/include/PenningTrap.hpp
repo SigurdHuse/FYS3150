@@ -3,6 +3,7 @@
 
 #include <armadillo>
 #include <Particle.hpp>
+#include <bits/stdc++.h>
 
 class PenningTrap
 {

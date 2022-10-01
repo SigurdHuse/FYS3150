@@ -2,6 +2,7 @@
 #define __Particle_hpp__
 
 #include <armadillo>
+#include <bits/stdc++.h>
 
 class Particle
 {
