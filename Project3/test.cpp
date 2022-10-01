@@ -19,13 +19,24 @@ void test_add_particle()
 
 void test_E_field()
 {
-    PenningTrap test(B0, V0, d);
-    arma::vec r = {1, 0, 0}, v = {1, 1, 1};
-    Particle p(1, 1, r, v);
-    test.add_particle(p);
-    arma::vec expected = {0, 0, -1};
+    PenningTrap test(4, V0, d);
+    arma::vec expected = {0., 0., 8.};
     expected *= ke;
-    arma::vec computed = test.external_E_field({0, 0, 0});
+    arma::vec r = {1.0, 1.0, 2.0};
+    arma::vec computed = test.external_E_field(r);
+    for (int i = 0; i < 3; ++i)
+    {
+        assert((expected(i) - computed(i)) < tol);
+    }
+}
+
+void test_B_field()
+{
+    PenningTrap test(B0, V0, d);
+    arma::vec expected = {-1., -1., 4.};
+    expected *= ke;
+    arma::vec r = {1.0, 1.0, 2.0};
+    arma::vec computed = test.external_E_field(r);
     for (int i = 0; i < 3; ++i)
     {
         assert((expected(i) - computed(i)) < tol);
@@ -35,4 +46,6 @@ void test_E_field()
 int main()
 {
     test_add_particle();
+    test_E_field();
+    test_B_field();
 }
