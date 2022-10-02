@@ -5,6 +5,7 @@
 *.txt
 *.pdf
 *.pgf
+.vscode
 
 # Compiled Object files
 *.slo
