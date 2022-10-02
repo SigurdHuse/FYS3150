@@ -69,6 +69,7 @@ arma::vec PenningTrap::total_force_particles(int i)
 // Computes sum of force from fields and other particles
 arma::vec PenningTrap::total_force(int i)
 {
+    total_force_external(i).print();
     return total_force_particles(i) + total_force_external(i);
 }
 
@@ -109,7 +110,7 @@ void PenningTrap::evolve_forward_Euler(double dt)
     }
 }
 
-void PenningTrap::evolve_RK4(double dt)
+void PenningTrap::evolve_RK4(double dt, bool interaction)
 {
     int n = particles_.size();
     std::vector<arma::vec> forces(n), vs(n);
@@ -117,7 +118,14 @@ void PenningTrap::evolve_RK4(double dt)
     const double dd = 1. / d_ / d_, V02 = V0_ * 2;
     for (int i = 0; i < n; ++i)
     {
-        forces[i] = total_force_particles(i);
+        if (interaction)
+        {
+            forces[i] = total_force(i);
+        }
+        else
+        {
+            forces[i] = total_force_external(i);
+        }
         vs[i] = particles_[i].v_;
     }
     for (int i = 0; i < n; ++i)
@@ -139,6 +147,7 @@ void PenningTrap::evolve_RK4(double dt)
         particles_[i].r_ += (k1_v + 2 * k2_v + 2 * k3_v + k4_v) / 6.;
         particles_[i].v_ += (k1_r + 2 * k2_r + 2 * k3_r + k4_r) / 6.;
     }
+    std::cout << cnt << std::endl;
 }
 
 // Writes all x-positions to first row, all y-positions to second row and all z-positons to third row

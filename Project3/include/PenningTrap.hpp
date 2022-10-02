@@ -37,7 +37,8 @@ public:
     arma::vec total_force(int i);
 
     // Evolve the system one time step (dt) using Runge-Kutta 4th order
-    void evolve_RK4(double dt);
+    // With or without interactions between particles
+    void evolve_RK4(double dt, bool interaction);
 
     // Evolve the system one time step (dt) using Forward Euler
     void evolve_forward_Euler(double dt);
