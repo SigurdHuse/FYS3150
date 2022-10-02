@@ -72,6 +72,15 @@ arma::vec PenningTrap::total_force(int i)
     return total_force_particles(i) + total_force_external(i);
 }
 
+// Right side of ODE without force applied
+arma::vec PenningTrap::f(double omega0, double omegaz, arma::vec deriv, arma::vec pos)
+{
+    arma::vec ans = {omega0 * deriv(1) + omegaz / 2 * pos(0),
+                     -omega0 * deriv(0) + omegaz / 2 * pos(1),
+                     -omegaz * pos(2)};
+    return ans;
+}
+
 // Go one step forward in simulation with forward Euler
 // The position of each particle is r, and it's derivative is v
 void PenningTrap::evolve_forward_Euler(double dt)
@@ -89,9 +98,7 @@ void PenningTrap::evolve_forward_Euler(double dt)
     {
         omega0 = particles_[i].q_ * B0_ / particles_[i].m_;
         omegaz = V02 * particles_[i].q_ / particles_[i].m_ * dd;
-        arma::vec tmp = {omega0 * vs[i](1) + omegaz / 2 * particles_[i].r_(0),
-                         -omega0 * vs[i](0) + omegaz / 2 * particles_[i].r_(1),
-                         -omegaz * particles_[i].r_(2)};
+        arma::vec tmp = f(omega0, omegaz, particles_[i].v_, particles_[i].r_);
         tmp += forces[i];
         particles_[i].v_ += dt * tmp;
     }
@@ -100,15 +107,6 @@ void PenningTrap::evolve_forward_Euler(double dt)
     {
         particles_[i].r_ += dt * vs[i];
     }
-}
-
-// Right side of ODE without force applied
-arma::vec PenningTrap::f(double omega0, double omegaz, arma::vec deriv, arma::vec pos)
-{
-    arma::vec ans = {omega0 * deriv(1) + omegaz / 2 * pos(0),
-                     -omega0 * deriv(0) + omegaz / 2 * pos(1),
-                     -omegaz * pos(2)};
-    return ans;
 }
 
 void PenningTrap::evolve_RK4(double dt)
@@ -126,20 +124,20 @@ void PenningTrap::evolve_RK4(double dt)
     {
         omega0 = particles_[i].q_ * B0_ / particles_[i].m_;
         omegaz = V02 * particles_[i].q_ / particles_[i].m_ * dd;
-        arma::vec k1 = (f(omega0, omegaz, particles_[i].v_, particles_[i].r_) + forces[i]) * dt;
-        arma::vec k2 = (f(omega0, omegaz, particles_[i].v_ + k1 / 2, particles_[i].r_) + forces[i]) * dt;
-        arma::vec k3 = (f(omega0, omegaz, particles_[i].v_ + k1 / 2, particles_[i].r_) + forces[i]) * dt;
-        arma::vec k4 = (f(omega0, omegaz, particles_[i].v_ + k3, particles_[i].r_) + forces[i]) * dt;
-        particles_[i].v_ += (k1 + 2 * k2 + 2 * k3 + k4) / 6;
-    }
+        arma::vec k1_r = (f(omega0, omegaz, particles_[i].v_, particles_[i].r_) + forces[i]) * dt;
+        arma::vec k1_v = vs[i] * dt;
 
-    for (int i = 0; i < n; ++i)
-    {
-        arma::vec k1 = vs[i] * dt;
-        arma::vec k2 = (vs[i] + k1 / 2) * dt;
-        arma::vec k3 = (vs[i] + k2 / 2) * dt;
-        arma::vec k4 = (vs[i] + k3) * dt;
-        particles_[i].r_ += (k1 + 2 * k2 + 2 * k3 + k4) / 6;
+        arma::vec k2_r = (f(omega0, omegaz, particles_[i].v_ + k1_r / 2, particles_[i].r_ + k1_v / 2) + forces[i]) * dt;
+        arma::vec k2_v = (vs[i] + k1_v / 2) * dt;
+
+        arma::vec k3_r = (f(omega0, omegaz, particles_[i].v_ + k2_r / 2, particles_[i].r_ + k2_v / 2) + forces[i]) * dt;
+        arma::vec k3_v = (vs[i] + k2_v / 2) * dt;
+
+        arma::vec k4_r = (f(omega0, omegaz, particles_[i].v_ + k3_r, particles_[i].r_ + k3_v) + forces[i]) * dt;
+        arma::vec k4_v = (vs[i] + k3_v) * dt;
+
+        particles_[i].r_ += (k1_v + 2 * k2_v + 2 * k3_v + k4_v) / 6.;
+        particles_[i].v_ += (k1_r + 2 * k2_r + 2 * k3_r + k4_r) / 6.;
     }
 }
 
