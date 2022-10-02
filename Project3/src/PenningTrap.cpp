@@ -102,6 +102,47 @@ void PenningTrap::evolve_forward_Euler(double dt)
     }
 }
 
+// Right side of ODE without force applied
+arma::vec PenningTrap::f(double omega0, double omegaz, arma::vec deriv, arma::vec pos)
+{
+    arma::vec ans = {omega0 * deriv(1) + omegaz / 2 * pos(0),
+                     -omega0 * deriv(0) + omegaz / 2 * pos(1),
+                     -omegaz * pos(2)};
+    return ans;
+}
+
+void PenningTrap::evolve_RK4(double dt)
+{
+    int n = particles_.size();
+    std::vector<arma::vec> forces(n), vs(n);
+    double omega0, omegaz;
+    const double dd = 1. / d_ / d_, V02 = V0_ * 2;
+    for (int i = 0; i < n; ++i)
+    {
+        forces[i] = total_force_particles(i);
+        vs[i] = particles_[i].v_;
+    }
+    for (int i = 0; i < n; ++i)
+    {
+        omega0 = particles_[i].q_ * B0_ / particles_[i].m_;
+        omegaz = V02 * particles_[i].q_ / particles_[i].m_ * dd;
+        arma::vec k1 = (f(omega0, omegaz, particles_[i].v_, particles_[i].r_) + forces[i]) * dt;
+        arma::vec k2 = (f(omega0, omegaz, particles_[i].v_ + k1 / 2, particles_[i].r_) + forces[i]) * dt;
+        arma::vec k3 = (f(omega0, omegaz, particles_[i].v_ + k1 / 2, particles_[i].r_) + forces[i]) * dt;
+        arma::vec k4 = (f(omega0, omegaz, particles_[i].v_ + k3, particles_[i].r_) + forces[i]) * dt;
+        particles_[i].v_ += (k1 + 2 * k2 + 2 * k3 + k4) / 6;
+    }
+
+    for (int i = 0; i < n; ++i)
+    {
+        arma::vec k1 = vs[i] * dt;
+        arma::vec k2 = (vs[i] + k1 / 2) * dt;
+        arma::vec k3 = (vs[i] + k2 / 2) * dt;
+        arma::vec k4 = (vs[i] + k3) * dt;
+        particles_[i].r_ += (k1 + 2 * k2 + 2 * k3 + k4) / 6;
+    }
+}
+
 // Writes all x-positions to first row, all y-positions to second row and all z-positons to third row
 void PenningTrap::write_positions_to_file(std::ofstream &outfile, int width, int prec)
 {

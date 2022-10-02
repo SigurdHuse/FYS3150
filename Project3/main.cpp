@@ -17,7 +17,7 @@ int main()
     {
         outfile << dt * i << "\n";
         test.write_positions_to_file(outfile, 14, 6);
-        test.evolve_forward_Euler(dt);
+        test.evolve_RK4(dt);
     }
     outfile << time << "\n";
     test.write_positions_to_file(outfile, 14, 6);

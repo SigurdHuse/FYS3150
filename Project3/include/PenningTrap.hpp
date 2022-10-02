@@ -44,6 +44,9 @@ public:
 
     // Writes current positon of particles to file
     void write_positions_to_file(std::ofstream &outfile, int width, int prec);
+
+    // Right side of ODE
+    arma::vec f(double omega0, double omegaz, arma::vec deriv, arma::vec pos);
 };
 
 #endif
