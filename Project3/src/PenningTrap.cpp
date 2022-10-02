@@ -8,6 +8,7 @@ PenningTrap::PenningTrap(double B0_in, double V0_in, double d_in)
     B0_ = B0_in;
     V0_ = V0_in;
     d_ = d_in;
+    std::vector<arma::vec> particles_;
 }
 
 // Adds particle to vector which stores particles in the Penning trap
@@ -52,6 +53,7 @@ arma::vec PenningTrap::total_force_external(int i)
 arma::vec PenningTrap::total_force_particles(int i)
 {
     arma::vec ans = arma::vec(3).fill(0.);
+    Particle p = particles_[i];
     int n = particles_.size();
     for (int j = 0; j < i; ++j)
     {
@@ -61,11 +63,55 @@ arma::vec PenningTrap::total_force_particles(int i)
     {
         ans += force_particle(i, j);
     }
-    return ans;
+    return ans / p.m_ * p.q_;
 }
 
 // Computes sum of force from fields and other particles
 arma::vec PenningTrap::total_force(int i)
 {
     return total_force_particles(i) + total_force_external(i);
+}
+
+// Go one step forward in simulation with forward Euler
+// The position of each particle is r, and it's derivative is v
+void PenningTrap::evolve_forward_Euler(double dt)
+{
+    int n = particles_.size();
+    std::vector<arma::vec> forces(n), vs(n);
+    for (int i = 0; i < n; ++i)
+    {
+        forces[i] = total_force_particles(i);
+        vs[i] = particles_[i].v_;
+    }
+    double omega0, omegaz;
+    const double dd = 1. / d_ / d_, V02 = V0_ * 2;
+    for (int i = 0; i < n; ++i)
+    {
+        omega0 = particles_[i].q_ * B0_ / particles_[i].m_;
+        omegaz = V02 * particles_[i].q_ / particles_[i].m_ * dd;
+        arma::vec tmp = {omega0 * vs[i](1) + omegaz / 2 * particles_[i].r_(0),
+                         -omega0 * vs[i](0) + omegaz / 2 * particles_[i].r_(1),
+                         -omegaz * particles_[i].r_(2)};
+        tmp += forces[i];
+        particles_[i].v_ += dt * tmp;
+    }
+
+    for (int i = 0; i < n; ++i)
+    {
+        particles_[i].r_ += dt * vs[i];
+    }
+}
+
+// Writes all x-positions to first row, all y-positions to second row and all z-positons to third row
+void PenningTrap::write_positions_to_file(std::ofstream &outfile, int width, int prec)
+{
+    int n = particles_.size();
+    for (int i = 0; i < 3; ++i)
+    {
+        for (int j = 0; j < n; ++j)
+        {
+            outfile << std::setw(width) << std::setprecision(prec) << std::scientific << particles_[j].r_(i) << ", ";
+        }
+        outfile << std::endl;
+    }
 }

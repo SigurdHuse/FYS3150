@@ -41,6 +41,9 @@ public:
 
     // Evolve the system one time step (dt) using Forward Euler
     void evolve_forward_Euler(double dt);
+
+    // Writes current positon of particles to file
+    void write_positions_to_file(std::ofstream &outfile, int width, int prec);
 };
 
 #endif
