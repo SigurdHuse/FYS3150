@@ -41,10 +41,13 @@ public:
     void evolve_RK4(double dt, bool interaction);
 
     // Evolve the system one time step (dt) using Forward Euler
-    void evolve_forward_Euler(double dt);
+    void evolve_forward_Euler(double dt, bool interaction);
 
     // Writes current positon of particles to file
     void write_positions_to_file(std::ofstream &outfile, int width, int prec);
+
+    // Writes current velocities of particles to file
+    void write_velocities_to_file(std::ofstream &outfile, int width, int prec);
 
     // Right side of ODE
     arma::vec f(double omega0, double omegaz, arma::vec deriv, arma::vec pos);

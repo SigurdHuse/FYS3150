@@ -28,6 +28,8 @@ arma::vec PenningTrap::external_E_field(arma::vec r)
 }
 
 // Computes external magnetic field B from definition
+
+// TODO
 arma::vec PenningTrap::external_B_field(arma::vec r)
 {
     arma::vec field = {0, 0, B0_};
@@ -45,6 +47,10 @@ arma::vec PenningTrap::force_particle(int i, int j)
 arma::vec PenningTrap::total_force_external(int i)
 {
     Particle p = particles_[i];
+    (p.q_ * external_E_field(p.r_)).print();
+    std::cout << "electric\n";
+    (p.q_ * arma::cross(p.v_, external_B_field(p.r_))).print();
+    std::cout << "B\n";
     return p.q_ * external_E_field(p.r_) + p.q_ * arma::cross(p.v_, external_B_field(p.r_));
 }
 
@@ -70,6 +76,7 @@ arma::vec PenningTrap::total_force_particles(int i)
 arma::vec PenningTrap::total_force(int i)
 {
     total_force_external(i).print();
+    std::cout << "\n";
     return total_force_particles(i) + total_force_external(i);
 }
 
@@ -84,13 +91,20 @@ arma::vec PenningTrap::f(double omega0, double omegaz, arma::vec deriv, arma::ve
 
 // Go one step forward in simulation with forward Euler
 // The position of each particle is r, and it's derivative is v
-void PenningTrap::evolve_forward_Euler(double dt)
+void PenningTrap::evolve_forward_Euler(double dt, bool interaction)
 {
     int n = particles_.size();
     std::vector<arma::vec> forces(n), vs(n);
     for (int i = 0; i < n; ++i)
     {
-        forces[i] = total_force_particles(i);
+        if (interaction)
+        {
+            forces[i] = total_force_particles(i);
+        }
+        else
+        {
+            forces[i] = {0, 0, 0};
+        }
         vs[i] = particles_[i].v_;
     }
     double omega0, omegaz;
@@ -120,11 +134,11 @@ void PenningTrap::evolve_RK4(double dt, bool interaction)
     {
         if (interaction)
         {
-            forces[i] = total_force(i);
+            forces[i] = total_force_particles(i);
         }
         else
         {
-            forces[i] = total_force_external(i);
+            forces[i] = {0, 0, 0};
         }
         vs[i] = particles_[i].v_;
     }
@@ -147,7 +161,6 @@ void PenningTrap::evolve_RK4(double dt, bool interaction)
         particles_[i].r_ += (k1_v + 2 * k2_v + 2 * k3_v + k4_v) / 6.;
         particles_[i].v_ += (k1_r + 2 * k2_r + 2 * k3_r + k4_r) / 6.;
     }
-    std::cout << cnt << std::endl;
 }
 
 // Writes all x-positions to first row, all y-positions to second row and all z-positons to third row
@@ -159,6 +172,20 @@ void PenningTrap::write_positions_to_file(std::ofstream &outfile, int width, int
         for (int j = 0; j < n; ++j)
         {
             outfile << std::setw(width) << std::setprecision(prec) << std::scientific << particles_[j].r_(i) << ", ";
+        }
+        outfile << std::endl;
+    }
+}
+
+// Writes all x-velocities to first row, all y-velocities to second row and all z-velocities to third row
+void PenningTrap::write_velocities_to_file(std::ofstream &outfile, int width, int prec)
+{
+    int n = particles_.size();
+    for (int i = 0; i < 3; ++i)
+    {
+        for (int j = 0; j < n; ++j)
+        {
+            outfile << std::setw(width) << std::setprecision(prec) << std::scientific << particles_[j].v_(i) << ", ";
         }
         outfile << std::endl;
     }
