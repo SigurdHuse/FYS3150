@@ -5,13 +5,13 @@ const double B0 = 9.65 * 1e1, V0 = 9.65 * 1e8, d = 1e4;
 
 const double m = 40.0775, q = 1.;
 
-const int width = 14, prec = 7;
+const int width = 16, prec = 8;
 
 void one_particle_100_mus(std::string filename)
 {
     // Constructs objects
     PenningTrap test(B0, V0, d);
-    arma::vec r = {10., 10., 10.}, v = {-3., 5., 2.};
+    arma::vec r = {10., 0, 10.}, v = {0, 5., 0};
     Particle p(q, m, r, v);
     test.add_particle(p);
 
@@ -73,17 +73,18 @@ void two_particles(std::string filename, bool interaction, bool vel)
 void one_particle_different_h(std::string filename, std::vector<int> nvals, bool euler)
 {
     // Constructs objects
-    PenningTrap test(B0, V0, d);
-    arma::vec r = {10., 10., 10.}, v = {-3., 5., 2.};
-    Particle p(q, m, r, v);
-    test.add_particle(p);
 
     const int time = 10;
     for (int n : nvals)
     {
+        PenningTrap test(B0, V0, d);
+        arma::vec r = {10., 0, 10.}, v = {0, 5., 0};
+        Particle p(q, m, r, v);
+        test.add_particle(p);
         const double h = (double)time / n;
         std::ofstream outfile;
         std::string file = filename + "_n_" + std::to_string(n) + "_method_";
+
         if (euler)
         {
             file += "euler";
@@ -92,9 +93,10 @@ void one_particle_different_h(std::string filename, std::vector<int> nvals, bool
         {
             file += "RK4";
         }
+
         file += ".txt";
         outfile.open(file);
-        std::cout << n << std::endl;
+
         // Simulates and writes to file
         for (int i = 0; i < n; ++i)
         {
@@ -119,7 +121,7 @@ int main()
     // two_particles("two_particles_without_interaction.txt", 0, 0);
     // two_particles("two_particles_with_interaction_vel.txt", 1, 1);
     // two_particles("two_particles_without_interaction_vel.txt", 0, 1);
-    //  one_particle_100_mus("one_particle_n_10000.txt");
+    one_particle_100_mus("one_particle_n_10000.txt");
     std::vector<int> nvals = {10, 100, 1000, 10000, 100000};
     one_particle_different_h("one_particle", nvals, 0);
     one_particle_different_h("one_particle", nvals, 1);

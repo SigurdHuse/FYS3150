@@ -10,7 +10,7 @@ def plot_one_particle():
         delimiter=",",
     )
     x, y, z = main[::3], main[1::3], main[2::3]
-    plt.plot(time, z)
+    plt.plot(x, y)
 
 
 def plot_two_particles(interaction):
@@ -61,7 +61,7 @@ def plot_phase_two_particles(interaction):
     plt.plot(p2_x[0], v2_x[0], marker="o", color="r")
 
 
-def generate_exact_solution(x0, v0, m, q, d, B0, V0, T):
+def generate_exact_solution(x0, v0, m, q, d, B0, V0, T, n):
     omega0 = q * B0 / m
     omegaz = 2 * q * V0 / m / d / d
     omega_minus = (omega0 - np.sqrt(omega0**2 - 2 * omegaz)) / 2
@@ -70,7 +70,7 @@ def generate_exact_solution(x0, v0, m, q, d, B0, V0, T):
     A_minus = -(v0 + omega_plus * x0) / (omega_minus - omega_plus)
     phi_plus = 0
     phi_minus = 0
-    t = np.linspace(0, T, T * 1000)
+    t = np.linspace(0, T, n + 1)
     values = A_plus * np.exp(-1j * (omega_plus * t + phi_plus)) + A_minus * np.exp(
         -1j * (omega_minus * t + phi_minus)
     )
@@ -78,7 +78,7 @@ def generate_exact_solution(x0, v0, m, q, d, B0, V0, T):
 
 
 def plot_exact_solution(x0, z0, v0, m, q, d, B0, V0, T, plot_z):
-    values, t, omegaz = generate_exact_solution(x0, v0, m, q, d, B0, V0, T)
+    values, t, omegaz = generate_exact_solution(x0, v0, m, q, d, B0, V0, T, T * 10000)
     z = z0 * np.cos(np.sqrt(omegaz) * t)
     x, y = np.real(values), np.imag(values)
     if plot_z:
@@ -120,6 +120,105 @@ def plot_3D_two_particles(interaction):
     ax.plot3D(p2_x[0], p2_y[0], p2_z[0], color="midnightblue", marker="o")
 
 
+def plot_relative_error(RK4_method):
+    nvals = [10**i for i in range(1, 6)]
+    fig, axs = plt.subplots(3, 2)
+    fig.tight_layout(pad=3.0)
+    x_plot, y_plot = 0, 0
+    for n in nvals:
+        RK4 = np.loadtxt(
+            "one_particle_n_" + str(n) + "_method_RK4.txt",
+            delimiter=",",
+            usecols=range(1),
+        )
+        euler = np.loadtxt(
+            "one_particle_n_" + str(n) + "_method_euler.txt",
+            delimiter=",",
+            usecols=range(1),
+        )
+        exact, t, omegaz = generate_exact_solution(
+            10, 5, 40.0775, 1, 10**4, 96.5, 9.65 * 10**8, 10, n
+        )
+
+        x_RK4, y_RK4, z_RK4 = RK4[3::3], RK4[4::3], RK4[5::3]
+        x_euler, y_euler, z_euler = euler[3::3], euler[4::3], euler[5::3]
+        x, y, z = (
+            np.real(exact[1:]),
+            np.imag(exact[1:]),
+            10 * np.cos(np.sqrt(omegaz) * t[1:]),
+        )
+
+        error_RK4 = (
+            np.abs((x_RK4 - x) / x) + np.abs((y_RK4 - y) / y) + np.abs((z_RK4 - z) / z)
+        )
+        error_euler = (
+            np.abs((x_euler - x) / x)
+            + np.abs((y_euler - y) / y)
+            + np.abs((z_euler - z) / z)
+        )
+        t = t[1:]
+        if RK4_method:
+            axs[y_plot, x_plot].plot(t, error_RK4, label="RK4")
+
+        else:
+            axs[y_plot, x_plot].plot(t, error_euler, label="Euler")
+
+        axs[y_plot, x_plot].set_title(f"Relative error when h = {10/n}")
+        axs[y_plot, x_plot].grid()
+        axs[y_plot, x_plot].set_xlim([0, 10])
+        axs[y_plot, x_plot].set_yscale("log")
+        x_plot += 1
+        if x_plot == 2:
+            x_plot = 0
+            y_plot += 1
+
+    lines_labels = [ax.get_legend_handles_labels() for ax in fig.axes]
+    lines, labels = [sum(lol, []) for lol in zip(*lines_labels)]
+    fig.legend(lines, labels, loc="lower right")
+
+
+def compute_convergence_rate(RK4):
+    nvals = [10**i for i in range(1, 6)]
+    delta_values = []
+    h_values = []
+    for n in nvals:
+        if RK4:
+            data = np.loadtxt(
+                "one_particle_n_" + str(n) + "_method_RK4.txt",
+                delimiter=",",
+                usecols=range(1),
+            )
+        else:
+            data = np.loadtxt(
+                "one_particle_n_" + str(n) + "_method_euler.txt",
+                delimiter=",",
+                usecols=range(1),
+            )
+        exact, t, omegaz = generate_exact_solution(
+            10, 5, 40.0775, 1, 10**4, 96.5, 9.65 * 10**8, 10, n
+        )
+
+        x_data, y_data, z_data = data[3::3], data[4::3], data[5::3]
+        x, y, z = (
+            np.real(exact[1:]),
+            np.imag(exact[1:]),
+            10 * np.cos(np.sqrt(omegaz) * t[1:]),
+        )
+        r_max = np.max(np.abs(x_data - x) + np.abs(y_data - y) + np.abs(z_data - z))
+        delta_values.append(r_max)
+        h_values.append(10 / n)
+    r_err = 0.0
+    for k in range(1, 5):
+        r_err += np.log(delta_values[k] / delta_values[k - 1]) / np.log(
+            h_values[k] / h_values[k - 1]
+        )
+    r_err /= 4
+    if RK4:
+        print("Error convergence rate for RK4 is ", r_err)
+    else:
+        print("Error convergence rate for forward Euler is ", r_err)
+
+
 if __name__ == "__main__":
     """
     plot_two_particles(1)
@@ -135,7 +234,11 @@ if __name__ == "__main__":
     plot_3D_two_particles(False)
     save_plot("3D plot")
     """
-    plot_exact_solution(10, 10, 5, 40.0775, 1, 10**4, 96.5, 9.65 * 10**8, 100, True)
-    save_plot("Exact solution for one particle")
+    # plot_exact_solution(10, 10, 5, 40.0775, 1, 10**4, 96.5, 9.65 * 10**8, 100, True)
+    # save_plot("Exact solution for one particle")
     # plot_one_particle()
     # save_plot("Numerical approximation of one particle")
+    # plot_relative_error(True)
+    # plt.show()
+    compute_convergence_rate(True)
+    compute_convergence_rate(False)
