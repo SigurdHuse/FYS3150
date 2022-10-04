@@ -15,7 +15,7 @@ void one_particle_100_mus(std::string filename)
     Particle p(q, m, r, v);
     test.add_particle(p);
 
-    const int time = 100, n = 10000;
+    const int time = 100, n = 100000;
     const double dt = (double)time / n;
     std::ofstream outfile, time_file;
     time_file.open("time_" + filename);
@@ -62,7 +62,7 @@ void two_particles(std::string filename, bool interaction, bool vel)
         {
             test.write_positions_to_file(outfile, width, prec);
         }
-        test.evolve_forward_Euler(dt, interaction);
+        test.evolve_RK4(dt, interaction);
     }
     time_file << time << "\n";
     test.write_positions_to_file(outfile, width, prec);
@@ -70,11 +70,57 @@ void two_particles(std::string filename, bool interaction, bool vel)
     time_file.close();
 }
 
+void one_particle_different_h(std::string filename, std::vector<int> nvals, bool euler)
+{
+    // Constructs objects
+    PenningTrap test(B0, V0, d);
+    arma::vec r = {10., 10., 10.}, v = {-3., 5., 2.};
+    Particle p(q, m, r, v);
+    test.add_particle(p);
+
+    const int time = 10;
+    for (int n : nvals)
+    {
+        const double h = (double)time / n;
+        std::ofstream outfile;
+        std::string file = filename + "_n_" + std::to_string(n) + "_method_";
+        if (euler)
+        {
+            file += "euler";
+        }
+        else
+        {
+            file += "RK4";
+        }
+        file += ".txt";
+        outfile.open(file);
+        std::cout << n << std::endl;
+        // Simulates and writes to file
+        for (int i = 0; i < n; ++i)
+        {
+            test.write_positions_to_file(outfile, width, prec);
+            if (euler)
+            {
+                test.evolve_forward_Euler(h, 1);
+            }
+            else
+            {
+                test.evolve_RK4(h, 1);
+            }
+        }
+        test.write_positions_to_file(outfile, width, prec);
+        outfile.close();
+    }
+}
+
 int main()
 {
-    two_particles("two_particles_with_interaction.txt", 1, 0);
-    two_particles("two_particles_without_interaction.txt", 0, 0);
-    two_particles("two_particles_with_interaction_vel.txt", 1, 1);
-    two_particles("two_particles_without_interaction_vel.txt", 0, 1);
-    // one_particle_100_mus("one_particle_n_10000.txt");
+    // two_particles("two_particles_with_interaction.txt", 1, 0);
+    // two_particles("two_particles_without_interaction.txt", 0, 0);
+    // two_particles("two_particles_with_interaction_vel.txt", 1, 1);
+    // two_particles("two_particles_without_interaction_vel.txt", 0, 1);
+    //  one_particle_100_mus("one_particle_n_10000.txt");
+    std::vector<int> nvals = {10, 100, 1000, 10000, 100000};
+    one_particle_different_h("one_particle", nvals, 0);
+    one_particle_different_h("one_particle", nvals, 1);
 }

@@ -28,8 +28,6 @@ arma::vec PenningTrap::external_E_field(arma::vec r)
 }
 
 // Computes external magnetic field B from definition
-
-// TODO
 arma::vec PenningTrap::external_B_field(arma::vec r)
 {
     arma::vec field = {0, 0, B0_};
