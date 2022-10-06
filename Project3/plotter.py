@@ -10,14 +10,18 @@ def plot_one_particle():
         delimiter=",",
     )
     x, y, z = main[::3], main[1::3], main[2::3]
-    plt.plot(x, y)
+    plt.plot(x, y, label="One particle")
+    plt.xlabel(f"time ($\mu$s)")
+    plt.ylabel("z-position ($\mu$m)")
 
 
 def plot_two_particles(interaction):
     if interaction:
         filename = "two_particles_with_interaction.txt"
+        title = "Plot of two particles with interaction"
     else:
         filename = "two_particles_without_interaction.txt"
+        title = "Plot of two particles without interaction"
 
     main = np.loadtxt(filename, delimiter=",", usecols=range(2))
     x, y = main[::3], main[1::3]
@@ -26,11 +30,20 @@ def plot_two_particles(interaction):
 
     plt.subplot(2, 1, 1)
     plt.plot(p1_x, p1_y, label="first particle", color="r")
-    plt.plot(p1_x[0], p1_y[0], marker="o", color="r")
+    plt.plot(p1_x[0], p1_y[0], marker="o", color="midnightblue")
+    plt.xlim([-25, 25])
+    plt.ylim([-25, 25])
+    plt.title(title)
+    plt.legend()
+    plt.grid()
 
     plt.subplot(2, 1, 2)
     plt.plot(p2_x, p2_y, label="second particle", color="midnightblue")
-    plt.plot(p2_x[0], p2_y[0], marker="o", color="midnightblue")
+    plt.plot(p2_x[0], p2_y[0], marker="o", color="r")
+    plt.xlim([-25, 25])
+    plt.ylim([-25, 25])
+    plt.legend()
+    plt.grid()
 
 
 def plot_phase_two_particles(interaction):
@@ -44,21 +57,66 @@ def plot_phase_two_particles(interaction):
     pos = np.loadtxt(filename1, delimiter=",", usecols=range(2))
     vel = np.loadtxt(filename2, delimiter=",", usecols=range(2))
 
-    x, y = pos[::3], pos[1::3]
-    p1_x, p1_y = x[:, 0], y[:, 0]
-    p2_x, p2_y = x[:, 1], y[:, 1]
+    filename = "phase_space"
+    if interaction:
+        filename += "_interaction"
+    filename += "_x.pgf"
 
-    vx, vy = vel[::3], vel[1::3]
-    v1_x, v1_y = vx[:, 0], vy[:, 0]
-    v2_x, v2_y = vx[:, 1], vy[:, 1]
+    x, y, z = pos[:-3:3], pos[1:-2:3], pos[2:-1:3]
+    p1_x, p1_y, p1_z = x[:, 0], y[:, 0], z[:, 0]
+    p2_x, p2_y, p2_z = x[:, 1], y[:, 1], z[:, 1]
+
+    vx, vy, vz = vel[:-3:3], vel[1:-2:3], vel[2:-1:3]
+    v1_x, v1_y, v1_z = vx[:, 0], vy[:, 0], vz[:, 0]
+    v2_x, v2_y, v2_z = vx[:, 1], vy[:, 1], vz[:, 1]
 
     plt.subplot(2, 1, 1)
     plt.plot(p1_x, v1_x, label="first particle", color="r")
     plt.plot(p1_x[0], v1_x[0], marker="o", color="midnightblue")
+    plt.title("Phase space plot in x-plane" + " with interaction" * (interaction == 1))
+    plt.xlim([-16, 16])
+    plt.ylim([-16, 16])
 
     plt.subplot(2, 1, 2)
     plt.plot(p2_x, v2_x, label="second particle", color="midnightblue")
     plt.plot(p2_x[0], v2_x[0], marker="o", color="r")
+    plt.xlim([-16, 16])
+    plt.ylim([-16, 16])
+
+    plt.savefig(filename)
+    plt.clf()
+
+    plt.subplot(2, 1, 1)
+    plt.plot(p1_y, v1_y, label="first particle", color="r")
+    plt.plot(p1_y[0], v1_y[0], marker="o", color="midnightblue")
+    plt.title("Phase space plot in y-plane" + " with interaction" * (interaction == 1))
+    plt.xlim([-16, 16])
+    plt.ylim([-16, 16])
+
+    plt.subplot(2, 1, 2)
+    plt.plot(p2_y, v2_y, label="second particle", color="midnightblue")
+    plt.plot(p2_y[0], v2_y[0], marker="o", color="r")
+
+    filename = filename[:-5] + "y" + filename[-4:]
+
+    plt.savefig(filename)
+    plt.clf()
+
+    plt.subplot(2, 1, 1)
+    plt.plot(p1_z, v1_z, label="first particle", color="r")
+    plt.plot(p1_z[0], v1_z[0], marker="o", color="midnightblue")
+    plt.title("Phase space plot in z-plane" + " with interaction" * (interaction == 1))
+    plt.xlim([-16, 16])
+    plt.ylim([-16, 16])
+
+    plt.subplot(2, 1, 2)
+    plt.plot(p2_z, v2_z, label="second particle", color="midnightblue")
+    plt.plot(p2_z[0], v2_z[0], marker="o", color="r")
+
+    filename = filename[:-5] + "z" + filename[-4:]
+
+    plt.savefig(filename)
+    plt.clf()
 
 
 def generate_exact_solution(x0, v0, m, q, d, B0, V0, T, n):
@@ -91,10 +149,11 @@ def save_plot(title, xlim=[], ylim=[], filename=""):
     plt.grid()
     plt.title(title)
     plt.legend()
-    plt.show()
-    # plt.xlim(xlim)
-    # plt.ylim(ylim)
+
+    plt.xlim(xlim)
+    plt.ylim(ylim)
     # plt.rc("pgf", texsystem="pdflatex")
+    plt.show()
     # plt.savefig(filename)
     plt.clf()
 
@@ -177,7 +236,7 @@ def plot_relative_error(RK4_method):
     fig.legend(lines, labels, loc="lower right")
 
 
-def compute_convergence_rate(RK4):
+def compute_error_convergence_rate(RK4):
     nvals = [10**i for i in range(1, 6)]
     delta_values = []
     h_values = []
@@ -197,7 +256,6 @@ def compute_convergence_rate(RK4):
         exact, t, omegaz = generate_exact_solution(
             10, 5, 40.0775, 1, 10**4, 96.5, 9.65 * 10**8, 10, n
         )
-
         x_data, y_data, z_data = data[3::3], data[4::3], data[5::3]
         x, y, z = (
             np.real(exact[1:]),
@@ -220,25 +278,36 @@ def compute_convergence_rate(RK4):
 
 
 if __name__ == "__main__":
+    plt.rc("pgf", texsystem="pdflatex")
     """
-    plot_two_particles(1)
-    save_plot("with interaction")
-    plot_two_particles(0)
-    save_plot("without interaction")
-    plot_phase_two_particles(1)
-    save_plot("with interaction")
-    plot_phase_two_particles(0)
-    save_plot("without interaction")
     plot_one_particle()
     save_plot("Numerical approximation of one particle")
     plot_3D_two_particles(False)
     save_plot("3D plot")
     """
+    plot_one_particle()
+    plt.show()
+    # save_plot(
+    #    f"Numerical approximation of one particle for 100 $\mu$s",
+    #    [0, 100],
+    #    [-11, 11],
+    #    "one_particle_time_100.pgf",
+    # )
+
+    # plot_two_particles(1)
+    # plt.savefig("two_particles_with_interaction.pgf")
+    # plt.clf()
+    # plot_two_particles(0)
+    # plt.savefig("two_particles_without_interaction.pgf")
+    # plt.clf()
+
+    # plot_phase_two_particles(1)
+    # plot_phase_two_particles(0)
+
     # plot_exact_solution(10, 10, 5, 40.0775, 1, 10**4, 96.5, 9.65 * 10**8, 100, True)
     # save_plot("Exact solution for one particle")
-    # plot_one_particle()
-    # save_plot("Numerical approximation of one particle")
+    #
     # plot_relative_error(True)
     # plt.show()
-    compute_convergence_rate(True)
-    compute_convergence_rate(False)
+    # compute_error_convergence_rate(True)
+    # compute_error_convergence_rate(False)

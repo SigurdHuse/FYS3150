@@ -50,7 +50,7 @@ public:
     void write_velocities_to_file(std::ofstream &outfile, int width, int prec);
 
     // Right side of ODE
-    arma::vec f(double omega0, double omegaz, arma::vec deriv, arma::vec pos);
+    std::vector<arma::vec> f(double omega0, double omegaz, const arma::vec &deriv, const arma::vec &pos, const arma::vec &forces);
 };
 
 #endif
