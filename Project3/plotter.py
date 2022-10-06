@@ -277,6 +277,23 @@ def compute_error_convergence_rate(RK4):
         print("Error convergence rate for forward Euler is ", r_err)
 
 
+def plot_number_of_particles_trapped():
+    f_vals = [0.1, 0.4, 0.7]
+    number = 1
+    for f in f_vals:
+        main = np.loadtxt(f"hundred_particles_f_{f}.txt", usecols=range(1))
+        omega, particles = main[::2], main[1::2]
+        plt.subplot(3, 1, number)
+        plt.plot(omega, particles, label=f"f = {f}")
+        plt.legend()
+        plt.grid()
+        if number == 2:
+            plt.ylabel(f"Number of particles left after 500 $\mu$s")
+        plt.xlabel(f"$\omega_V$")
+        number += 1
+    plt.show()
+
+
 if __name__ == "__main__":
     plt.rc("pgf", texsystem="pdflatex")
     """
@@ -285,8 +302,8 @@ if __name__ == "__main__":
     plot_3D_two_particles(False)
     save_plot("3D plot")
     """
-    plot_one_particle()
-    plt.show()
+    # plot_one_particle()
+    # plt.show()
     # save_plot(
     #    f"Numerical approximation of one particle for 100 $\mu$s",
     #    [0, 100],
@@ -311,3 +328,4 @@ if __name__ == "__main__":
     # plt.show()
     # compute_error_convergence_rate(True)
     # compute_error_convergence_rate(False)
+    plot_number_of_particles_trapped()

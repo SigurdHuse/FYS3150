@@ -6,8 +6,7 @@ const double ke = 1.38935333 * 1e5, T = 9.64852559 * 1e1;
 const double B0 = 9.65 * 1e1, V0 = 9.65 * 1e8, d = 1e4;
 const double tol = 1e-8;
 
-// Need to find weight of singly-charged Calcium ion
-const double m = 46;
+const double m = 40.0775;
 
 void test_add_particle()
 {
@@ -118,11 +117,34 @@ void test_total_force_particles()
         assert(abs(expected2(i) - computed2(i)) < tol);
         assert(abs(expected3(i) - computed3(i)) < tol);
     }
-    cout << "total_force_particles test passed" << endl;
+    cout << "total_force_particles() test passed" << endl;
 }
 
-// TODO
-void test_total_force() { ; }
+void test_get_total_of_particles_in_trap()
+{
+    PenningTrap test(1., 1., 100.);
+    arma::vec r1 = {1., 1., 1.}, r2 = {100, 100, 100}, v = {-1., 2, 3};
+    Particle p1(1, 1, r1, v), p2(1, 1, r2, v);
+    assert(test.get_number_of_particles_in_trap() == 0);
+    test.add_particle(p1);
+    assert(test.get_number_of_particles_in_trap() == 1);
+    for (int i = 0; i < 9; ++i)
+    {
+        test.add_particle(p1);
+    }
+    assert(test.get_number_of_particles_in_trap() == 10);
+    test.add_particle(p2);
+    assert(test.get_number_of_particles_in_trap() == 10);
+    cout << "get_total_of_particles_in_trap() test passed" << endl;
+}
+
+void test_fill_trap()
+{
+    PenningTrap test(1., 1., 100.);
+    test.fill_trap(1, m, 100);
+    assert(test.get_number_of_particles_in_trap() == 100);
+    cout << "fill_trap() test passed" << endl;
+}
 
 int main()
 {
@@ -132,4 +154,6 @@ int main()
     test_force_particle();
     test_total_force_external();
     test_total_force_particles();
+    test_get_total_of_particles_in_trap();
+    test_fill_trap();
 }
