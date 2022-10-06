@@ -10,7 +10,7 @@ def plot_one_particle():
         delimiter=",",
     )
     x, y, z = main[::3], main[1::3], main[2::3]
-    plt.plot(x, y, label="One particle")
+    plt.plot(time, z, label="One particle")
     plt.xlabel(f"time ($\mu$s)")
     plt.ylabel("z-position ($\mu$m)")
 
@@ -73,49 +73,83 @@ def plot_phase_two_particles(interaction):
     plt.subplot(2, 1, 1)
     plt.plot(p1_x, v1_x, label="first particle", color="r")
     plt.plot(p1_x[0], v1_x[0], marker="o", color="midnightblue")
-    plt.title("Phase space plot in x-plane" + " with interaction" * (interaction == 1))
-    plt.xlim([-16, 16])
-    plt.ylim([-16, 16])
+    plt.title(
+        "Phase space plot in x-plane"
+        + " with"
+        + "out" * (interaction == 0)
+        + " interaction"
+    )
+    plt.xlim([-20, 20])
+    plt.ylim([-20, 20])
+    plt.legend()
+    plt.grid()
 
     plt.subplot(2, 1, 2)
     plt.plot(p2_x, v2_x, label="second particle", color="midnightblue")
     plt.plot(p2_x[0], v2_x[0], marker="o", color="r")
-    plt.xlim([-16, 16])
-    plt.ylim([-16, 16])
+    plt.xlim([-20, 20])
+    plt.ylim([-20, 20])
+    plt.legend()
+    plt.grid()
 
-    plt.savefig(filename)
+    # plt.savefig(filename)
+    plt.show()
     plt.clf()
 
     plt.subplot(2, 1, 1)
     plt.plot(p1_y, v1_y, label="first particle", color="r")
     plt.plot(p1_y[0], v1_y[0], marker="o", color="midnightblue")
-    plt.title("Phase space plot in y-plane" + " with interaction" * (interaction == 1))
-    plt.xlim([-16, 16])
-    plt.ylim([-16, 16])
+    plt.title(
+        "Phase space plot in y-plane"
+        + " with"
+        + "out" * (interaction == 0)
+        + " interaction"
+    )
+    plt.xlim([-20, 20])
+    plt.ylim([-20, 20])
+    plt.legend()
+    plt.grid()
 
     plt.subplot(2, 1, 2)
     plt.plot(p2_y, v2_y, label="second particle", color="midnightblue")
     plt.plot(p2_y[0], v2_y[0], marker="o", color="r")
+    plt.xlim([-20, 20])
+    plt.ylim([-20, 20])
+    plt.legend()
+    plt.grid()
 
     filename = filename[:-5] + "y" + filename[-4:]
 
-    plt.savefig(filename)
+    # plt.savefig(filename)
+    plt.show()
     plt.clf()
 
     plt.subplot(2, 1, 1)
     plt.plot(p1_z, v1_z, label="first particle", color="r")
     plt.plot(p1_z[0], v1_z[0], marker="o", color="midnightblue")
-    plt.title("Phase space plot in z-plane" + " with interaction" * (interaction == 1))
-    plt.xlim([-16, 16])
-    plt.ylim([-16, 16])
+    plt.title(
+        "Phase space plot in z-plane"
+        + " with"
+        + "out" * (interaction == 0)
+        + " interaction"
+    )
+    plt.xlim([-20, 20])
+    plt.ylim([-20, 20])
+    plt.legend()
+    plt.grid()
 
     plt.subplot(2, 1, 2)
     plt.plot(p2_z, v2_z, label="second particle", color="midnightblue")
     plt.plot(p2_z[0], v2_z[0], marker="o", color="r")
+    plt.xlim([-20, 20])
+    plt.ylim([-20, 20])
+    plt.legend()
+    plt.grid()
 
     filename = filename[:-5] + "z" + filename[-4:]
 
-    plt.savefig(filename)
+    # plt.savefig(filename)
+    plt.show()
     plt.clf()
 
 
@@ -150,8 +184,8 @@ def save_plot(title, xlim=[], ylim=[], filename=""):
     plt.title(title)
     plt.legend()
 
-    plt.xlim(xlim)
-    plt.ylim(ylim)
+    # plt.xlim(xlim)
+    # plt.ylim(ylim)
     # plt.rc("pgf", texsystem="pdflatex")
     plt.show()
     # plt.savefig(filename)
@@ -296,36 +330,35 @@ def plot_number_of_particles_trapped():
 
 if __name__ == "__main__":
     plt.rc("pgf", texsystem="pdflatex")
-    """
-    plot_one_particle()
-    save_plot("Numerical approximation of one particle")
-    plot_3D_two_particles(False)
-    save_plot("3D plot")
-    """
     # plot_one_particle()
-    # plt.show()
+    # save_plot("Numerical approximation of one particle")
+    # plot_3D_two_particles(False)
+    # save_plot("3D plot")
     # save_plot(
     #    f"Numerical approximation of one particle for 100 $\mu$s",
     #    [0, 100],
     #    [-11, 11],
-    #    "one_particle_time_100.pgf",
+    #   "one_particle_time_100.pgf",
     # )
 
     # plot_two_particles(1)
     # plt.savefig("two_particles_with_interaction.pgf")
+    # plt.show()
     # plt.clf()
     # plot_two_particles(0)
     # plt.savefig("two_particles_without_interaction.pgf")
+    # plt.show()
     # plt.clf()
 
     # plot_phase_two_particles(1)
     # plot_phase_two_particles(0)
 
     # plot_exact_solution(10, 10, 5, 40.0775, 1, 10**4, 96.5, 9.65 * 10**8, 100, True)
+    # plt.show()
     # save_plot("Exact solution for one particle")
     #
     # plot_relative_error(True)
     # plt.show()
     # compute_error_convergence_rate(True)
     # compute_error_convergence_rate(False)
-    plot_number_of_particles_trapped()
+    # plot_number_of_particles_trapped()

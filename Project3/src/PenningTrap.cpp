@@ -204,7 +204,7 @@ void PenningTrap::evolve_RK4(long double dt, bool interaction)
     for (int i = 0; i < n; ++i)
     {
         omega0 = particles_[i].q_ * B0_ / particles_[i].m_;
-        omegaz = V0_ * particles_[i].q_ / particles_[i].m_ * dd;
+        omegaz = 2 * V0_ * particles_[i].q_ / particles_[i].m_ * dd;
         std::vector<arma::vec> k1 = f(omega0, omegaz, particles_[i].v_, particles_[i].r_, forces[i]);
         k1[0] *= dt;
         k1[1] *= dt;
@@ -331,7 +331,7 @@ double PenningTrap::get_omegaz(double offset, double q, double m, arma::vec pos)
     {
         return 0;
     }
-    return get_V0(offset) * q / m / d_ / d_;
+    return 2 * get_V0(offset) * q / m / d_ / d_;
 }
 
 // Counts number of particles in the trap (particles which satisfies |r| < d)
