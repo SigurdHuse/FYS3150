@@ -7,21 +7,31 @@ const double m = 40.0775, q = 1.;
 
 const int width = 20, prec = 9;
 
+/**
+ * @brief Function to simulate movement of one particle in a Penning trap for 50 mu seconds, and
+ * with 100000 time steps. The results are written to the given filename.
+ *
+ * @param filename String with the filename we write the results too.
+ * @return Nothing, results are writte to file
+ */
+
 void one_particle_50_mus(std::string filename)
 {
+
     // Constructs objects
     PenningTrap test(B0, V0, d);
     arma::vec r = {20., 0, 20.}, v = {0, 25., 0};
     Particle p(q, m, r, v);
     test.add_particle(p);
 
+    // Define variables
     const int time = 50, n = 100000;
     const double dt = (double)time / n;
     std::ofstream outfile, time_file;
     time_file.open("time_" + filename);
     outfile.open(filename);
 
-    // Simulates and writes to file
+    // Simulate and writes to file
     for (int i = 0; i < n; ++i)
     {
         time_file << dt * i << "\n";
@@ -34,6 +44,15 @@ void one_particle_50_mus(std::string filename)
     outfile.close();
 }
 
+/**
+ * @brief Function to simulate movement or velocities of two particles in a Penning trap for 50 mu seconds, and
+ * with 100000 time steps. The results are written to the given filename.
+ *
+ * @param filename String with the filename we write the results too.
+ * @param interaction Bool which tells us wheter or we include Columb interactions between particles.
+ * @param vel Bool which tells us if we write the velocities or positions to file.
+ */
+
 void two_particles(std::string filename, bool interaction, bool vel)
 {
     // Constructs objects
@@ -44,7 +63,7 @@ void two_particles(std::string filename, bool interaction, bool vel)
     test.add_particle(p1);
     test.add_particle(p2);
 
-    const int time = 30, n = 100000;
+    const int time = 50, n = 100000;
     const double dt = (double)time / n;
     std::ofstream outfile, time_file;
     time_file.open("time_" + filename);
@@ -69,6 +88,15 @@ void two_particles(std::string filename, bool interaction, bool vel)
     outfile.close();
     time_file.close();
 }
+
+/**
+ * @brief Function to simulate movement of one particle in a Penning trap for 50 mu seconds, and
+ * with different time steps. The results are written to the given filename.
+ *
+ * @param filename String with the filename we write the results too.
+ * @param nvals Container with the different values of n we run the simulation with
+ * @param euler Bool which indicates wheter we use the Euler or RK4 method to simulate one time step
+ */
 
 void one_particle_different_h(std::string filename, std::vector<int> nvals, bool euler)
 {
@@ -115,10 +143,19 @@ void one_particle_different_h(std::string filename, std::vector<int> nvals, bool
     }
 }
 
+/**
+ * @brief Function to simulate movement of one hundred randomly generated particles in a Penning trap for 500 mu seconds
+ * with 10000 time steps. Afer 500 mu second, we check how many particles are left in the trap, and write that witht the
+ * value of omega_V to a file.
+ *
+ * @param f Double defines which amplitude the V_0 has
+ * @param filename String with the filename we write the results too.
+ */
+
 void hundred_particles_time_dependent(double f, std::string filename)
 {
     double time = 500;
-    int steps = 50000;
+    int steps = 10000;
     const double M = 1e6, dt = time / steps;
 
     std::ofstream outfile;
@@ -144,10 +181,10 @@ int main()
     // two_particles("two_particles_with_interaction_vel.txt", 1, 1);
     // two_particles("two_particles_without_interaction_vel.txt", 0, 1);
     //  one_particle_50_mus("one_particle_n_10000.txt");
-    std::vector<int> nvals = {4000, 8000, 16000, 32000};
+    //  std::vector<int> nvals = {4000, 8000, 16000, 32000};
     //  one_particle_different_h("one_particle", nvals, 0);
-    one_particle_different_h("one_particle", nvals, 1);
-    // hundred_particles_time_dependent(0.1, "hundred_particles_f_0.1.txt");
-    // hundred_particles_time_dependent(0.4, "hundred_particles_f_0.4.txt");
-    // hundred_particles_time_dependent(0.7, "hundred_particles_f_0.7.txt");
+    // one_particle_different_h("one_particle", nvals, 1);
+    hundred_particles_time_dependent(0.1, "hundred_particles_f_0.1.txt");
+    hundred_particles_time_dependent(0.4, "hundred_particles_f_0.4.txt");
+    hundred_particles_time_dependent(0.7, "hundred_particles_f_0.7.txt");
 }

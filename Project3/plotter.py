@@ -357,12 +357,12 @@ if __name__ == "__main__":
     # plt.savefig("3d_plot_without_interaction.pgf")
     # plt.clf()
 
-    plot_two_particles(1)
-    plt.savefig("two_particles_with_interaction.pgf")
-    plt.clf()
-    plot_two_particles(0)
-    plt.savefig("two_particles_without_interaction.pgf")
-    plt.clf()
+    # plot_two_particles(1)
+    # plt.savefig("two_particles_with_interaction.pgf")
+    # plt.clf()
+    # plot_two_particles(0)
+    # plt.savefig("two_particles_without_interaction.pgf")
+    # plt.clf()
 
     # plot_phase_two_particles(1)
     # plot_phase_two_particles(0)
@@ -380,5 +380,5 @@ if __name__ == "__main__":
 
     # compute_error_convergence_rate(True)
     # compute_error_convergence_rate(False)
-    # plot_number_of_particles_trapped()
-    # plt.show()
+    plot_number_of_particles_trapped()
+    plt.show()
