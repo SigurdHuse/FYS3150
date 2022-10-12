@@ -10,7 +10,9 @@ def plot_one_particle():
         delimiter=",",
     )
     x, y, z = main[::3], main[1::3], main[2::3]
-    plt.plot(time, z, label="One particle")
+    plt.plot(time, z, label="One particle solved with RK4")
+    plt.title("Plot of one particle in Penning trap simulated with RK4")
+    plt.legend(loc="upper center")
     plt.xlabel(f"time ($\mu$s)")
     plt.ylabel("z-position ($\mu$m)")
 
@@ -133,16 +135,22 @@ def plot_phase_two_particles(interaction):
         + "out" * (interaction == 0)
         + " interaction"
     )
-    plt.xlim([-20, 20])
-    plt.ylim([-20, 20])
+    plt.xlim([-11, 11])
+    plt.ylim([-11, 11])
+    if interaction:
+        plt.xlim([0, 11])
+        plt.ylim([-5, 5])
     plt.legend()
     plt.grid()
 
     plt.subplot(2, 1, 2)
     plt.plot(p2_z, v2_z, label="second particle", color="midnightblue")
     plt.plot(p2_z[0], v2_z[0], marker="o", color="r")
-    plt.xlim([-20, 20])
-    plt.ylim([-20, 20])
+    plt.xlim([-11, 11])
+    plt.ylim([-11, 11])
+    if interaction:
+        plt.xlim([-12, 0])
+        plt.ylim([-5, 5])
     plt.legend()
     plt.grid()
 
@@ -174,9 +182,14 @@ def plot_exact_solution(x0, z0, v0, m, q, d, B0, V0, T, plot_z):
     z = z0 * np.cos(np.sqrt(omegaz) * t)
     x, y = np.real(values), np.imag(values)
     if plot_z:
-        plt.plot(t, z, label="Exact solution for one particle")
+        plt.plot(t, z, label="Analytic solution for one particle", color="midnightblue")
     else:
-        plt.plot(x, y, label="Exact solution for one particle")
+        plt.plot(x, y, label="Analytic solution for one particle", color="midnightblue")
+    plt.grid()
+    plt.legend(loc="upper center")
+    plt.title("Plot of analytic solution for one particle in Penning trap")
+    plt.xlabel(f"time ($\mu$s)")
+    plt.ylabel("z-position ($\mu$m)")
 
 
 def save_plot(title, xlim=[], ylim=[], filename=""):
@@ -211,11 +224,21 @@ def plot_3D_two_particles(interaction):
 
     ax.plot3D(p2_x, p2_y, p2_z, label="Particle two", color="r")
     ax.plot3D(p2_x[0], p2_y[0], p2_z[0], color="midnightblue", marker="o")
+    ax.set_title(
+        "3d plot of two particles with" + "out" * (interaction == 0) + " interaction"
+    )
+    ax.set_zlabel("z-position ($\mu$m)")
+    ax.set_ylabel("y-position ($\mu$m)")
+    ax.set_xlabel("x-position ($\mu$m)")
+    ax.legend()
+    # plt.savefig("3d_plot_with" + "out" * (interaction == 0) + "_interaction.pgf")
+    plt.show()
+    plt.clf()
 
 
 def plot_relative_error(RK4_method):
-    nvals = [10**i for i in range(1, 6)]
-    fig, axs = plt.subplots(3, 2)
+    nvals = [4000, 8000, 16000, 32000]
+    fig, axs = plt.subplots(2, 2)
     fig.tight_layout(pad=3.0)
     x_plot, y_plot = 0, 0
     for n in nvals:
@@ -251,23 +274,29 @@ def plot_relative_error(RK4_method):
         )
         t = t[1:]
         if RK4_method:
-            axs[y_plot, x_plot].plot(t, error_RK4, label="RK4")
-
+            if n == 4000:
+                axs[y_plot, x_plot].plot(t, error_RK4, label="RK4")
+            else:
+                axs[y_plot, x_plot].plot(t, error_RK4)
         else:
-            axs[y_plot, x_plot].plot(t, error_euler, label="Euler")
+            if n == 4000:
+                axs[y_plot, x_plot].plot(t, error_euler, label="Euler")
+            else:
+                axs[y_plot, x_plot].plot(t, error_euler)
 
-        axs[y_plot, x_plot].set_title(f"Relative error when h = {10/n}")
+        axs[y_plot, x_plot].set_title(f"Relative error when h = {50/n}")
         axs[y_plot, x_plot].grid()
-        axs[y_plot, x_plot].set_xlim([0, 10])
+        axs[y_plot, x_plot].set_xlim([0, 50])
         axs[y_plot, x_plot].set_yscale("log")
         x_plot += 1
-        if x_plot == 2:
+        if x_plot == 1:
             x_plot = 0
             y_plot += 1
 
+    # fig.suptitle("Plot of relative error for different values of h")
     lines_labels = [ax.get_legend_handles_labels() for ax in fig.axes]
     lines, labels = [sum(lol, []) for lol in zip(*lines_labels)]
-    fig.legend(lines, labels, loc="lower right")
+    fig.legend(lines, labels, loc="lower center")
 
 
 def compute_error_convergence_rate(RK4):
@@ -323,23 +352,21 @@ def plot_number_of_particles_trapped():
         plt.grid()
         if number == 2:
             plt.ylabel(f"Number of particles left after 500 $\mu$s")
-        plt.xlabel(f"$\omega_V$")
+        plt.xlabel(f"$\omega_V$ (MHz)")
         number += 1
-    plt.show()
 
 
 if __name__ == "__main__":
-    plt.rc("pgf", texsystem="pdflatex")
+    # plt.rc("pgf", texsystem="pdflatex")
     # plot_one_particle()
-    # save_plot("Numerical approximation of one particle")
-    # plot_3D_two_particles(False)
-    # save_plot("3D plot")
     # save_plot(
-    #    f"Numerical approximation of one particle for 100 $\mu$s",
-    #    [0, 100],
-    #    [-11, 11],
-    #   "one_particle_time_100.pgf",
+    #     f"Numerical approximation of one particle for 100 $\mu$s",
+    #     [0, 100],
+    #     [-11, 11],
+    #     "one_particle_time_100.pgf",
     # )
+
+    # plot_3D_two_particles(False)
 
     # plot_two_particles(1)
     # plt.savefig("two_particles_with_interaction.pgf")
@@ -353,12 +380,13 @@ if __name__ == "__main__":
     # plot_phase_two_particles(1)
     # plot_phase_two_particles(0)
 
-    # plot_exact_solution(10, 10, 5, 40.0775, 1, 10**4, 96.5, 9.65 * 10**8, 100, True)
+    # plot_exact_solution(20, 20, 25, 40.0775, 1, 500, 96.5, 2.41 * 1e6, 50, True)
     # plt.show()
     # save_plot("Exact solution for one particle")
-    #
-    # plot_relative_error(True)
-    # plt.show()
-    # compute_error_convergence_rate(True)
-    # compute_error_convergence_rate(False)
-    # plot_number_of_particles_trapped()
+
+    plot_relative_error(True)
+    plt.show()
+    compute_error_convergence_rate(True)
+    compute_error_convergence_rate(False)
+    plot_number_of_particles_trapped()
+    plt.show()
