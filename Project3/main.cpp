@@ -115,37 +115,10 @@ void one_particle_different_h(std::string filename, std::vector<int> nvals, bool
     }
 }
 
-void one_particle_100_mus_test(std::string filename)
-{
-    // Constructs objects
-    PenningTrap test(B0, V0, d, 0.5, 1000.);
-    arma::vec r = {10., 0, 10.}, v = {0, 5., 0};
-    Particle p(q, m, r, v);
-    test.add_particle(p);
-
-    const int time = 100, n = 100000;
-    const long double dt = (long double)time / n;
-    std::ofstream outfile, time_file;
-    time_file.open("time_" + filename);
-    outfile.open(filename);
-
-    // Simulates and writes to file
-    for (int i = 0; i < n; ++i)
-    {
-        time_file << dt * i << "\n";
-        test.write_positions_to_file(outfile, width, prec);
-        test.evolve_RK4(dt, 1, 1);
-    }
-    time_file << time << "\n";
-    test.write_positions_to_file(outfile, width, prec);
-    time_file.close();
-    outfile.close();
-}
-
 void hundred_particles_time_dependent(double f, std::string filename)
 {
     double time = 500;
-    int steps = 500000;
+    int steps = 50000;
     const double M = 1e6, dt = time / steps;
 
     std::ofstream outfile;
@@ -154,7 +127,7 @@ void hundred_particles_time_dependent(double f, std::string filename)
     for (double omega_V = 0.2; omega_V <= 2.5; omega_V += 0.02)
     {
         PenningTrap trap(B0, d, V0, f, omega_V * M);
-        trap.fill_trap(1, m, 10);
+        trap.fill_trap(1, m, 100);
         outfile << std::setw(width) << std::setprecision(prec) << std::scientific << omega_V << std::endl;
         for (int i = 0; i < steps; ++i)
         {

@@ -8,8 +8,11 @@ PenningTrap::PenningTrap(double B0_in, double V0_in, double d_in)
     B0_ = B0_in;
     V0_ = V0_in;
     d_ = d_in;
+
     // Time starts at t = 0
     t_ = 0;
+
+    // Checks if values for time dependece were provided
     supposed_to_be_time_dependent = 0;
     std::vector<arma::vec> particles_;
 }
@@ -17,12 +20,16 @@ PenningTrap::PenningTrap(double B0_in, double V0_in, double d_in)
 // Constructor for time and positon dependent V_0
 PenningTrap::PenningTrap(double B0_in, double V0_in, double d_in, double f, double omega_v)
 {
+    // Checks if values for time dependece were provided
     supposed_to_be_time_dependent = 1;
+
     B0_ = B0_in;
     V0_ = V0_in;
     d_ = d_in;
+
     // Time starts at t = 0
     t_ = 0;
+
     f_ = f;
     omega_v_ = omega_v;
     std::vector<arma::vec> particles_;

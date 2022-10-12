@@ -10,8 +10,11 @@ def plot_one_particle():
         delimiter=",",
     )
     x, y, z = main[::3], main[1::3], main[2::3]
-    plt.plot(time, z, label="One particle solved with RK4")
-    plt.title("Plot of one particle in Penning trap simulated with RK4")
+    plt.xlim([0, 50])
+    plt.ylim([-21, 21])
+    plt.grid()
+    plt.plot(time, z, label="One particle simulated with RK4", color="midnightblue")
+    plt.title("Plot of one particle in a Penning trap simulated with RK4")
     plt.legend(loc="upper center")
     plt.xlabel(f"time ($\mu$s)")
     plt.ylabel("z-position ($\mu$m)")
@@ -33,8 +36,7 @@ def plot_two_particles(interaction):
     plt.subplot(2, 1, 1)
     plt.plot(p1_x, p1_y, label="first particle", color="r")
     plt.plot(p1_x[0], p1_y[0], marker="o", color="midnightblue")
-    plt.xlim([-25, 25])
-    plt.ylim([-25, 25])
+    plt.axis("equal")
     plt.title(title)
     plt.legend()
     plt.grid()
@@ -42,8 +44,7 @@ def plot_two_particles(interaction):
     plt.subplot(2, 1, 2)
     plt.plot(p2_x, p2_y, label="second particle", color="midnightblue")
     plt.plot(p2_x[0], p2_y[0], marker="o", color="r")
-    plt.xlim([-25, 25])
-    plt.ylim([-25, 25])
+    plt.axis("equal")
     plt.legend()
     plt.grid()
 
@@ -95,8 +96,7 @@ def plot_phase_two_particles(interaction):
     plt.legend()
     plt.grid()
 
-    # plt.savefig(filename)
-    plt.show()
+    plt.savefig(filename)
     plt.clf()
 
     # Plot y-plane
@@ -124,8 +124,7 @@ def plot_phase_two_particles(interaction):
 
     filename = filename[:-5] + "y" + filename[-4:]
 
-    # plt.savefig(filename)
-    plt.show()
+    plt.savefig(filename)
     plt.clf()
 
     # Plot z - plane
@@ -159,8 +158,7 @@ def plot_phase_two_particles(interaction):
 
     filename = filename[:-5] + "z" + filename[-4:]
 
-    # plt.savefig(filename)
-    plt.show()
+    plt.savefig(filename)
     plt.clf()
 
 
@@ -195,19 +193,6 @@ def plot_exact_solution(x0, z0, v0, m, q, d, B0, V0, T, plot_z):
     plt.ylabel("z-position ($\mu$m)")
 
 
-def save_plot(title, xlim=[], ylim=[], filename=""):
-    plt.grid()
-    plt.title(title)
-    plt.legend()
-
-    # plt.xlim(xlim)
-    # plt.ylim(ylim)
-    # plt.rc("pgf", texsystem="pdflatex")
-    plt.show()
-    # plt.savefig(filename)
-    plt.clf()
-
-
 def plot_3D_two_particles(interaction):
     if interaction:
         filename = "two_particles_with_interaction.txt"
@@ -234,7 +219,7 @@ def plot_3D_two_particles(interaction):
     ax.set_ylabel("y-position ($\mu$m)")
     ax.set_xlabel("x-position ($\mu$m)")
     ax.legend()
-    # plt.savefig("3d_plot_with" + "out" * (interaction == 0) + "_interaction.pgf")
+    #
     plt.show()
     plt.clf()
 
@@ -360,38 +345,39 @@ def plot_number_of_particles_trapped():
 
 
 if __name__ == "__main__":
-    pass
-    # plt.rc("pgf", texsystem="pdflatex")
+    plt.rc("pgf", texsystem="pdflatex")
     # plot_one_particle()
-    # save_plot(
-    #     f"Numerical approximation of one particle for 100 $\mu$s",
-    #     [0, 100],
-    #     [-11, 11],
-    #     "one_particle_time_100.pgf",
-    # )
+    # plt.savefig("one_particle_time_50.pgf")
+    # plt.clf()
 
     # plot_3D_two_particles(False)
+    # plt.savefig("3d_plot_with_interaction.pgf")
+    # plt.clf()
+    # plot_3D_two_particles(True)
+    # plt.savefig("3d_plot_without_interaction.pgf")
+    # plt.clf()
 
-    # plot_two_particles(1)
-    # plt.savefig("two_particles_with_interaction.pgf")
-    # plt.show()
-    # plt.clf()
-    # plot_two_particles(0)
-    # plt.savefig("two_particles_without_interaction.pgf")
-    # plt.show()
-    # plt.clf()
+    plot_two_particles(1)
+    plt.savefig("two_particles_with_interaction.pgf")
+    plt.clf()
+    plot_two_particles(0)
+    plt.savefig("two_particles_without_interaction.pgf")
+    plt.clf()
 
     # plot_phase_two_particles(1)
     # plot_phase_two_particles(0)
 
     # plot_exact_solution(20, 20, 25, 40.0775, 1, 500, 96.5, 2.41 * 1e6, 50, True)
-    # plt.show()
-    # save_plot("Exact solution for one particle")
+    # plt.savefig("Exact solution for one particle.pgf")
+    # plt.clf()
 
     # plot_relative_error(True)
-    # plt.show()
+    # plt.savefig("Relative_error_RK4.pgf")
+    # plt.clf()
     # plot_relative_error(False)
-    # plt.show()
+    # plt.savefig("Relative_error_Euler.pgf")
+    # plt.clf()
+
     # compute_error_convergence_rate(True)
     # compute_error_convergence_rate(False)
     # plot_number_of_particles_trapped()
