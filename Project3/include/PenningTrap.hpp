@@ -9,6 +9,7 @@ class PenningTrap
 {
 private:
     double B0_, V0_, d_, f_, omega_v_;
+    bool supposed_to_be_time_dependent;
     long double t_;
     std::vector<Particle> particles_;
 

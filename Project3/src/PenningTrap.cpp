@@ -10,12 +10,14 @@ PenningTrap::PenningTrap(double B0_in, double V0_in, double d_in)
     d_ = d_in;
     // Time starts at t = 0
     t_ = 0;
+    supposed_to_be_time_dependent = 0;
     std::vector<arma::vec> particles_;
 }
 
 // Constructor for time and positon dependent V_0
 PenningTrap::PenningTrap(double B0_in, double V0_in, double d_in, double f, double omega_v)
 {
+    supposed_to_be_time_dependent = 1;
     B0_ = B0_in;
     V0_ = V0_in;
     d_ = d_in;
@@ -126,6 +128,8 @@ void PenningTrap::evolve_forward_Euler(long double dt, bool interaction)
 {
     int n = particles_.size();
     std::vector<arma::vec> forces(n);
+
+    // Computes forces from other particles
     for (int i = 0; i < n; ++i)
     {
         if (interaction)
@@ -152,6 +156,8 @@ void PenningTrap::evolve_forward_Euler(long double dt, bool interaction)
 // Go one step forward in simulation with forward Euler with time and position dependecy
 void PenningTrap::evolve_forward_Euler(long double dt, bool interaction, bool time_interaction)
 {
+    assert(supposed_to_be_time_dependent && "No initial values for time dependence");
+    // Checks if system is time dependent
     if (time_interaction == 0)
     {
         evolve_forward_Euler(dt, interaction);
@@ -159,6 +165,8 @@ void PenningTrap::evolve_forward_Euler(long double dt, bool interaction, bool ti
     }
     int n = particles_.size();
     std::vector<arma::vec> forces(n);
+
+    // Computes forces from other particles
     for (int i = 0; i < n; ++i)
     {
         if (interaction)
@@ -190,6 +198,8 @@ void PenningTrap::evolve_RK4(long double dt, bool interaction)
     std::vector<arma::vec> forces(n);
     double omega0, omegaz;
     const double dd = 1. / d_ / d_;
+
+    // Computes forces from other particles
     for (int i = 0; i < n; ++i)
     {
         if (interaction)
@@ -203,6 +213,9 @@ void PenningTrap::evolve_RK4(long double dt, bool interaction)
     }
     for (int i = 0; i < n; ++i)
     {
+        // Instead of updating each particle for each new k
+        // We pass in the new value of r and v into the next update step for k
+
         omega0 = particles_[i].q_ * B0_ / particles_[i].m_;
         omegaz = 2 * V0_ * particles_[i].q_ / particles_[i].m_ * dd;
         std::vector<arma::vec> k1 = f(omega0, omegaz, particles_[i].v_, particles_[i].r_, forces[i]);
@@ -229,6 +242,8 @@ void PenningTrap::evolve_RK4(long double dt, bool interaction)
 // Go one step forward in simulation with RK4 with time and position dependecy
 void PenningTrap::evolve_RK4(long double dt, bool interaction, bool time_dependent)
 {
+    assert(supposed_to_be_time_dependent && "No initial values for time dependence");
+    // Checks if system is time dependent
     if (time_dependent == 0)
     {
         evolve_RK4(dt, interaction);
@@ -237,6 +252,8 @@ void PenningTrap::evolve_RK4(long double dt, bool interaction, bool time_depende
     int n = particles_.size();
     std::vector<arma::vec> forces(n);
     double omega0, omegaz;
+
+    // Computes forces from other particles
     for (int i = 0; i < n; ++i)
     {
         if (interaction)
@@ -250,6 +267,8 @@ void PenningTrap::evolve_RK4(long double dt, bool interaction, bool time_depende
     }
     for (int i = 0; i < n; ++i)
     {
+        // Instead of updating each particle for each new k
+        // We pass in the new value of r and v into the next update step for k
         omega0 = get_omega0(particles_[i].q_, particles_[i].m_, particles_[i].r_);
         omegaz = get_omegaz(0., particles_[i].q_, particles_[i].m_, particles_[i].r_);
         std::vector<arma::vec> k1 = f(omega0, omegaz, particles_[i].v_, particles_[i].r_, forces[i]);
@@ -277,6 +296,8 @@ void PenningTrap::evolve_RK4(long double dt, bool interaction, bool time_depende
         particles_[i].r_ += (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1]) / 6.;
         particles_[i].v_ += (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0]) / 6.;
     }
+
+    // Update time of system
     t_ += dt;
 }
 

@@ -78,7 +78,7 @@ void one_particle_different_h(std::string filename, std::vector<int> nvals, bool
     for (int n : nvals)
     {
         PenningTrap test(B0, V0, d);
-        arma::vec r = {10., 0, 10.}, v = {0, 5., 0};
+        arma::vec r = {20., 0, 20.}, v = {0, 25., 0};
         Particle p(q, m, r, v);
         test.add_particle(p);
         const double h = (double)time / n;
@@ -144,7 +144,7 @@ void one_particle_100_mus_test(std::string filename)
 
 void hundred_particles_time_dependent(double f, std::string filename)
 {
-    double length = 500, V = 241250, time = 500;
+    double time = 500;
     int steps = 500000;
     const double M = 1e6, dt = time / steps;
 
@@ -153,7 +153,7 @@ void hundred_particles_time_dependent(double f, std::string filename)
 
     for (double omega_V = 0.2; omega_V <= 2.5; omega_V += 0.02)
     {
-        PenningTrap trap(B0, length, V, f, omega_V * M);
+        PenningTrap trap(B0, d, V0, f, omega_V * M);
         trap.fill_trap(1, m, 10);
         outfile << std::setw(width) << std::setprecision(prec) << std::scientific << omega_V << std::endl;
         for (int i = 0; i < steps; ++i)
@@ -166,16 +166,16 @@ void hundred_particles_time_dependent(double f, std::string filename)
 
 int main()
 {
-    two_particles("two_particles_with_interaction.txt", 1, 0);
-    two_particles("two_particles_without_interaction.txt", 0, 0);
-    two_particles("two_particles_with_interaction_vel.txt", 1, 1);
-    two_particles("two_particles_without_interaction_vel.txt", 0, 1);
-    one_particle_50_mus("one_particle_n_10000.txt");
-    std::vector<int> nvals = {4000, 8000, 16000, 32000};
-    one_particle_different_h("one_particle", nvals, 0);
-    one_particle_different_h("one_particle", nvals, 1);
-    one_particle_100_mus_test("test.txt");
-    // hundred_particles_time_dependent(0.1, "hundred_particles_f_0.1.txt");
-    //  hundred_particles_time_dependent(0.4, "hundred_particles_f_0.4.txt");
-    //  hundred_particles_time_dependent(0.7, "hundred_particles_f_0.7.txt");
+    // two_particles("two_particles_with_interaction.txt", 1, 0);
+    // two_particles("two_particles_without_interaction.txt", 0, 0);
+    // two_particles("two_particles_with_interaction_vel.txt", 1, 1);
+    // two_particles("two_particles_without_interaction_vel.txt", 0, 1);
+    //  one_particle_50_mus("one_particle_n_10000.txt");
+    //  std::vector<int> nvals = {4000, 8000, 16000, 32000};
+    //  one_particle_different_h("one_particle", nvals, 0);
+    //  one_particle_different_h("one_particle", nvals, 1);
+    //  one_particle_100_mus_test("test.txt");
+    hundred_particles_time_dependent(0.1, "hundred_particles_f_0.1.txt");
+    hundred_particles_time_dependent(0.4, "hundred_particles_f_0.4.txt");
+    hundred_particles_time_dependent(0.7, "hundred_particles_f_0.7.txt");
 }

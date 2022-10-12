@@ -72,6 +72,7 @@ def plot_phase_two_particles(interaction):
     v1_x, v1_y, v1_z = vx[:, 0], vy[:, 0], vz[:, 0]
     v2_x, v2_y, v2_z = vx[:, 1], vy[:, 1], vz[:, 1]
 
+    # Plot x-plane
     plt.subplot(2, 1, 1)
     plt.plot(p1_x, v1_x, label="first particle", color="r")
     plt.plot(p1_x[0], v1_x[0], marker="o", color="midnightblue")
@@ -81,16 +82,16 @@ def plot_phase_two_particles(interaction):
         + "out" * (interaction == 0)
         + " interaction"
     )
-    plt.xlim([-20, 20])
-    plt.ylim([-20, 20])
+    plt.xlim([-60, 60])
+    plt.ylim([-50, 50])
     plt.legend()
     plt.grid()
 
     plt.subplot(2, 1, 2)
     plt.plot(p2_x, v2_x, label="second particle", color="midnightblue")
     plt.plot(p2_x[0], v2_x[0], marker="o", color="r")
-    plt.xlim([-20, 20])
-    plt.ylim([-20, 20])
+    plt.xlim([-70, 80])
+    plt.ylim([-60, 60])
     plt.legend()
     plt.grid()
 
@@ -98,6 +99,7 @@ def plot_phase_two_particles(interaction):
     plt.show()
     plt.clf()
 
+    # Plot y-plane
     plt.subplot(2, 1, 1)
     plt.plot(p1_y, v1_y, label="first particle", color="r")
     plt.plot(p1_y[0], v1_y[0], marker="o", color="midnightblue")
@@ -107,16 +109,16 @@ def plot_phase_two_particles(interaction):
         + "out" * (interaction == 0)
         + " interaction"
     )
-    plt.xlim([-20, 20])
-    plt.ylim([-20, 20])
+    plt.xlim([-60, 15])
+    plt.ylim([-40, 40])
     plt.legend()
     plt.grid()
 
     plt.subplot(2, 1, 2)
     plt.plot(p2_y, v2_y, label="second particle", color="midnightblue")
     plt.plot(p2_y[0], v2_y[0], marker="o", color="r")
-    plt.xlim([-20, 20])
-    plt.ylim([-20, 20])
+    plt.xlim([-80, 60])
+    plt.ylim([-60, 60])
     plt.legend()
     plt.grid()
 
@@ -126,6 +128,7 @@ def plot_phase_two_particles(interaction):
     plt.show()
     plt.clf()
 
+    # Plot z - plane
     plt.subplot(2, 1, 1)
     plt.plot(p1_z, v1_z, label="first particle", color="r")
     plt.plot(p1_z[0], v1_z[0], marker="o", color="midnightblue")
@@ -135,11 +138,11 @@ def plot_phase_two_particles(interaction):
         + "out" * (interaction == 0)
         + " interaction"
     )
-    plt.xlim([-11, 11])
-    plt.ylim([-11, 11])
+    plt.xlim([-50, 50])
+    plt.ylim([-40, 40])
     if interaction:
-        plt.xlim([0, 11])
-        plt.ylim([-5, 5])
+        plt.xlim([-30, 30])
+        plt.ylim([-30, 30])
     plt.legend()
     plt.grid()
 
@@ -149,8 +152,8 @@ def plot_phase_two_particles(interaction):
     plt.xlim([-11, 11])
     plt.ylim([-11, 11])
     if interaction:
-        plt.xlim([-12, 0])
-        plt.ylim([-5, 5])
+        plt.xlim([-20, 25])
+        plt.ylim([-20, 20])
     plt.legend()
     plt.grid()
 
@@ -253,7 +256,7 @@ def plot_relative_error(RK4_method):
             usecols=range(1),
         )
         exact, t, omegaz = generate_exact_solution(
-            10, 5, 40.0775, 1, 10**4, 96.5, 9.65 * 10**8, 10, n
+            20, 25, 40.0775, 1, 500, 9.65 * 1e1, 2.41 * 1e6, 50, n
         )
 
         x_RK4, y_RK4, z_RK4 = RK4[3::3], RK4[4::3], RK4[5::3]
@@ -261,7 +264,7 @@ def plot_relative_error(RK4_method):
         x, y, z = (
             np.real(exact[1:]),
             np.imag(exact[1:]),
-            10 * np.cos(np.sqrt(omegaz) * t[1:]),
+            20 * np.cos(np.sqrt(omegaz) * t[1:]),
         )
 
         error_RK4 = (
@@ -289,7 +292,7 @@ def plot_relative_error(RK4_method):
         axs[y_plot, x_plot].set_xlim([0, 50])
         axs[y_plot, x_plot].set_yscale("log")
         x_plot += 1
-        if x_plot == 1:
+        if x_plot == 2:
             x_plot = 0
             y_plot += 1
 
@@ -300,7 +303,7 @@ def plot_relative_error(RK4_method):
 
 
 def compute_error_convergence_rate(RK4):
-    nvals = [10**i for i in range(1, 6)]
+    nvals = [4000, 8000, 16000, 32000]
     delta_values = []
     h_values = []
     for n in nvals:
@@ -317,19 +320,19 @@ def compute_error_convergence_rate(RK4):
                 usecols=range(1),
             )
         exact, t, omegaz = generate_exact_solution(
-            10, 5, 40.0775, 1, 10**4, 96.5, 9.65 * 10**8, 10, n
+            20, 25, 40.0775, 1, 500, 9.65 * 1e1, 2.41 * 1e6, 50, n
         )
         x_data, y_data, z_data = data[3::3], data[4::3], data[5::3]
         x, y, z = (
             np.real(exact[1:]),
             np.imag(exact[1:]),
-            10 * np.cos(np.sqrt(omegaz) * t[1:]),
+            20 * np.cos(np.sqrt(omegaz) * t[1:]),
         )
         r_max = np.max(np.abs(x_data - x) + np.abs(y_data - y) + np.abs(z_data - z))
         delta_values.append(r_max)
-        h_values.append(10 / n)
+        h_values.append(50 / n)
     r_err = 0.0
-    for k in range(1, 5):
+    for k in range(1, 4):
         r_err += np.log(delta_values[k] / delta_values[k - 1]) / np.log(
             h_values[k] / h_values[k - 1]
         )
@@ -357,6 +360,7 @@ def plot_number_of_particles_trapped():
 
 
 if __name__ == "__main__":
+    pass
     # plt.rc("pgf", texsystem="pdflatex")
     # plot_one_particle()
     # save_plot(
@@ -384,9 +388,11 @@ if __name__ == "__main__":
     # plt.show()
     # save_plot("Exact solution for one particle")
 
-    plot_relative_error(True)
-    plt.show()
-    compute_error_convergence_rate(True)
-    compute_error_convergence_rate(False)
-    plot_number_of_particles_trapped()
-    plt.show()
+    # plot_relative_error(True)
+    # plt.show()
+    # plot_relative_error(False)
+    # plt.show()
+    # compute_error_convergence_rate(True)
+    # compute_error_convergence_rate(False)
+    # plot_number_of_particles_trapped()
+    # plt.show()
