@@ -1,4 +1,4 @@
-#Project 3 Simulating a Penning Trap
+# Project 3 Simulating a Penning Trap
 
 ## How to generate data from report
 Run command  
