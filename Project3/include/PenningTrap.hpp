@@ -17,7 +17,7 @@ public:
     // Constructor
     PenningTrap(double B0_in, double V0_in, double d_in);
 
-    // Constructor for time ans positon dependent V_0
+    // Constructor for time and positon dependent V_0
     PenningTrap(double B0_in, double V0_in, double d_in, double f, double omega_v);
 
     // Add a particle to the trap
