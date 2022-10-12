@@ -33,7 +33,6 @@ void test_E_field()
 }
 
 // Tests external_B_field() function in PenningTrap class
-
 void test_B_field()
 {
     PenningTrap test1(1., V0, d), test2(3.4, V0, d);
@@ -49,7 +48,6 @@ void test_B_field()
 }
 
 // Tests force_particle() function in PenningTrap class
-
 void test_force_particle()
 {
     PenningTrap test(B0, V0, d);
@@ -75,7 +73,6 @@ void test_force_particle()
 }
 
 // Tests total_force_external() function in PenningTrap class
-
 void test_total_force_external()
 {
     PenningTrap test(3., 2., 1.);
@@ -92,7 +89,6 @@ void test_total_force_external()
 }
 
 // Tests total_force_particles() function in PenningTrap class
-
 void test_total_force_particles()
 {
     PenningTrap test(1., 1., 1.);
@@ -131,7 +127,6 @@ void test_total_force_particles()
 }
 
 // Tests get_number_of_particles_in_trap() function in PenningTrap class
-
 void test_get_total_of_particles_in_trap()
 {
     PenningTrap test(1., 1., 100.);
@@ -151,13 +146,23 @@ void test_get_total_of_particles_in_trap()
 }
 
 // Tests fill_trap() function in PenningTrap class
-
 void test_fill_trap()
 {
     PenningTrap test(1., 1., 100.);
     test.fill_trap(1, m, 100);
     assert(test.get_number_of_particles_in_trap() == 100);
     cout << "fill_trap() test passed" << endl;
+}
+
+// Tests if the supposed_to_be_time_dependent variable is correct in the
+// two constructors for the PenningTrap class.
+void test_constructor_time_dependent()
+{
+    PenningTrap test1(1., 1., 100.);
+    PenningTrap test2(1., 1., 100., 10, 4);
+    assert(test1.supposed_to_be_time_dependent == 0);
+    assert(test2.supposed_to_be_time_dependent);
+    cout << "constructor_time_dependent() test passed" << endl;
 }
 
 int main()
@@ -170,4 +175,5 @@ int main()
     test_total_force_particles();
     test_get_total_of_particles_in_trap();
     test_fill_trap();
+    test_constructor_time_dependent();
 }
