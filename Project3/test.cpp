@@ -8,6 +8,7 @@ const double tol = 1e-8;
 
 const double m = 40.0775;
 
+// Tests add_particle() function in PenningTrap class
 void test_add_particle()
 {
     PenningTrap test(B0, V0, d);
@@ -17,6 +18,7 @@ void test_add_particle()
     cout << "add_particle() test passed" << endl;
 }
 
+// Tests external_E_field() function in PenningTrap class
 void test_E_field()
 {
     PenningTrap test(4, 2, 1.);
@@ -29,6 +31,8 @@ void test_E_field()
     }
     cout << "external_E_field() test passed" << endl;
 }
+
+// Tests external_B_field() function in PenningTrap class
 
 void test_B_field()
 {
@@ -43,6 +47,8 @@ void test_B_field()
     }
     cout << "external_B_field() test passed" << endl;
 }
+
+// Tests force_particle() function in PenningTrap class
 
 void test_force_particle()
 {
@@ -68,6 +74,8 @@ void test_force_particle()
     cout << "force_particle() test passed" << endl;
 }
 
+// Tests total_force_external() function in PenningTrap class
+
 void test_total_force_external()
 {
     PenningTrap test(3., 2., 1.);
@@ -82,6 +90,8 @@ void test_total_force_external()
     }
     cout << "total_force_external() test passed" << endl;
 }
+
+// Tests total_force_particles() function in PenningTrap class
 
 void test_total_force_particles()
 {
@@ -120,6 +130,8 @@ void test_total_force_particles()
     cout << "total_force_particles() test passed" << endl;
 }
 
+// Tests get_number_of_particles_in_trap() function in PenningTrap class
+
 void test_get_total_of_particles_in_trap()
 {
     PenningTrap test(1., 1., 100.);
@@ -137,6 +149,8 @@ void test_get_total_of_particles_in_trap()
     assert(test.get_number_of_particles_in_trap() == 10);
     cout << "get_total_of_particles_in_trap() test passed" << endl;
 }
+
+// Tests fill_trap() function in PenningTrap class
 
 void test_fill_trap()
 {
