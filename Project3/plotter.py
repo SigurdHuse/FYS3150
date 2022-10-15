@@ -1,6 +1,13 @@
 import numpy as np
 from mpl_toolkits import mplot3d
 import matplotlib.pyplot as plt
+import matplotlib as mpl
+
+mpl.rcParams["axes.labelsize"] = 16
+mpl.rcParams["axes.titlesize"] = 16
+mpl.rcParams["legend.fontsize"] = "large"
+mpl.rcParams["xtick.labelsize"] = 12
+mpl.rcParams["ytick.labelsize"] = 16
 
 
 def plot_one_particle():
@@ -11,6 +18,7 @@ def plot_one_particle():
     )
     x, y, z = main[::3], main[1::3], main[2::3]
     plt.xlim([0, 50])
+    plt.xticks([i * 5 for i in range(11)])
     plt.ylim([-21, 21])
     plt.grid()
     plt.plot(time, z, label="One particle simulated with RK4", color="midnightblue")
@@ -33,20 +41,37 @@ def plot_two_particles(interaction):
     p1_x, p1_y = x[:, 0], y[:, 0]
     p2_x, p2_y = x[:, 1], y[:, 1]
 
-    plt.subplot(2, 1, 1)
     plt.plot(p1_x, p1_y, label="first particle", color="r")
     plt.plot(p1_x[0], p1_y[0], marker="o", color="midnightblue")
-    plt.axis("equal")
-    plt.title(title)
-    plt.legend()
-    plt.grid()
-
-    plt.subplot(2, 1, 2)
     plt.plot(p2_x, p2_y, label="second particle", color="midnightblue")
     plt.plot(p2_x[0], p2_y[0], marker="o", color="r")
     plt.axis("equal")
-    plt.legend()
     plt.grid()
+    plt.legend()
+    plt.xlabel("x-position ($\mu$m)")
+    plt.ylabel("y-position ($\mu$m)")
+    plt.title(title)
+    """
+    fig, ax = plt.subplots(2, 1)
+    fig.tight_layout(pad=3.0)
+
+    ax[0].plot(p1_x, p1_y, label="first particle", color="r")
+    ax[0].plot(p1_x[0], p1_y[0], marker="o", color="midnightblue")
+    ax[0].set_aspect("equal", adjustable="box", anchor="C")
+    ax[0].set_xlabel("x-position ($\mu$m)")
+    ax[0].set_ylabel("y-position ($\mu$m)")
+    ax[0].set_title(title)
+    ax[0].legend()
+    ax[0].grid()
+
+    ax[1].plot(p2_x, p2_y, label="second particle", color="midnightblue")
+    ax[1].plot(p2_x[0], p2_y[0], marker="o", color="r")
+    ax[1].set_xlabel("x-position ($\mu$m)")
+    ax[1].set_ylabel("y-position ($\mu$m)")
+    ax[1].set_aspect("equal", adjustable="box", anchor="C")
+    ax[1].legend()
+    ax[1].grid()
+    """
 
 
 def plot_phase_two_particles(interaction):
@@ -83,6 +108,7 @@ def plot_phase_two_particles(interaction):
         + "out" * (interaction == 0)
         + " interaction"
     )
+    plt.ylabel(f"v-x ($\mu m / \mu s)$")
     plt.xlim([-60, 60])
     plt.ylim([-50, 50])
     plt.legend()
@@ -91,6 +117,8 @@ def plot_phase_two_particles(interaction):
     plt.subplot(2, 1, 2)
     plt.plot(p2_x, v2_x, label="second particle", color="midnightblue")
     plt.plot(p2_x[0], v2_x[0], marker="o", color="r")
+    plt.ylabel(f"v-x ($\mu m / \mu s$)")
+    plt.xlabel(f"x-position ($\mu m$)")
     plt.xlim([-70, 80])
     plt.ylim([-60, 60])
     plt.legend()
@@ -142,6 +170,7 @@ def plot_phase_two_particles(interaction):
     if interaction:
         plt.xlim([-30, 30])
         plt.ylim([-30, 30])
+    plt.ylabel(f"v-z ($\mu m / \mu s$)")
     plt.legend()
     plt.grid()
 
@@ -153,6 +182,8 @@ def plot_phase_two_particles(interaction):
     if interaction:
         plt.xlim([-20, 25])
         plt.ylim([-20, 20])
+    plt.ylabel(f"v-z ($\mu m / \mu s$)")
+    plt.xlabel(f"z-position ($\mu m$)")
     plt.legend()
     plt.grid()
 
@@ -219,15 +250,12 @@ def plot_3D_two_particles(interaction):
     ax.set_ylabel("y-position ($\mu$m)")
     ax.set_xlabel("x-position ($\mu$m)")
     ax.legend()
-    #
-    plt.show()
-    plt.clf()
 
 
 def plot_relative_error(RK4_method):
     nvals = [4000, 8000, 16000, 32000]
     fig, axs = plt.subplots(2, 2)
-    fig.tight_layout(pad=3.0)
+    fig.tight_layout(pad=4.0)
     x_plot, y_plot = 0, 0
     for n in nvals:
         RK4 = np.loadtxt(
@@ -272,10 +300,12 @@ def plot_relative_error(RK4_method):
             else:
                 axs[y_plot, x_plot].plot(t, error_euler)
 
-        axs[y_plot, x_plot].set_title(f"Relative error when h = {50/n}")
+        axs[y_plot, x_plot].set_title(f"Relative error when n = {n}")
         axs[y_plot, x_plot].grid()
         axs[y_plot, x_plot].set_xlim([0, 50])
         axs[y_plot, x_plot].set_yscale("log")
+        axs[y_plot, x_plot].set_xlabel(f"time ($\mu s$)")
+        axs[y_plot, x_plot].set_ylabel(f"Relative error")
         x_plot += 1
         if x_plot == 2:
             x_plot = 0
@@ -350,10 +380,10 @@ if __name__ == "__main__":
     # plt.savefig("one_particle_time_50.pgf")
     # plt.clf()
 
-    # plot_3D_two_particles(False)
+    # plot_3D_two_particles(True)
     # plt.savefig("3d_plot_with_interaction.pgf")
     # plt.clf()
-    # plot_3D_two_particles(True)
+    # plot_3D_two_particles(False)
     # plt.savefig("3d_plot_without_interaction.pgf")
     # plt.clf()
 
@@ -381,4 +411,5 @@ if __name__ == "__main__":
     # compute_error_convergence_rate(True)
     # compute_error_convergence_rate(False)
     plot_number_of_particles_trapped()
-    plt.show()
+    plt.savefig("Numbers_of_particles_trapped_0.2_2.5_.pgf")
+    plt.clf()
