@@ -84,7 +84,7 @@ arma::vec PenningTrap::external_B_field(arma::vec r, bool use_distance)
 arma::vec PenningTrap::force_particle(int i, int j)
 {
     Particle p1 = particles_[i], p2 = particles_[j];
-    return ke * p2.q_ * (p1.r_ - p2.r_) / pow(arma::norm(p1.r_ - p2.r_), 3);
+    return ke * p1.q_ * p2.q_ * (p1.r_ - p2.r_) / pow(arma::norm(p1.r_ - p2.r_), 3);
 }
 
 // Compute the Lorentz force
@@ -109,7 +109,7 @@ arma::vec PenningTrap::total_force_particles(int i)
     {
         ans += force_particle(i, j);
     }
-    return ans / p.m_ * p.q_;
+    return ans / p.m_;
 }
 
 // Computes sum of force from fields and other particles

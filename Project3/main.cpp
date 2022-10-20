@@ -102,7 +102,7 @@ void one_particle_different_h(std::string filename, std::vector<int> nvals, bool
 {
     // Constructs objects
 
-    const int time = 50;
+    const double time = 50;
     for (int n : nvals)
     {
         PenningTrap test(B0, V0, d);
@@ -168,11 +168,11 @@ void hundred_particles_time_dependent(double f, bool interaction, std::string fi
     for (double omega_V = omega_start; omega_V <= omega_end; omega_V += inc)
     {
         PenningTrap trap(B0, d, V0, f, omega_V * M);
-        trap.fill_trap(interaction, m, 100);
+        trap.fill_trap(q, m, 100);
         outfile << std::setw(width) << std::setprecision(prec) << std::scientific << omega_V << std::endl;
         for (int i = 0; i < steps; ++i)
         {
-            trap.evolve_RK4(dt, 0, 1);
+            trap.evolve_RK4(dt, interaction, 1);
         }
         outfile << std::setw(width) << std::setprecision(prec) << std::scientific << trap.get_number_of_particles_in_trap() << std::endl;
     }
@@ -184,13 +184,13 @@ int main()
     // two_particles("two_particles_without_interaction.txt", 0, 0);
     // two_particles("two_particles_with_interaction_vel.txt", 1, 1);
     // two_particles("two_particles_without_interaction_vel.txt", 0, 1);
-    //  one_particle_50_mus("one_particle_n_10000.txt");
-    //  std::vector<int> nvals = {4000, 8000, 16000, 32000};
-    //  one_particle_different_h("one_particle", nvals, 0);
+    // one_particle_50_mus("one_particle_n_10000.txt");
+    // std::vector<int> nvals = {4000, 8000, 16000, 32000};
+    // one_particle_different_h("one_particle", nvals, 0);
     // one_particle_different_h("one_particle", nvals, 1);
-    // hundred_particles_time_dependent(0.1, false, "hundred_particles_f_0.1.txt", 0.2, 2.5, 0.02);
-    // hundred_particles_time_dependent(0.4, false, "hundred_particles_f_0.4.txt", 0.2, 2.5, 0.02);
-    // hundred_particles_time_dependent(0.7, false, "hundred_particles_f_0.7.txt", 0.2, 2.5, 0.02);
-    hundred_particles_time_dependent(0.4, true, "hundred_particles_f_0.4_fine_interaction.txt", 1.9, 2.2, 0.001);
-    hundred_particles_time_dependent(0.4, false, "hundred_particles_f_0.4_fine.txt", 1.9, 2.2, 0.001);
+    hundred_particles_time_dependent(0.1, false, "hundred_particles_f_0.1.txt", 0.2, 2.5, 0.02);
+    hundred_particles_time_dependent(0.4, false, "hundred_particles_f_0.4.txt", 0.2, 2.5, 0.02);
+    hundred_particles_time_dependent(0.7, false, "hundred_particles_f_0.7.txt", 0.2, 2.5, 0.02);
+    // hundred_particles_time_dependent(0.4, true, "hundred_particles_f_0.4_fine_interaction.txt", 2.0, 2.2, 0.001);
+    // hundred_particles_time_dependent(0.4, false, "hundred_particles_f_0.4_fine.txt", 2.0, 2.2, 0.001);
 }

@@ -109,7 +109,7 @@ def plot_phase_two_particles(interaction):
         + " interaction"
     )
     plt.ylabel(f"v-x ($\mu m / \mu s)$")
-    plt.xlim([-60, 60])
+    plt.xlim([-70, 50])
     plt.ylim([-50, 50])
     plt.legend()
     plt.grid()
@@ -180,7 +180,7 @@ def plot_phase_two_particles(interaction):
     plt.xlim([-11, 11])
     plt.ylim([-11, 11])
     if interaction:
-        plt.xlim([-20, 25])
+        plt.xlim([-25, 25])
         plt.ylim([-20, 20])
     plt.ylabel(f"v-z ($\mu m / \mu s$)")
     plt.xlabel(f"z-position ($\mu m$)")
@@ -343,7 +343,8 @@ def compute_error_convergence_rate(RK4):
             np.imag(exact[1:]),
             20 * np.cos(np.sqrt(omegaz) * t[1:]),
         )
-        r_max = np.max(np.abs(x_data - x) + np.abs(y_data - y) + np.abs(z_data - z))
+
+        r_max = np.max(np.abs(x - x_data) + np.abs(y - y_data) + np.abs(z - z_data))
         delta_values.append(r_max)
         h_values.append(50 / n)
     r_err = 0.0
@@ -351,7 +352,7 @@ def compute_error_convergence_rate(RK4):
         r_err += np.log(delta_values[k] / delta_values[k - 1]) / np.log(
             h_values[k] / h_values[k - 1]
         )
-    r_err /= 4
+    r_err /= 3
     if RK4:
         print("Error convergence rate for RK4 is ", r_err)
     else:
@@ -376,40 +377,41 @@ def plot_number_of_particles_trapped():
 
 if __name__ == "__main__":
     plt.rc("pgf", texsystem="pdflatex")
-    # plot_one_particle()
-    # plt.savefig("one_particle_time_50.pgf")
-    # plt.clf()
-
-    # plot_3D_two_particles(True)
-    # plt.savefig("3d_plot_with_interaction.pgf")
-    # plt.clf()
-    # plot_3D_two_particles(False)
-    # plt.savefig("3d_plot_without_interaction.pgf")
-    # plt.clf()
-
-    # plot_two_particles(1)
-    # plt.savefig("two_particles_with_interaction.pgf")
-    # plt.clf()
-    # plot_two_particles(0)
-    # plt.savefig("two_particles_without_interaction.pgf")
-    # plt.clf()
-
-    # plot_phase_two_particles(1)
-    # plot_phase_two_particles(0)
-
-    # plot_exact_solution(20, 20, 25, 40.0775, 1, 500, 96.5, 2.41 * 1e6, 50, True)
-    # plt.savefig("Exact solution for one particle.pgf")
-    # plt.clf()
-
-    # plot_relative_error(True)
-    # plt.savefig("Relative_error_RK4.pgf")
-    # plt.clf()
-    # plot_relative_error(False)
-    # plt.savefig("Relative_error_Euler.pgf")
-    # plt.clf()
-
-    # compute_error_convergence_rate(True)
-    # compute_error_convergence_rate(False)
-    plot_number_of_particles_trapped()
-    plt.savefig("Numbers_of_particles_trapped_0.2_2.5_.pgf")
+    plot_one_particle()
+    plt.savefig("one_particle_time_50.pgf")
     plt.clf()
+
+    plot_3D_two_particles(True)
+    plt.savefig("3d_plot_with_interaction.pgf")
+    plt.clf()
+    plot_3D_two_particles(False)
+    plt.savefig("3d_plot_without_interaction.pgf")
+    plt.clf()
+
+    plot_two_particles(1)
+    plt.savefig("two_particles_with_interaction.pgf")
+    plt.clf()
+    plot_two_particles(0)
+    plt.savefig("two_particles_without_interaction.pgf")
+    plt.clf()
+
+    plot_phase_two_particles(1)
+    plot_phase_two_particles(0)
+
+    plot_exact_solution(20, 20, 25, 40.0775, 1, 500, 96.5, 2.41 * 1e6, 50, True)
+    plt.savefig("Exact solution for one particle.pgf")
+    plt.clf()
+
+    plot_relative_error(True)
+    plt.savefig("Relative_error_RK4.pgf")
+    plt.clf()
+    plot_relative_error(False)
+    plt.savefig("Relative_error_Euler.pgf")
+    plt.clf()
+
+    compute_error_convergence_rate(True)
+    compute_error_convergence_rate(False)
+    plt.clf()
+    # plot_number_of_particles_trapped()
+    # plt.savefig("Numbers_of_particles_trapped_0.2_2.5_.pgf")
+    # plt.clf()
