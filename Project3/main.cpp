@@ -167,7 +167,7 @@ void hundred_particles_time_dependent(double f, bool interaction, std::string fi
 
     for (double omega_V = omega_start; omega_V <= omega_end; omega_V += inc)
     {
-        PenningTrap trap(B0, d, V0, f, omega_V * M);
+        PenningTrap trap(B0, V0, d, f, omega_V);
         trap.fill_trap(q, m, 100);
         outfile << std::setw(width) << std::setprecision(prec) << std::scientific << omega_V << std::endl;
         for (int i = 0; i < steps; ++i)
@@ -191,6 +191,6 @@ int main()
     hundred_particles_time_dependent(0.1, false, "hundred_particles_f_0.1.txt", 0.2, 2.5, 0.02);
     hundred_particles_time_dependent(0.4, false, "hundred_particles_f_0.4.txt", 0.2, 2.5, 0.02);
     hundred_particles_time_dependent(0.7, false, "hundred_particles_f_0.7.txt", 0.2, 2.5, 0.02);
-    hundred_particles_time_dependent(0.4, true, "hundred_particles_f_0.4_fine_interaction.txt", 2.0, 2.2, 0.001);
-    hundred_particles_time_dependent(0.4, false, "hundred_particles_f_0.4_fine.txt", 2.0, 2.2, 0.001);
+    hundred_particles_time_dependent(0.1, true, "hundred_particles_f_0.4_fine_interaction.txt", 1.25, 1.45, 0.001);
+    hundred_particles_time_dependent(0.1, false, "hundred_particles_f_0.4_fine.txt", 1.25, 1.45, 0.001);
 }

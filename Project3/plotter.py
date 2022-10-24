@@ -375,6 +375,7 @@ def plot_number_of_particles_trapped():
             plt.ylabel(f"Fraction of trapped particles after 500 $\mu$s")
         plt.xlabel(f"$\omega_V$ (MHz)")
         number += 1
+        plt.xticks(np.arange(0.2, 2.5, 0.2))
 
 
 def plot_number_of_particles_trapped_fine():
@@ -434,7 +435,9 @@ if __name__ == "__main__":
     compute_error_convergence_rate(True)
     compute_error_convergence_rate(False)
     plot_number_of_particles_trapped()
+    # plt.show()
     plt.savefig("Numbers_of_particles_trapped_0.2_2.5_.pgf")
-    plt.clf()
+    # plt.clf()
     plot_number_of_particles_trapped_fine()
     plt.savefig("Numbers_of_particles_trapped_2.0_2.2_.pgf")
+    # plt.show()

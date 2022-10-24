@@ -15,7 +15,7 @@ void test_add_particle()
     arma::vec r = {1, 0, 0}, v = {1, 1, 1};
     Particle p(ke, m, r, v);
     test.add_particle(p);
-    cout << "add_particle() test passed" << endl;
+    // cout << "add_particle() test passed" << endl;
 }
 
 // Tests external_E_field() function in PenningTrap class
@@ -29,7 +29,7 @@ void test_E_field()
     {
         assert(abs(expected(i) - computed(i)) < tol);
     }
-    cout << "external_E_field() test passed" << endl;
+    // cout << "external_E_field() test passed" << endl;
 }
 
 // Tests external_B_field() function in PenningTrap class
@@ -44,7 +44,7 @@ void test_B_field()
         assert((expected1(i) - computed1(i)) < tol);
         assert((expected2(i) - computed2(i)) < tol);
     }
-    cout << "external_B_field() test passed" << endl;
+    // cout << "external_B_field() test passed" << endl;
 }
 
 // Tests force_particle() function in PenningTrap class
@@ -69,7 +69,7 @@ void test_force_particle()
         assert(abs(computed1(i) - expected1(i)) < tol);
         assert(abs(computed2(i) - expected2(i)) < tol);
     }
-    cout << "force_particle() test passed" << endl;
+    // cout << "force_particle() test passed" << endl;
 }
 
 // Tests total_force_external() function in PenningTrap class
@@ -85,7 +85,7 @@ void test_total_force_external()
     {
         assert(abs(expected(i) - computed(i)) < tol);
     }
-    cout << "total_force_external() test passed" << endl;
+    // cout << "total_force_external() test passed" << endl;
 }
 
 // Tests total_force_particles() function in PenningTrap class
@@ -123,7 +123,7 @@ void test_total_force_particles()
         assert(abs(expected2(i) - computed2(i)) < tol);
         assert(abs(expected3(i) - computed3(i)) < tol);
     }
-    cout << "total_force_particles() test passed" << endl;
+    // cout << "total_force_particles() test passed" << endl;
 }
 
 // Tests get_number_of_particles_in_trap() function in PenningTrap class
@@ -142,7 +142,7 @@ void test_get_total_of_particles_in_trap()
     assert(test.get_number_of_particles_in_trap() == 10);
     test.add_particle(p2);
     assert(test.get_number_of_particles_in_trap() == 10);
-    cout << "get_total_of_particles_in_trap() test passed" << endl;
+    // cout << "get_total_of_particles_in_trap() test passed" << endl;
 }
 
 // Tests fill_trap() function in PenningTrap class
@@ -151,7 +151,7 @@ void test_fill_trap()
     PenningTrap test(1., 1., 100.);
     test.fill_trap(1, m, 100);
     assert(test.get_number_of_particles_in_trap() == 100);
-    cout << "fill_trap() test passed" << endl;
+    // cout << "fill_trap() test passed" << endl;
 }
 
 // Tests if the supposed_to_be_time_dependent variable is correct in the
@@ -162,7 +162,7 @@ void test_constructor_time_dependent()
     PenningTrap test2(1., 1., 100., 10, 4);
     assert(test1.supposed_to_be_time_dependent == 0);
     assert(test2.supposed_to_be_time_dependent);
-    cout << "constructor_time_dependent() test passed" << endl;
+    // cout << "constructor_time_dependent() test passed" << endl;
 }
 
 int main()
