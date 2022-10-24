@@ -3,6 +3,7 @@ from mpl_toolkits import mplot3d
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 
+mpl.rcParams["figure.titlesize"] = 16
 mpl.rcParams["axes.labelsize"] = 16
 mpl.rcParams["axes.titlesize"] = 16
 mpl.rcParams["legend.fontsize"] = "large"
@@ -362,17 +363,38 @@ def compute_error_convergence_rate(RK4):
 def plot_number_of_particles_trapped():
     f_vals = [0.1, 0.4, 0.7]
     number = 1
+    nr_of_particles = 100
     for f in f_vals:
         main = np.loadtxt(f"hundred_particles_f_{f}.txt", usecols=range(1))
         omega, particles = main[::2], main[1::2]
         plt.subplot(3, 1, number)
-        plt.plot(omega, particles, label=f"f = {f}")
+        plt.plot(omega, particles / nr_of_particles, label=f"f = {f}")
         plt.legend()
         plt.grid()
         if number == 2:
-            plt.ylabel(f"Number of particles left after 500 $\mu$s")
+            plt.ylabel(f"Fraction of trapped particles after 500 $\mu$s")
         plt.xlabel(f"$\omega_V$ (MHz)")
         number += 1
+
+
+def plot_number_of_particles_trapped_fine():
+    without = np.loadtxt("hundred_particles_f_0.4_fine.txt", usecols=range(1))
+    interaction = np.loadtxt(
+        "hundred_particles_f_0.4_fine_interaction.txt", usecols=range(1)
+    )
+    nr_of_particles = 100
+    omega1, omega2 = without[::2], interaction[::2]
+    particle1, particle2 = without[1::2], interaction[1::2]
+
+    fig, ax = plt.subplots(2, 1)
+    ax[0].plot(omega1, particle1 / nr_of_particles, label=f"without interaction")
+    ax[0].legend()
+    ax[0].set_xlabel(f"$\omega_V$ (MHz)")
+
+    ax[1].plot(omega2, particle2 / nr_of_particles, label=f"with interaction")
+    ax[1].legend()
+    ax[1].set_xlabel(f"$\omega_V$ (MHz)")
+    fig.supylabel(f"Fraction of trapped particles after 500 $\mu$s")
 
 
 if __name__ == "__main__":
@@ -411,7 +433,8 @@ if __name__ == "__main__":
 
     compute_error_convergence_rate(True)
     compute_error_convergence_rate(False)
+    plot_number_of_particles_trapped()
+    plt.savefig("Numbers_of_particles_trapped_0.2_2.5_.pgf")
     plt.clf()
-    # plot_number_of_particles_trapped()
-    # plt.savefig("Numbers_of_particles_trapped_0.2_2.5_.pgf")
-    # plt.clf()
+    plot_number_of_particles_trapped_fine()
+    plt.savefig("Numbers_of_particles_trapped_2.0_2.2_.pgf")

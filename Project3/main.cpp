@@ -180,17 +180,17 @@ void hundred_particles_time_dependent(double f, bool interaction, std::string fi
 
 int main()
 {
-    // two_particles("two_particles_with_interaction.txt", 1, 0);
-    // two_particles("two_particles_without_interaction.txt", 0, 0);
-    // two_particles("two_particles_with_interaction_vel.txt", 1, 1);
-    // two_particles("two_particles_without_interaction_vel.txt", 0, 1);
-    // one_particle_50_mus("one_particle_n_10000.txt");
-    // std::vector<int> nvals = {4000, 8000, 16000, 32000};
-    // one_particle_different_h("one_particle", nvals, 0);
-    // one_particle_different_h("one_particle", nvals, 1);
+    two_particles("two_particles_with_interaction.txt", 1, 0);
+    two_particles("two_particles_without_interaction.txt", 0, 0);
+    two_particles("two_particles_with_interaction_vel.txt", 1, 1);
+    two_particles("two_particles_without_interaction_vel.txt", 0, 1);
+    one_particle_50_mus("one_particle_n_10000.txt");
+    std::vector<int> nvals = {4000, 8000, 16000, 32000};
+    one_particle_different_h("one_particle", nvals, 0);
+    one_particle_different_h("one_particle", nvals, 1);
     hundred_particles_time_dependent(0.1, false, "hundred_particles_f_0.1.txt", 0.2, 2.5, 0.02);
     hundred_particles_time_dependent(0.4, false, "hundred_particles_f_0.4.txt", 0.2, 2.5, 0.02);
     hundred_particles_time_dependent(0.7, false, "hundred_particles_f_0.7.txt", 0.2, 2.5, 0.02);
-    // hundred_particles_time_dependent(0.4, true, "hundred_particles_f_0.4_fine_interaction.txt", 2.0, 2.2, 0.001);
-    // hundred_particles_time_dependent(0.4, false, "hundred_particles_f_0.4_fine.txt", 2.0, 2.2, 0.001);
+    hundred_particles_time_dependent(0.4, true, "hundred_particles_f_0.4_fine_interaction.txt", 2.0, 2.2, 0.001);
+    hundred_particles_time_dependent(0.4, false, "hundred_particles_f_0.4_fine.txt", 2.0, 2.2, 0.001);
 }
