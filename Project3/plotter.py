@@ -368,7 +368,7 @@ def plot_number_of_particles_trapped():
         main = np.loadtxt(f"hundred_particles_f_{f}.txt", usecols=range(1))
         omega, particles = main[::2], main[1::2]
         plt.subplot(3, 1, number)
-        plt.plot(omega, particles / nr_of_particles, label=f"f = {f}")
+        plt.plot(omega, particles / nr_of_particles, "bo", label=f"f = {f}")
         plt.legend()
         plt.grid()
         if number == 2:
@@ -388,11 +388,11 @@ def plot_number_of_particles_trapped_fine():
     particle1, particle2 = without[1::2], interaction[1::2]
 
     fig, ax = plt.subplots(2, 1)
-    ax[0].plot(omega1, particle1 / nr_of_particles, label=f"without interaction")
+    ax[0].plot(omega1, particle1 / nr_of_particles, "bo", label=f"without interaction")
     ax[0].legend()
     ax[0].set_xlabel(f"$\omega_V$ (MHz)")
 
-    ax[1].plot(omega2, particle2 / nr_of_particles, label=f"with interaction")
+    ax[1].plot(omega2, particle2 / nr_of_particles, "bo", label=f"with interaction")
     ax[1].legend()
     ax[1].set_xlabel(f"$\omega_V$ (MHz)")
     fig.supylabel(f"Fraction of trapped particles after 500 $\mu$s")
@@ -435,7 +435,6 @@ if __name__ == "__main__":
     compute_error_convergence_rate(True)
     compute_error_convergence_rate(False)
     plot_number_of_particles_trapped()
-    # plt.show()
     plt.savefig("Numbers_of_particles_trapped_0.2_2.5_.pgf")
     # plt.clf()
     plot_number_of_particles_trapped_fine()
