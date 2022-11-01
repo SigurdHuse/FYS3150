@@ -12,12 +12,15 @@ private:
     // Side length of grid
     int l;
 
+    // Temprature of system
+    double T;
+
+public:
     // The grid
     arma::Mat<int> grid;
 
-public:
     // Constructor
-    System(int l);
+    System(int l, double T);
 
     // Computes the energy of the system
     int compute_engergy();
