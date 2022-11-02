@@ -2,6 +2,9 @@
 #define __system_hpp__
 
 #include <armadillo>
+#include <utility>
+#include <random>
+#include <string>
 
 class System
 {
@@ -11,19 +14,34 @@ class System
 private:
     // Side length of grid
     int l;
+    int N;
 
     // Temprature of system
     double T;
+    double beta;
+
+    // Probability
+    // unsigned seed;
+    std::default_random_engine engine;
+    std::uniform_real_distribution<double> uniform_dist;
+
+    // Ratio between p-values in our MC simulation
+    std::vector<double> delta_E_values;
+
+    std::ofstream energy_out, magnetism_out;
 
 public:
     // The grid
     arma::Mat<int> grid;
 
+    // Neighbors
+    std::vector<std::vector<std::pair<int, int>>> neig;
+
     // Constructor
-    System(int l, double T);
+    System(int l, double T, bool open_files);
 
     // Computes the energy of the system
-    int compute_engergy();
+    int compute_energy();
 
     // Computes the magnetisation of the system
     int compute_magnetisation();
@@ -33,6 +51,21 @@ public:
 
     // Computes the suspectibility of the system
     double compute_suspectibility();
+
+    // Fills the system with randomly generated up and down spins
+    void fill_with_random_spins();
+
+    // Generate a random coordiante in the grid
+    std::pair<int, int> generate_random_coordinate();
+
+    // Perform one MC cycle
+    void one_MC_cycle();
+
+    // Writes system energy to file
+    void write_energy_to_file();
+
+    // Write system magnetisation to file
+    void write_magnetisation_to_file();
 };
 
 #endif

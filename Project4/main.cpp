@@ -1,17 +1,21 @@
-#include <armadillo>
-#include <random>
+#include "system.hpp"
 
 int main()
 {
-    auto gen = std::bind(std::uniform_int_distribution<>(0, 1), std::default_random_engine());
-    arma::Mat<int> tmp = arma::Mat<int>(10, 10);
-    for (int i = 0; i < 10; ++i)
+    System test(2, 1, 1);
+    test.fill_with_random_spins();
+    // std::ofstream outfile;
+    // outfile.open("energy.txt");
+    int runs = 1e6;
+    long double ans = test.compute_energy();
+    for (int i = 0; i < runs; ++i)
     {
-        for (int j = 0; j < 10; ++j)
-        {
-            tmp(i, j) = 2 * (gen() == 1) - 1;
-        }
+        test.one_MC_cycle();
+        // test.grid.raw_print();
+        // std::cout << "\n\n";
+        ans += test.compute_energy();
+        // std::cout << ans << "\n";
     }
-
-    tmp.print();
+    std::cout << ans << "\n";
+    std::cout << ans / runs << "\n";
 }
