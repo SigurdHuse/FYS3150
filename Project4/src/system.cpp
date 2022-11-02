@@ -2,7 +2,7 @@
 
 #include <chrono>
 
-System::System(int length, double temp, bool open_files)
+System::System(int length, double temp)
 {
     l = length;
     N = length * length;
@@ -12,7 +12,7 @@ System::System(int length, double temp, bool open_files)
 
     grid = arma::Mat<int>(length, length);
     neig = std::vector<std::vector<std::pair<int, int>>>(length, std::vector<std::pair<int, int>>(length));
-    delta_E_values = std::vector<double>(9);
+    delta_E_values = std::vector<double>(17);
 
     // right neighbor is first, down neighbor is second
     for (int i = 0; i < length - 1; ++i)
@@ -46,22 +46,14 @@ System::System(int length, double temp, bool open_files)
     }
 
     // seed = std::chrono::system_clock::now().time_since_epoch().count();
-    std::default_random_engine engine(std::chrono::system_clock::now().time_since_epoch().count());
-    std::uniform_real_distribution<double> uniform_dist(0.0, 1.0);
-
-    if (open_files)
-    {
-        std::ofstream magnetism_out, energy_out;
-
-        energy_out.open("Energy_states_l_" + std::to_string(length) + ".txt");
-        magnetism_out.open("Magnetism_states_l_" + std::to_string(length) + ".txt");
-    }
+    // std::cout << std::chrono::system_clock::now().time_since_epoch().count() << "\n";
 }
 
 // Computes the magnetisation of the system by summing over all spins
 int System::compute_magnetisation()
 {
     int ans = 0;
+#pragma omp parallel for
     for (int i = 0; i < l; ++i)
     {
         for (int j = 0; j < l; ++j)
@@ -76,6 +68,7 @@ int System::compute_magnetisation()
 int System::compute_energy()
 {
     int ans = 0;
+#pragma omp parallel for
     for (int i = 0; i < l; ++i)
     {
         for (int j = 0; j < l; ++j)
@@ -107,6 +100,7 @@ void System::fill_with_random_spins()
 // Generates a random coordinate in the system
 std::pair<int, int> System::generate_random_coordinate()
 {
+    std::default_random_engine engine(std::chrono::system_clock::now().time_since_epoch().count());
     std::uniform_int_distribution<int> gen(0, l - 1);
     // Number generator
     std::pair<int, int> ans;
@@ -119,6 +113,8 @@ std::pair<int, int> System::generate_random_coordinate()
 // Perform a single MC cycle
 void System::one_MC_cycle()
 {
+    std::default_random_engine engine(std::chrono::system_clock::now().time_since_epoch().count());
+    std::uniform_real_distribution<double> uniform_dist(0.0, 1.0);
     for (int i = 0; i < N; ++i)
     {
         auto cor = generate_random_coordinate();
@@ -134,20 +130,8 @@ void System::one_MC_cycle()
         double A = std::min(1., delta_E_values[E_after - E_before + 8]);
         double r = uniform_dist(engine);
         // std::cout << r << "\n";
-        //  std::cout << A << " " << r << "\n";
+        // std::cout << A << " " << r << "\n";
         //   std::cout << "Number:" << -2 * (r > A) + 1 << "\n";
         grid(y, x) *= -2 * (r > A) + 1;
     }
-}
-
-// Writes magnetisation of system to file
-void System::write_magnetisation_to_file()
-{
-    magnetism_out << compute_magnetisation() << "\n";
-}
-
-// Writes energy of system to file
-void System::write_energy_to_file()
-{
-    energy_out << compute_energy() << "\n";
 }

@@ -38,7 +38,7 @@ public:
     std::vector<std::vector<std::pair<int, int>>> neig;
 
     // Constructor
-    System(int l, double T, bool open_files);
+    System(int l, double T);
 
     // Computes the energy of the system
     int compute_energy();
@@ -60,12 +60,6 @@ public:
 
     // Perform one MC cycle
     void one_MC_cycle();
-
-    // Writes system energy to file
-    void write_energy_to_file();
-
-    // Write system magnetisation to file
-    void write_magnetisation_to_file();
 };
 
 #endif

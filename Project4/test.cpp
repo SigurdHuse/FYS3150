@@ -5,7 +5,7 @@
 
 void test_compute_magnetisation()
 {
-    System test1(5, 1, 0), test2(3, 10, 0);
+    System test1(5, 1), test2(3, 10);
     test1.grid.fill(1);
     test2.grid.fill(-1);
     assert(test1.compute_magnetisation() == 25);
@@ -21,7 +21,7 @@ void test_compute_engergy()
                                          {-1, -1, -1, -1}};
     std::vector<int> expected = {-8, 0, 0, 0, 0, 0, 0, 8, 8, 0, 0, 0, 0, 0, 0, -8};
 
-    System test(2, 3, 0);
+    System test(2, 3);
     int cnt = 0;
     for (auto v : pos)
     {
