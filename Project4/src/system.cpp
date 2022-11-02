@@ -53,11 +53,12 @@ System::System(int length, double temp)
 int System::compute_magnetisation()
 {
     int ans = 0;
-#pragma omp parallel for
+#pragma omp parallel for collapse(2)
     for (int i = 0; i < l; ++i)
     {
         for (int j = 0; j < l; ++j)
         {
+#pragma omp atomic
             ans += grid(i, j);
         }
     }
@@ -68,12 +69,14 @@ int System::compute_magnetisation()
 int System::compute_energy()
 {
     int ans = 0;
-#pragma omp parallel for
+#pragma omp parallel for collapse(2)
     for (int i = 0; i < l; ++i)
     {
         for (int j = 0; j < l; ++j)
         {
+#pragma omp atomic
             ans += grid(i, j) * grid(i, neig[i][j].first);
+#pragma omp atomic
             ans += grid(i, j) * grid(neig[i][j].second, j);
         }
     }
@@ -85,14 +88,15 @@ int System::compute_energy()
 void System::fill_with_random_spins()
 {
     // Binary generator
-    auto binary_gen = std::bind(std::uniform_int_distribution<>(0, 1), std::default_random_engine());
+    std::default_random_engine engine(std::chrono::system_clock::now().time_since_epoch().count());
+    std::uniform_int_distribution<int> gen(0, 1);
 
     // Fill grid
     for (int i = 0; i < l; ++i)
     {
         for (int j = 0; j < l; ++j)
         {
-            grid(i, j) = 2 * binary_gen() - 1;
+            grid(i, j) = 2 * gen(engine) - 1;
         }
     }
 }

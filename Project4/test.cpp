@@ -2,7 +2,9 @@
 #include <assert.h>
 #include <vector>
 #include <algorithm>
+#include <armadillo>
 
+// Test compute_magnetisation in System class works as expected
 void test_compute_magnetisation()
 {
     System test1(5, 1), test2(3, 10);
@@ -12,6 +14,7 @@ void test_compute_magnetisation()
     assert(test2.compute_magnetisation() == -9);
 }
 
+// Test compute_engergy in System class works as expected
 void test_compute_engergy()
 {
     std::vector<std::vector<int>> pos = {{1, 1, 1, 1},
@@ -43,8 +46,54 @@ void test_compute_engergy()
     // std::cout << expected.size() << "\n";
 }
 
+// Test random_coordinate and r in System class works as expected
+void test_random_coordinate_and_r()
+{
+    System test(2, 1);
+    arma::mat data = arma::mat(2, 2);
+    for (int i = 0; i < 1e6; ++i)
+    {
+        auto p = test.generate_random_coordinate();
+        data(p.first, p.second)++;
+    }
+    data /= 1e6;
+    data.print();
+
+    std::default_random_engine engine(std::chrono::system_clock::now().time_since_epoch().count());
+    std::uniform_real_distribution<double> uniform_dist(0.0, 1.0);
+
+    long double r = 0;
+    for (int i = 0; i < 1e6; ++i)
+    {
+        r += uniform_dist(engine);
+    }
+    std::cout << r / 1e6 << std::endl;
+}
+
+// Test delta_E_values in System class is computed as expected
+void test_delta_E_values()
+{
+    System test1(20, 1), test2(20, 2);
+    std::vector<double> expected1 = {exp(8),
+                                     exp(4),
+                                     exp(0),
+                                     exp(-4),
+                                     exp(-8)};
+    std::vector<double> expected2 = {exp(4), exp(2), exp(0), exp(-2), exp(-4)};
+    double tol = 1e-8;
+    for (int i = -8, j = 0; i <= 8; i += 4, j++)
+    {
+        // std::cout << test.delta_E_values[i + 8] << "\n";
+        // std::cout << expected[j] << "\n";
+        assert(abs(test1.delta_E_values[i + 8] - expected1[j]) < tol);
+        assert(abs(test2.delta_E_values[i + 8] - expected2[j]) < tol);
+    }
+}
+
 int main()
 {
     test_compute_magnetisation();
     test_compute_engergy();
+    test_random_coordinate_and_r();
+    test_delta_E_values();
 }

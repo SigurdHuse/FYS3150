@@ -25,14 +25,14 @@ private:
     std::default_random_engine engine;
     std::uniform_real_distribution<double> uniform_dist;
 
-    // Ratio between p-values in our MC simulation
-    std::vector<double> delta_E_values;
-
     std::ofstream energy_out, magnetism_out;
 
 public:
     // The grid
     arma::Mat<int> grid;
+
+    // Ratio between p-values in our MC simulation
+    std::vector<double> delta_E_values;
 
     // Neighbors
     std::vector<std::vector<std::pair<int, int>>> neig;
