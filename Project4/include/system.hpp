@@ -20,14 +20,15 @@ private:
     double T;
     double beta;
 
-    // Probability
-    // unsigned seed;
-    std::default_random_engine engine;
+public:
+    // Random number generator;
+    std::mt19937 engine;
+
+    // Distributions
+    std::uniform_int_distribution<int> gen_0_l;
+    std::uniform_int_distribution<int> gen_int_0_1;
     std::uniform_real_distribution<double> uniform_dist;
 
-    std::ofstream energy_out, magnetism_out;
-
-public:
     // The grid
     arma::Mat<int> grid;
 
@@ -60,6 +61,9 @@ public:
 
     // Perform one MC cycle
     void one_MC_cycle();
+
+    // Fills the grid with only positive spins
+    void fill_with_positive();
 };
 
 #endif

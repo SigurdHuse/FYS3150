@@ -1,7 +1,5 @@
 #include "system.hpp"
 
-#include <chrono>
-
 System::System(int length, double temp)
 {
     l = length;
@@ -10,8 +8,13 @@ System::System(int length, double temp)
     T = temp;
     beta = 1. / T;
 
+    // Grid containing the spins
     grid = arma::Mat<int>(length, length);
+
+    // Neighbors of each spin, with peridodic boundary conditions
     neig = std::vector<std::vector<std::pair<int, int>>>(length, std::vector<std::pair<int, int>>(length));
+
+    // Vector containing the different values of the ratio between probabilites of states
     delta_E_values = std::vector<double>(17);
 
     // right neighbor is first, down neighbor is second
@@ -39,14 +42,17 @@ System::System(int length, double temp)
     neig[length - 1][length - 1].first = 0;
     neig[length - 1][length - 1].second = 0;
 
+    // Different values of p(x')/p(x_i)
     for (int i = -8; i <= 8; i += 4)
     {
         delta_E_values[i + 8] = exp(-beta * i);
         // std::cout << delta_E_values[i + 8] << "\n";
     }
 
-    // seed = std::chrono::system_clock::now().time_since_epoch().count();
-    // std::cout << std::chrono::system_clock::now().time_since_epoch().count() << "\n";
+    // Sets parameters of distributions
+    gen_0_l.param(std::uniform_int_distribution<int>::param_type(0, length - 1));
+    gen_int_0_1.param(std::uniform_int_distribution<int>::param_type(0, 1));
+    uniform_dist.param(std::uniform_real_distribution<double>::param_type(0.0, 1.0));
 }
 
 // Computes the magnetisation of the system by summing over all spins
@@ -87,16 +93,12 @@ int System::compute_energy()
 // Fills the grid by generating 0's and 1's from a uniform distribution
 void System::fill_with_random_spins()
 {
-    // Binary generator
-    std::default_random_engine engine(std::chrono::system_clock::now().time_since_epoch().count());
-    std::uniform_int_distribution<int> gen(0, 1);
-
     // Fill grid
     for (int i = 0; i < l; ++i)
     {
         for (int j = 0; j < l; ++j)
         {
-            grid(i, j) = 2 * gen(engine) - 1;
+            grid(i, j) = 2 * gen_int_0_1(engine) - 1;
         }
     }
 }
@@ -104,12 +106,9 @@ void System::fill_with_random_spins()
 // Generates a random coordinate in the system
 std::pair<int, int> System::generate_random_coordinate()
 {
-    std::default_random_engine engine(std::chrono::system_clock::now().time_since_epoch().count());
-    std::uniform_int_distribution<int> gen(0, l - 1);
-    // Number generator
     std::pair<int, int> ans;
-    ans.first = gen(engine);
-    ans.second = gen(engine);
+    ans.first = gen_0_l(engine);
+    ans.second = gen_0_l(engine);
     // std::cout << ans.first << " " << ans.second << "\n";
     return ans;
 }
@@ -117,8 +116,6 @@ std::pair<int, int> System::generate_random_coordinate()
 // Perform a single MC cycle
 void System::one_MC_cycle()
 {
-    std::default_random_engine engine(std::chrono::system_clock::now().time_since_epoch().count());
-    std::uniform_real_distribution<double> uniform_dist(0.0, 1.0);
     for (int i = 0; i < N; ++i)
     {
         auto cor = generate_random_coordinate();
@@ -137,5 +134,17 @@ void System::one_MC_cycle()
         // std::cout << A << " " << r << "\n";
         //   std::cout << "Number:" << -2 * (r > A) + 1 << "\n";
         grid(y, x) *= -2 * (r > A) + 1;
+    }
+}
+
+// Fills the grid with only positive spins
+void System::fill_with_positive()
+{
+    for (int i = 0; i < l; ++i)
+    {
+        for (int j = 0; j < l; ++j)
+        {
+            grid(i, j) = 1;
+        }
     }
 }
