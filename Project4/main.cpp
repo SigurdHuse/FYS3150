@@ -34,6 +34,7 @@ void do_a_MC_simulation(int l, double T, int runs, int walkers, unsigned int see
         magnetism_out.open("Magnetism_states_l_" + std::to_string(l) + "_T_" + std::to_string(T) + "_" +
                            std::to_string(runs) + "_walker_" + std::to_string(i) + ".txt");
         System cur(l, T);
+        // std::cout << seed + i * 1e6 << "\n";
         cur.engine.seed(seed + i * 1e6);
         if (random_start)
         {
@@ -116,6 +117,7 @@ int main(int argc, const char *argv[])
     int l = atoi(argv[1]), runs = atoi(argv[3]), walkers = atoi(argv[4]);
     double T = atof(argv[2]);
     bool random = atoi(argv[5]);
-    unsigned int base_seed = std::chrono::system_clock::now().time_since_epoch().count();
+    // std::chrono::system_clock::now().time_since_epoch().count()
+    unsigned int base_seed = 1e6;
     do_a_MC_simulation(l, T, runs, walkers, base_seed, random);
 }

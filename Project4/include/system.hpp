@@ -56,14 +56,14 @@ public:
     // Fills the system with randomly generated up and down spins
     void fill_with_random_spins();
 
-    // Generate a random coordiante in the grid
-    std::pair<int, int> generate_random_coordinate();
-
     // Perform one MC cycle
     void one_MC_cycle();
 
     // Fills the grid with only positive spins
     void fill_with_positive();
+
+    // Fills in the neigbhor matrix
+    void fill_neig();
 };
 
 #endif

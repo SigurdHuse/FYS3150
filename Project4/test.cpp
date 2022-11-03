@@ -47,18 +47,8 @@ void test_compute_engergy()
 }
 
 // Test random_coordinate and r in System class works as expected
-void test_random_coordinate_and_r()
+void test_random_r()
 {
-    System test(2, 1);
-    arma::mat data = arma::mat(2, 2);
-    for (int i = 0; i < 1e6; ++i)
-    {
-        auto p = test.generate_random_coordinate();
-        data(p.first, p.second)++;
-    }
-    data /= 1e6;
-    data.print();
-
     std::default_random_engine engine(std::chrono::system_clock::now().time_since_epoch().count());
     std::uniform_real_distribution<double> uniform_dist(0.0, 1.0);
 
@@ -94,6 +84,6 @@ int main()
 {
     test_compute_magnetisation();
     test_compute_engergy();
-    test_random_coordinate_and_r();
+    test_random_r();
     test_delta_E_values();
 }
