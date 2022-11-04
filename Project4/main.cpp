@@ -33,22 +33,13 @@ void do_a_MC_simulation(int l, double T, int runs, int walkers, unsigned int see
 
         magnetism_out.open("Magnetism_states_l_" + std::to_string(l) + "_T_" + std::to_string(T) + "_" +
                            std::to_string(runs) + "_walker_" + std::to_string(i) + ".txt");
-        System cur(l, T);
-        // std::cout << seed + i * 1e6 << "\n";
-        cur.engine.seed(seed + i * 1e6);
-        if (random_start)
-        {
-            cur.fill_with_random_spins();
-        }
-        else
-        {
-            cur.fill_with_positive();
-        }
+        System cur(l, T, seed + i * 1e6, random_start);
+
         for (int i = 0; i < runs; ++i)
         {
+            energy_out << cur.get_energy() << "\n";
+            magnetism_out << cur.get_magnetism() << "\n";
             cur.one_MC_cycle();
-            energy_out << cur.compute_energy() << "\n";
-            magnetism_out << cur.compute_magnetisation() << "\n";
         }
         energy_out.close();
         magnetism_out.close();

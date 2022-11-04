@@ -140,16 +140,16 @@ def generate_historgram(filename, l):
 if __name__ == "__main__":
 
     # Problem 4
-    # plot_energy_per_spin("Energy_states_l_2_T_1.000000_1000000_random.txt", 2, 7, 1, 1)
-    # plot_magnetisation_per_spin(
-    #     "Magnetism_states_l_2_T_1.000000_1000000_random.txt", 2, 7, 1, 1
-    # )
-    # plot_specific_heat_capacity(
-    #     "Energy_states_l_2_T_1.000000_1000000_random.txt", 2, 7, 1, 1
-    # )
-    # plot_susceptibility(
-    #     "Magnetism_states_l_2_T_1.000000_1000000_random.txt", 2, 7, 1, 1
-    # )
+    plot_energy_per_spin("Energy_states_l_2_T_1.000000_1000000_random.txt", 2, 7, 1, 1)
+    plot_magnetisation_per_spin(
+        "Magnetism_states_l_2_T_1.000000_1000000_random.txt", 2, 7, 1, 1
+    )
+    plot_specific_heat_capacity(
+        "Energy_states_l_2_T_1.000000_1000000_random.txt", 2, 7, 1, 1
+    )
+    plot_susceptibility(
+        "Magnetism_states_l_2_T_1.000000_1000000_random.txt", 2, 7, 1, 1
+    )
 
     # Problem 5
     # plot_energy_per_spin(
@@ -165,5 +165,5 @@ if __name__ == "__main__":
     # plot_magnetisation_per_spin("Magnestism_states_l_20_T_2_1000000_positiv.txt", 20, 7, 0, 1)
 
     # Problem 6
-    generate_historgram("Energy_states_l_20_T_1.000000_1000000_random.txt", 20)
+    # generate_historgram("Energy_states_l_20_T_1.000000_1000000_random.txt", 20)
     # generate_historgram("Energy_states_l_20_T_2.400000_1000000_random.txt", 20)

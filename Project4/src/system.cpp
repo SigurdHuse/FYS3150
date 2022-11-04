@@ -1,12 +1,20 @@
 #include "system.hpp"
 
-System::System(int length, double temp)
+System::System(int length, double temp, unsigned int seed, bool random)
 {
     l = length;
     N = length * length;
 
     T = temp;
     beta = 1. / temp;
+
+    // Set seed of random number generator
+    engine = std::mt19937(seed);
+
+    // Sets parameters of distributions
+    gen_0_l.param(std::uniform_int_distribution<int>::param_type(0, length - 1));
+    gen_int_0_1.param(std::uniform_int_distribution<int>::param_type(0, 1));
+    uniform_dist.param(std::uniform_real_distribution<double>::param_type(0.0, 1.0));
 
     // Grid containing the spins
     grid = arma::Mat<int>(length, length);
@@ -21,16 +29,26 @@ System::System(int length, double temp)
     for (int i = -8; i <= 8; i += 4)
     {
         delta_E_values[i + 8] = exp(-beta * i);
-        // std::cout << delta_E_values[i + 8] << "\n";
     }
 
     // Fills neig matrix
     fill_neig();
 
-    // Sets parameters of distributions
-    gen_0_l.param(std::uniform_int_distribution<int>::param_type(0, length - 1));
-    gen_int_0_1.param(std::uniform_int_distribution<int>::param_type(0, 1));
-    uniform_dist.param(std::uniform_real_distribution<double>::param_type(0.0, 1.0));
+    // Fills grid with values
+    if (random)
+    {
+        fill_with_random_spins();
+    }
+    else
+    {
+        fill_with_positive();
+    }
+
+    // Computes energy of inital state
+    set_energy();
+
+    // Computes magnetisation of inital state
+    set_magnetisation();
 }
 
 void System::fill_neig()
@@ -48,7 +66,7 @@ void System::fill_neig()
 }
 
 // Computes the magnetisation of the system by summing over all spins
-int System::compute_magnetisation()
+void System::set_magnetisation()
 {
     int ans = 0;
     // #pragma omp parallel for collapse(2)
@@ -60,11 +78,11 @@ int System::compute_magnetisation()
             ans += grid(i, j);
         }
     }
-    return ans;
+    magnetism = ans;
 }
 
 // Computes the energy of the system by taking the product and summing over all neighboring pairs
-int System::compute_energy()
+void System::set_energy()
 {
     int ans = 0;
     // #pragma omp parallel for collapse(2)
@@ -79,7 +97,7 @@ int System::compute_energy()
         }
     }
 
-    return -ans;
+    energy = -ans;
 }
 
 // Fills the grid by generating 0's and 1's from a uniform distribution
@@ -100,6 +118,7 @@ void System::one_MC_cycle()
 {
     for (int i = 0; i < N; ++i)
     {
+
         int x = gen_0_l(engine), y = gen_0_l(engine);
 
         int delta_E;
@@ -111,6 +130,8 @@ void System::one_MC_cycle()
         if (r <= A)
         {
             grid(y, x) *= -1;
+            energy += delta_E;
+            magnetism += 2 * grid(y, x);
         }
     }
 }
@@ -125,4 +146,16 @@ void System::fill_with_positive()
             grid(i, j) = 1;
         }
     }
+}
+
+// Returns the magnetism of the system
+int System::get_magnetism()
+{
+    return magnetism;
+}
+
+// Returns the energy of the system
+int System::get_energy()
+{
+    return energy;
 }

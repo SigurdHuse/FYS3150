@@ -20,6 +20,9 @@ private:
     double T;
     double beta;
 
+    // Values of system
+    int energy, magnetism;
+
 public:
     // Random number generator;
     std::mt19937 engine;
@@ -39,13 +42,13 @@ public:
     std::vector<std::vector<std::pair<int, int>>> neig;
 
     // Constructor
-    System(int l, double T);
+    System(int l, double T, unsigned int seed, bool random);
 
     // Computes the energy of the system
-    int compute_energy();
+    void set_energy();
 
     // Computes the magnetisation of the system
-    int compute_magnetisation();
+    void set_magnetisation();
 
     // Computes the specific heat capacity of the system
     double compute_specific_heat_capacity();
@@ -64,6 +67,12 @@ public:
 
     // Fills in the neigbhor matrix
     void fill_neig();
+
+    // Returns the magnetism of the system
+    int get_magnetism();
+
+    // Returns the energy of the system
+    int get_energy();
 };
 
 #endif
