@@ -1,10 +1,22 @@
 #include "system.hpp"
 
+/**
+ * @brief Construct a new System:: System object describing a LxL Ising model
+ *
+ * @param length Integer side length of the square grid containing spins.
+ * @param temp Double temperature of the system.
+ * @param seed Unsigned int seed for the random number generator engine.
+ * @param random Bool indicating if the inital should be filled with random spins or only positive spins.
+ */
 System::System(int length, double temp, unsigned int seed, bool random)
 {
-    l = length;
+    // Stores length of system
+    L = length;
+
+    // Area of grid
     N = length * length;
 
+    // Stores temperature of system
     T = temp;
     beta = 1. / temp;
 
@@ -34,13 +46,14 @@ System::System(int length, double temp, unsigned int seed, bool random)
     // Fills neig matrix
     fill_neig();
 
-    // Fills grid with values
     if (random)
     {
+        // Fills grid with uniformly generated positive and negative spins
         fill_with_random_spins();
     }
     else
     {
+        // Fill grid with only positive spins
         fill_with_positive();
     }
 
@@ -51,28 +64,28 @@ System::System(int length, double temp, unsigned int seed, bool random)
     set_magnetisation();
 }
 
+// Precomputes the two neigbhors of each coordinate in the system using periodic boundary conditions
 void System::fill_neig()
 {
     // right neighbor is first, second is down neighbor
     // So first is x-coordinate, while second is y-coordinate
-    for (int i = 0; i < l; ++i)
+    for (int i = 0; i < L; ++i)
     {
-        for (int j = 0; j < l; ++j)
+        for (int j = 0; j < L; ++j)
         {
-            neig[i][j].first = (j + 1) % l;
-            neig[i][j].second = (i + 1) % l;
+            neig[i][j].first = (j + 1) % L;
+            neig[i][j].second = (i + 1) % L;
         }
     }
 }
 
-// Computes the magnetisation of the system by summing over all spins
+// Computes the start magnetisation of the system by summing over all spins
 void System::set_magnetisation()
 {
     int ans = 0;
-    // #pragma omp parallel for collapse(2)
-    for (int i = 0; i < l; ++i)
+    for (int i = 0; i < L; ++i)
     {
-        for (int j = 0; j < l; ++j)
+        for (int j = 0; j < L; ++j)
         {
             // #pragma omp atomic
             ans += grid(i, j);
@@ -81,14 +94,14 @@ void System::set_magnetisation()
     magnetism = ans;
 }
 
-// Computes the energy of the system by taking the product and summing over all neighboring pairs
+// Computes the start energy of the system by taking the product and summing over all
+// neighboring pairs without double-counting
 void System::set_energy()
 {
     int ans = 0;
-    // #pragma omp parallel for collapse(2)
-    for (int i = 0; i < l; ++i)
+    for (int i = 0; i < L; ++i)
     {
-        for (int j = 0; j < l; ++j)
+        for (int j = 0; j < L; ++j)
         {
             // #pragma omp atomic
             ans += grid(i, j) * grid(i, neig[i][j].first);
@@ -104,9 +117,9 @@ void System::set_energy()
 void System::fill_with_random_spins()
 {
     // Fill grid
-    for (int i = 0; i < l; ++i)
+    for (int i = 0; i < L; ++i)
     {
-        for (int j = 0; j < l; ++j)
+        for (int j = 0; j < L; ++j)
         {
             grid(i, j) = 2 * gen_int_0_1(engine) - 1;
         }
@@ -122,7 +135,9 @@ void System::one_MC_cycle()
         int x = gen_0_l(engine), y = gen_0_l(engine);
 
         int delta_E;
-        delta_E = 2 * grid(y, x) * (grid((y - 1 + l) % l, x) + grid(y, (x - 1 + l) % l) + grid(y, neig[y][x].first) + grid(neig[y][x].second, x));
+
+        // Compute difference in energy
+        delta_E = 2 * grid(y, x) * (grid((y - 1 + L) % L, x) + grid(y, (x - 1 + L) % L) + grid(y, neig[y][x].first) + grid(neig[y][x].second, x));
 
         double A = std::min(1., delta_E_values[delta_E + 8]);
         double r = uniform_dist(engine);
@@ -139,9 +154,9 @@ void System::one_MC_cycle()
 // Fills the grid with only positive spins
 void System::fill_with_positive()
 {
-    for (int i = 0; i < l; ++i)
+    for (int i = 0; i < L; ++i)
     {
-        for (int j = 0; j < l; ++j)
+        for (int j = 0; j < L; ++j)
         {
             grid(i, j) = 1;
         }

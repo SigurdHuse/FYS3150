@@ -13,7 +13,8 @@ class System
     */
 private:
     // Side length of grid
-    int l;
+    int L;
+    // Area of grid
     int N;
 
     // Temprature of system
@@ -42,7 +43,7 @@ public:
     std::vector<std::vector<std::pair<int, int>>> neig;
 
     // Constructor
-    System(int l, double T, unsigned int seed, bool random);
+    System(int length, double T, unsigned int seed, bool random);
 
     // Computes the energy of the system
     void set_energy();
