@@ -14,3 +14,4 @@
 `./main.exe <Length of grid> <Temperature of system> <Number of cycles> <Number of Markoc Chains> <Bool indicating random or ordered initial state>`
 
 ### Range of temperatures
+`./main.exe <Length of grid> <Start temperature> <End temperature> <Increase in temperature for each simulation> <Number of cycles> <Number of Markoc Chains> <Bool indicating random or ordered initial state>`
