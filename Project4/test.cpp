@@ -7,11 +7,13 @@
 // Test compute_magnetisation in System class works as expected
 void test_compute_magnetisation()
 {
-    System test1(5, 1), test2(3, 10);
+    System test1(5, 1, 10, 1), test2(3, 10, 10, 1);
     test1.grid.fill(1);
     test2.grid.fill(-1);
-    assert(test1.compute_magnetisation() == 25);
-    assert(test2.compute_magnetisation() == -9);
+    test1.set_magnetisation();
+    test2.set_magnetisation();
+    assert(test1.get_magnetism() == 25);
+    assert(test2.get_magnetism() == -9);
 }
 
 // Test compute_engergy in System class works as expected
@@ -24,7 +26,7 @@ void test_compute_engergy()
                                          {-1, -1, -1, -1}};
     std::vector<int> expected = {-8, 0, 0, 0, 0, 0, 0, 8, 8, 0, 0, 0, 0, 0, 0, -8};
 
-    System test(2, 3);
+    System test(2, 3, 10, 1);
     int cnt = 0;
     for (auto v : pos)
     {
@@ -38,8 +40,8 @@ void test_compute_engergy()
 
             // test.grid.print();
             // std::cout << test.compute_engergy() << " " << expected[cnt] << "\n";
-
-            assert(expected[cnt] == test.compute_energy());
+            test.set_energy();
+            assert(expected[cnt] == test.get_energy());
             cnt++;
         } while (std::next_permutation(v.begin(), v.end()));
     }
@@ -63,7 +65,7 @@ void test_random_r()
 // Test delta_E_values in System class is computed as expected
 void test_delta_E_values()
 {
-    System test1(20, 1), test2(20, 2);
+    System test1(20, 1, 10, 1), test2(20, 2, 10, 1);
     std::vector<double> expected1 = {exp(8),
                                      exp(4),
                                      exp(0),
