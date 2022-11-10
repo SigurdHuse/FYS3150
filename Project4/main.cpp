@@ -54,8 +54,8 @@ void do_a_MC_simulation(int L, double T, int runs, int walkers, unsigned int see
 
     std::string filename_energy, filename_magnetism;
 
-    filename_energy = "Energy_states_L_" + std::to_string(L) + "_T_" + std::to_string(T) + "_" + std::to_string(runs);
-    filename_magnetism = "Magnetism_states_L_" + std::to_string(L) + "_T_" + std::to_string(T) + "_" + std::to_string(runs);
+    filename_energy = "data/Energy_states_L_" + std::to_string(L) + "_T_" + std::to_string(T) + "_" + std::to_string(runs);
+    filename_magnetism = "data/Magnetism_states_L_" + std::to_string(L) + "_T_" + std::to_string(T) + "_" + std::to_string(runs);
 
     if (random_start)
     {

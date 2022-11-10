@@ -59,7 +59,8 @@ void test_random_r()
     {
         r += uniform_dist(engine);
     }
-    std::cout << r / 1e6 << std::endl;
+    std::cout << "Expected r: 0.5 \n";
+    std::cout << "Computed r: " << r / 1e6 << std::endl;
 }
 
 // Test delta_E_values in System class is computed as expected
@@ -84,6 +85,8 @@ void test_delta_E_values()
 
 int main()
 {
+    // arma::arma_version ver;
+    // std::cout << "ARMA version: " << ver.as_string() << std::endl;
     test_compute_magnetisation();
     test_compute_engergy();
     test_random_r();
