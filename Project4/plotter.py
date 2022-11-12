@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
+import os
 
 mpl.rcParams["figure.titlesize"] = 16
 mpl.rcParams["axes.labelsize"] = 14
@@ -186,55 +187,90 @@ def generate_historgram(filename, l, T, bins, log):
     plt.xlabel("Energy per spin")
 
 
+def compute_energy(sizes, temps, file_runs, runs):
+    for L in sizes:
+        values = []
+        N = L * L
+        filename_save = f"data/Computed_Energy_states_L_{L}.txt"
+        for T in temps:
+            filename = f"data/Energy_states_L_{L}_T_{T :.3f}000_{file_runs}_random.txt"
+            cur = np.loadtxt(filename, usecols=range(1), skiprows=1)
+            values.append(np.sum(cur) / N / runs)
+        np.savetxt(filename_save, values)
+
+
+def compute_magnetism(sizes, temps, file_runs, runs):
+    for L in sizes:
+        values = []
+        N = L * L
+        filename_save = f"data/Computed_Magnetism_states_L_{L}.txt"
+        for T in temps:
+            filename = (
+                f"data/Magnetism_states_L_{L}_T_{T :.3f}000_{file_runs}_random.txt"
+            )
+            cur = np.loadtxt(filename, usecols=range(1), skiprows=1)
+            values.append(np.sum(np.abs(cur)) / N / runs)
+        np.savetxt(filename_save, values)
+
+
+def compute_HC(sizes, temps, file_runs, runs):
+    for L in sizes:
+        values = []
+        N = L * L
+        filename_save = f"data/Computed_HC_states_L_{L}.txt"
+        for T in temps:
+            filename = f"data/Energy_states_L_{L}_T_{T :.3f}000_{file_runs}_random.txt"
+            cur = np.loadtxt(filename, usecols=range(1), skiprows=1)
+            E_squared = (np.sum(cur) / runs) ** 2
+            E_exp_squared = np.sum(np.power(cur, 2)) / runs
+            values.append((E_exp_squared - E_squared) / N / T / T)
+        np.savetxt(filename_save, values)
+
+
+def compute_susc(sizes, temps, file_runs, runs):
+    for L in sizes:
+        values = []
+        N = L * L
+        filename_save = f"data/Computed_susc_states_L_{L}.txt"
+        for T in temps:
+            filename = (
+                f"data/Magnetism_states_L_{L}_T_{T :.3f}000_{file_runs}_random.txt"
+            )
+            cur = np.loadtxt(filename, usecols=range(1), skiprows=1)
+            M_squared = (np.sum(np.abs(cur)) / runs) ** 2
+            M_exp_squared = np.sum(np.power(cur, 2)) / runs
+            values.append((M_exp_squared - M_squared) / N / T / T)
+        np.savetxt(filename_save, values)
+
+
 def plot_by_temp():
     """Script to plot quantities as a function of temperature from files"""
 
     sizes = [40, 60, 80, 100]
-    temps = np.arange(2.1, 2.41, 0.02)
-    runs = 10000000
-    file_runs = 1000000
+    temps = np.arange(2.1, 2.401, 0.006)
+    runs = 2000000
+    file_runs = 200000
+
+    # compute_energy(sizes, temps, file_runs, runs)
+    # compute_magnetism(sizes, temps, file_runs, runs)
+    # compute_HC(sizes, temps, file_runs, runs)
+    # compute_susc(sizes, temps, file_runs, runs)
+
     energy = []
     magnet = []
     specific = []
     susc = []
 
     for L in sizes:
-        tmp_energy = []
-        tmp_magnet = []
-        tmp_specific = []
-        tmp_susc = []
-        N = L * L
-        for T in temps:
-            T_squared = T * T
-            filename1 = (
-                f"data{L}/Energy_states_L_{L}_T_{T :.2f}0000_{file_runs}_random.txt"
-            )
-            filename2 = (
-                f"data{L}/Magnetism_states_L_{L}_T_{T :.2f}0000_{file_runs}_random.txt"
-            )
-            main_E = np.loadtxt(filename1, delimiter=",", usecols=range(1), skiprows=1)
-            main_M = np.loadtxt(filename2, delimiter=",", usecols=range(1), skiprows=1)
+        cur_E = np.loadtxt(f"data/Computed_Energy_states_L_{L}.txt")
+        cur_M = np.loadtxt(f"data/Computed_Magnetism_states_L_{L}.txt")
+        cur_specific = np.loadtxt(f"data/Computed_HC_states_L_{L}.txt")
+        cur_susc = np.loadtxt(f"data/Computed_susc_states_L_{L}.txt")
 
-            m = np.sum(np.abs(main_M)) / N / runs
-            epsilon = np.sum(main_E / N / runs)
-
-            E_squared = np.sum(np.power(main_E, 2)) / runs
-            E = (epsilon * L * L) ** 2
-            spec = (E_squared - E) / N / T_squared
-
-            M_squared = np.sum(np.power(main_M, 2)) / runs
-            M = (m * L * L) ** 2
-            suspect = (M_squared - M) / N / T_squared
-
-            tmp_energy.append(epsilon)
-            tmp_magnet.append(m)
-            tmp_specific.append(spec)
-            tmp_susc.append(suspect)
-
-        energy.append(tmp_energy)
-        magnet.append(tmp_magnet)
-        specific.append(tmp_specific)
-        susc.append(tmp_susc)
+        energy.append(cur_E)
+        magnet.append(cur_M)
+        specific.append(cur_specific)
+        susc.append(cur_susc)
 
     for i in range(len(energy)):
         plt.plot(temps, energy[i], label=f"L = {sizes[i]}")
@@ -255,21 +291,24 @@ def plot_by_temp():
     for i in range(len(specific)):
         plt.plot(temps, specific[i], label=f"L = {sizes[i]}")
     plt.legend()
-    plt.show()
     plt.title("Specific")
     plt.grid()
+    plt.show()
     plt.clf()
 
     for i in range(len(susc)):
         plt.plot(temps, susc[i], label=f"L = {sizes[i]}")
     plt.legend()
-    plt.show()
     plt.title("Susceptibility")
     plt.grid()
+    plt.show()
     plt.clf()
 
 
 if __name__ == "__main__":
+    newpath = r"plots"
+    if not os.path.exists(newpath):
+        os.makedirs(newpath)
     plt.rc("pgf", texsystem="pdflatex")
     # Problem 4
     # plot_energy_per_spin(
@@ -341,25 +380,25 @@ if __name__ == "__main__":
     # plt.clf()
 
     # Problem 6
-    generate_historgram(
-        "data/Energy_states_L_20_T_1.000000_1000000_random.txt",
-        20,
-        1,
-        np.arange(-2, -1.9, 0.005),
-        1,
-    )
+    # generate_historgram(
+    #     "data/Energy_states_L_20_T_1.000000_1000000_random.txt",
+    #     20,
+    #     1,
+    #     np.arange(-2, -1.9, 0.005),
+    #     1,
+    # )
     # plt.show()
-    plt.savefig("plots/Probs_L_20_T_1.pgf")
-
-    generate_historgram(
-        "data/Energy_states_L_20_T_2.400000_1000000_random.txt",
-        20,
-        2.4,
-        np.arange(-1.9, -0.6, 0.005),
-        0,
-    )
-    # plt.show()
-    plt.savefig("plots/Probs_L_20_T_2.4.pgf")
-
+    # plt.savefig("plots/Probs_L_20_T_1.pgf")
+    # plt.clf()
+    # generate_historgram(
+    #     "data/Energy_states_L_20_T_2.400000_1000000_random.txt",
+    #     20,
+    #     2.4,
+    #     np.arange(-1.9, -0.6, 0.005),
+    #     0,
+    # )
+    # # plt.show()
+    # plt.savefig("plots/Probs_L_20_T_2.4.pgf")
+    # plt.clf()
     # Problem 8
-    # plot_by_temp()
+    plot_by_temp()

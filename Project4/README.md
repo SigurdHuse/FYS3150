@@ -10,7 +10,10 @@ Run command:
 `c++ main.cpp src/system.cpp -I include/ -o main.exe -larmadillo -O2`
 
 ## How to run main.exe
-Before running make sure there is a folder named `data`, to store the results in.
+## Generate data from report
+Run command 
+`./main.exe -a`
+
 ### One temperature
 Run command:  
 `./main.exe <Length of grid> <Temperature of system> <Number of cycles> <Number of Markov Chains> <Bool indicating random or ordered initial state>`
@@ -24,8 +27,7 @@ Run command:
 `c++ test.cpp src/system.cpp -I include/ -larmadillo -O2 -o test.exe && ./test.exe`
 
 ## Generate plots
-Run command 
-`python3 plotter.py`
+Run command  `python3 plotter.py`  
 
 ## Dependecies
 The code was run on Ubuntu 20.04.5 LTS, with a Intel® Core™ i7-9750H CPU @ 2.60GHz × 12. The dependecies and how to install are:  

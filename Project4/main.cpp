@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <chrono>
 #include <assert.h>
+#include <sys/stat.h>
 
 /**
  * @brief Function performing a Monte Carlo simulation in Ising model with side length L.
@@ -109,6 +110,25 @@ void do_a_MC_simulation(int L, double T, int runs, int walkers, unsigned int see
 
 int main(int argc, const char *argv[])
 {
+    std::string folder_name = "data";
+    mkdir(folder_name.c_str(), 0777);
+
+    if (argc == 1 && argv[1] == "-a")
+    {
+        do_a_MC_simulation(2, 1.0, 1000000, 10, 1e6, 1);
+        do_a_MC_simulation(20, 1.0, 1000000, 10, 1e6, 1);
+        do_a_MC_simulation(20, 1.0, 1000000, 10, 1e6, 0);
+        do_a_MC_simulation(20, 2.4, 1000000, 10, 1e6, 1);
+        do_a_MC_simulation(20, 2.4, 1000000, 10, 1e6, 0);
+        for (int L = 40; L <= 100; L += 20)
+        {
+            for (double T = 2.1; T <= 2.4; T += 0.006)
+            {
+                do_a_MC_simulation(L, T, 2000000, 10, 1e6, random);
+            }
+        }
+        return 0;
+    }
     assert(argc == 6 || argc == 8);
     if (argc == 6)
     {
