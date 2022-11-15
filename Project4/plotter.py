@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
+import scipy as sc
 import os
 
 mpl.rcParams["figure.titlesize"] = 16
@@ -8,7 +9,7 @@ mpl.rcParams["axes.labelsize"] = 14
 mpl.rcParams["axes.titlesize"] = 12
 mpl.rcParams["legend.fontsize"] = "medium"
 mpl.rcParams["xtick.labelsize"] = 12
-mpl.rcParams["ytick.labelsize"] = 16
+mpl.rcParams["ytick.labelsize"] = 12
 
 
 def plot_energy_per_spin(filename, l, runs, random, T):
@@ -23,7 +24,7 @@ def plot_energy_per_spin(filename, l, runs, random, T):
         cur = main[:length]
         results.append(np.sum(cur / length / N))
 
-    title = f"Approximation of expected energy per spin in a {l} x {l} grid"
+    title = f"Approximation of <$\epsilon$> in a {l} x {l} grid"
     # title += " with random initial state" * random + " with ordered inital state" * (
     #    not random
     # )
@@ -31,7 +32,7 @@ def plot_energy_per_spin(filename, l, runs, random, T):
 
     plt.grid()
     plt.title(title)
-    plt.xlabel("Number of Monte Carlo cycles")
+    plt.xlabel("Number of Monte Carlo cycles [1]")
     plt.ylabel("Expected energy per spin [J]")
     labelname = "Expected energy per spin"
     labelname += (
@@ -59,7 +60,7 @@ def plot_magnetisation_per_spin(filename, l, runs, random, T):
         cur = main[:length]
         results.append(np.sum(np.abs(cur)) / length / N)
 
-    title = f"Approximation of expected magnetisation per spin in a {l} x {l} grid"
+    title = f"Approximation of <$|m|$> in a {l} x {l} grid"
     # title += " with random initial state" * random + " with ordered inital state" * (
     #    not random
     # )
@@ -67,8 +68,8 @@ def plot_magnetisation_per_spin(filename, l, runs, random, T):
 
     plt.grid()
     plt.title(title)
-    plt.xlabel("Number of Monte Carlo cycles")
-    plt.ylabel("Expected magnetisation per spin")
+    plt.xlabel("Number of Monte Carlo cycles [1]")
+    plt.ylabel("Expected absolute value of magnetisation per spin [1]")
 
     labelname = "Expected magnetisation per spin"
     labelname += (
@@ -103,7 +104,7 @@ def plot_specific_heat_capacity(filename, l, runs, T, random):
         E = (np.sum(cur) / length) ** 2
         results.append((E_squared - E) / N / T / T)
 
-    title = f"Approximation of specific heat capacity in a {l} x {l} grid"
+    title = f"Approximation of $C_V$ in a {l} x {l} grid"
     # title += " with random initial state" * random + " with ordered inital state" * (
     #    not random
     # )
@@ -119,8 +120,8 @@ def plot_specific_heat_capacity(filename, l, runs, T, random):
 
     plt.grid()
     plt.title(title)
-    plt.xlabel("Number of Monte Carlo cycles")
-    plt.ylabel("Specific heat capacity")
+    plt.xlabel("Number of Monte Carlo cycles [1]")
+    plt.ylabel(r"Specific heat capacity [k_B]")
     plt.plot(simulations, results, label=labelname, color=color_rand)
     plt.legend()
     plt.xscale("log")
@@ -141,7 +142,7 @@ def plot_susceptibility(filename, l, runs, T, random):
         M = (np.sum(np.abs(cur)) / length) ** 2
         results.append((M_squared - M) / N / T / T)
 
-    title = f"Approximation of susceptibility in a {l} x {l} grid"
+    title = f"Approximation of $\chi$ in a {l} x {l} grid"
     # title += " with random initial state" * random + " with ordered inital state" * (
     #    not random
     # )
@@ -157,8 +158,8 @@ def plot_susceptibility(filename, l, runs, T, random):
 
     plt.grid()
     plt.title(title)
-    plt.xlabel("Number of Monte Carlo cycles")
-    plt.ylabel("Susceptibility")
+    plt.xlabel("Number of Monte Carlo cycles [1]")
+    plt.ylabel("Susceptibility [1/J]")
     plt.plot(simulations, results, label=labelname, color=color_rand)
     plt.legend()
     plt.xscale("log")
@@ -171,7 +172,7 @@ def generate_historgram(filename, l, T, bins, log):
     main = np.loadtxt(filename, delimiter=",", usecols=range(1), skiprows=1)
     main /= N
 
-    print(np.var(main))
+    print(f"Estimated variance for a {l} x {l} grid with T = {T}:", np.var(main))
 
     bin_height, bin_boundary = np.histogram(main, bins=bins)
     width = bin_boundary[1] - bin_boundary[0]
@@ -182,9 +183,11 @@ def generate_historgram(filename, l, T, bins, log):
         plt.yscale("log")
 
     plt.grid()
-    plt.title(f"Estimated probability distribution of $\epsilon$ when T = {T}, L = {l}")
-    plt.ylabel("Probability")
-    plt.xlabel("Energy per spin")
+    plt.title(
+        f"Estimated probability distribution of <$\epsilon$> when T = {T}, L = {l}"
+    )
+    plt.ylabel("Probability [1]")
+    plt.xlabel("Expected energy per spin [J]")
 
 
 def compute_energy(sizes, temps, file_runs, runs):
@@ -195,7 +198,7 @@ def compute_energy(sizes, temps, file_runs, runs):
         for T in temps:
             filename = f"data/Energy_states_L_{L}_T_{T :.3f}000_{file_runs}_random.txt"
             cur = np.loadtxt(filename, usecols=range(1), skiprows=1)
-            values.append(np.sum(cur) / N / runs)
+            values.append((T, np.sum(cur) / N / runs))
         np.savetxt(filename_save, values)
 
 
@@ -209,7 +212,7 @@ def compute_magnetism(sizes, temps, file_runs, runs):
                 f"data/Magnetism_states_L_{L}_T_{T :.3f}000_{file_runs}_random.txt"
             )
             cur = np.loadtxt(filename, usecols=range(1), skiprows=1)
-            values.append(np.sum(np.abs(cur)) / N / runs)
+            values.append((T, np.sum(np.abs(cur)) / N / runs))
         np.savetxt(filename_save, values)
 
 
@@ -223,7 +226,7 @@ def compute_HC(sizes, temps, file_runs, runs):
             cur = np.loadtxt(filename, usecols=range(1), skiprows=1)
             E_squared = (np.sum(cur) / runs) ** 2
             E_exp_squared = np.sum(np.power(cur, 2)) / runs
-            values.append((E_exp_squared - E_squared) / N / T / T)
+            values.append((T, (E_exp_squared - E_squared) / N / T / T))
         np.savetxt(filename_save, values)
 
 
@@ -239,7 +242,7 @@ def compute_susc(sizes, temps, file_runs, runs):
             cur = np.loadtxt(filename, usecols=range(1), skiprows=1)
             M_squared = (np.sum(np.abs(cur)) / runs) ** 2
             M_exp_squared = np.sum(np.power(cur, 2)) / runs
-            values.append((M_exp_squared - M_squared) / N / T / T)
+            values.append((T, (M_exp_squared - M_squared) / N / T / T))
         np.savetxt(filename_save, values)
 
 
@@ -273,36 +276,90 @@ def plot_by_temp():
         susc.append(cur_susc)
 
     for i in range(len(energy)):
-        plt.plot(temps, energy[i], label=f"L = {sizes[i]}")
+        plt.plot(energy[i][:, 0], energy[i][:, 1], label=f"L = {sizes[i]}")
+
     plt.legend()
     plt.grid()
-    plt.title("Energy")
-    plt.show()
+    plt.title("Approximation of <$\epsilon$> for different grid lengths L")
+    plt.ylabel("Expected energy per spin [J]")
+    plt.xlabel("Temperature T [J / $k_b$]")
+    plt.savefig("plots/Energy_by_tmp.pgf")
     plt.clf()
 
     for i in range(len(magnet)):
-        plt.plot(temps, magnet[i], label=f"L = {sizes[i]}")
+        plt.plot(magnet[i][:, 0], magnet[i][:, 1], label=f"L = {sizes[i]}")
     plt.legend()
     plt.grid()
-    plt.title("Magnet")
-    plt.show()
+    plt.title("Approximation of <$|m|$> for different grid lengths L")
+    plt.ylabel("Expected absolute value of magnetisation per spin [1]")
+    plt.xlabel("Temperature T [J / $k_b$]")
+    plt.savefig("plots/Magnet_by_tmp.pgf")
     plt.clf()
 
     for i in range(len(specific)):
-        plt.plot(temps, specific[i], label=f"L = {sizes[i]}")
+        plt.plot(specific[i][:, 0], specific[i][:, 1], label=f"L = {sizes[i]}")
     plt.legend()
-    plt.title("Specific")
+    plt.title("Approximation of $C_V$ for different grid lengths L")
+    plt.ylabel(r"Specific heat capacity [$k_B$]")
+    plt.xlabel("Temperature T [J / $k_b$]")
     plt.grid()
-    plt.show()
+    plt.savefig("plots/HC_by_tmp.pgf")
     plt.clf()
 
     for i in range(len(susc)):
-        plt.plot(temps, susc[i], label=f"L = {sizes[i]}")
+        plt.plot(susc[i][:, 0], susc[i][:, 1], label=f"L = {sizes[i]}")
     plt.legend()
-    plt.title("Susceptibility")
+    plt.title("Approximation of $\chi$ for different grid lengths L")
+    plt.ylabel("Susceptibility [1/J]")
+    plt.xlabel("Temperature T [J / $k_b$]")
     plt.grid()
-    plt.show()
+    plt.savefig("plots/Susc_by_tmp.pgf")
     plt.clf()
+
+
+def estimate_T_inf():
+    """Script to compute T_c and estimate T_c for L = infinity using Specific Heat capacity"""
+
+    temps = np.arange(2.1, 2.401, 0.006)
+    sizes = np.array([40, 60, 80, 100])
+    values = 1 / sizes
+    critical_temps = np.zeros(len(sizes))
+
+    for i, L in enumerate(sizes):
+        cur = np.loadtxt(f"data/Computed_HC_states_L_{L}.txt")
+        critical_temps[i] = cur[np.argmax(cur[:, 1])][0]
+    estimate = sc.stats.linregress(values, critical_temps)
+
+    for L, T_c in zip(sizes, critical_temps):
+        print(f"The critical temperature for L = {L} is {T_c : .3f}")
+
+    x = np.linspace(0, np.max(values), 10000)
+    print("Estimate of T_c for infinite grid:", estimate.intercept)
+    plt.plot(
+        x,
+        estimate.intercept + estimate.slope * x,
+        label=f"Linear regression using $T_c$",
+        color="r",
+    )
+
+    plt.plot(values, critical_temps, "ro", label=f"Observed $T_c$")
+    plt.plot(
+        0,
+        estimate.intercept,
+        "bo",
+        label=f"Approximation of $T_c(\infty) = 2.2689$",
+        markersize=10,
+        color="midnightblue",
+    )
+
+    plt.yticks(np.arange(2.269, 2.29, 0.004))
+    plt.grid()
+    plt.legend()
+    plt.xlabel(r"$L^{-1}$ [1]")
+    plt.ylabel(r"$T_c [J / k_B]$")
+    plt.title(
+        f"Estimate of critical temperature $T_c$ for $\infty$x$\infty$-grid using $C_V$"
+    )
 
 
 if __name__ == "__main__":
@@ -310,95 +367,99 @@ if __name__ == "__main__":
     if not os.path.exists(newpath):
         os.makedirs(newpath)
     plt.rc("pgf", texsystem="pdflatex")
+
     # Problem 4
-    # plot_energy_per_spin(
-    #     "data/Energy_states_L_2_T_1.000000_1000000_random.txt", 2, 7, 1, 1
-    # )
-    # # plt.show()
-    # plt.savefig("plots/Energy_L_2_T_1.pgf")
-    # plt.clf()
+    plot_energy_per_spin(
+        "data/Energy_states_L_2_T_1.000000_1000000_random.txt", 2, 7, 1, 1
+    )
+    # plt.show()
+    plt.savefig("plots/Energy_L_2_T_1.pgf")
+    plt.clf()
 
-    # plot_magnetisation_per_spin(
-    #     "data/Magnetism_states_L_2_T_1.000000_1000000_random.txt", 2, 7, 1, 1
-    # )
-    # plt.savefig("plots/Magnet_L_2_T_1.pgf")
-    # plt.clf()
+    plot_magnetisation_per_spin(
+        "data/Magnetism_states_L_2_T_1.000000_1000000_random.txt", 2, 7, 1, 1
+    )
+    plt.savefig("plots/Magnet_L_2_T_1.pgf")
+    plt.clf()
 
-    # plot_specific_heat_capacity(
-    #     "data/Energy_states_L_2_T_1.000000_1000000_random.txt", 2, 7, 1, 1
-    # )
-    # plt.savefig("plots/HC_L_2_T_1.pgf")
-    # # plt.clf()
+    plot_specific_heat_capacity(
+        "data/Energy_states_L_2_T_1.000000_1000000_random.txt", 2, 7, 1, 1
+    )
+    plt.savefig("plots/HC_L_2_T_1.pgf")
+    plt.clf()
 
-    # # plot_susceptibility(
-    # #     "data/Magnetism_states_L_2_T_1.000000_1000000_random.txt", 2, 7, 1, 1
-    # # )
-    # # plt.savefig("plots/susceptibility_L_2_T_1.pgf")
-    # # plt.clf()
+    plot_susceptibility(
+        "data/Magnetism_states_L_2_T_1.000000_1000000_random.txt", 2, 7, 1, 1
+    )
+    plt.savefig("plots/susceptibility_L_2_T_1.pgf")
+    plt.clf()
 
-    # # Problem 5
-    # plot_energy_per_spin(
-    #     "data/Energy_states_L_20_T_1.000000_1000000_random.txt", 20, 7, 1, 1
-    # )
+    # Problem 5
+    plot_energy_per_spin(
+        "data/Energy_states_L_20_T_1.000000_1000000_random.txt", 20, 7, 1, 1
+    )
 
-    # plot_energy_per_spin(
-    #     "data/Energy_states_L_20_T_1.000000_1000000_positiv.txt", 20, 7, 0, 1
-    # )
-    # plt.grid()
-    # plt.savefig("plots/Energy_L_20_T_1.pgf")
-    # plt.clf()
+    plot_energy_per_spin(
+        "data/Energy_states_L_20_T_1.000000_1000000_positiv.txt", 20, 7, 0, 1
+    )
+    plt.grid()
+    plt.savefig("plots/Energy_L_20_T_1.pgf")
+    plt.clf()
 
-    # plot_energy_per_spin(
-    #     "data/Energy_states_L_20_T_2.400000_1000000_random.txt", 20, 7, 1, 2.4
-    # )
+    plot_energy_per_spin(
+        "data/Energy_states_L_20_T_2.400000_1000000_random.txt", 20, 7, 1, 2.4
+    )
 
-    # plot_energy_per_spin(
-    #     "data/Energy_states_L_20_T_2.400000_1000000_positiv.txt", 20, 7, 0, 2.4
-    # )
-    # plt.grid()
-    # plt.savefig("plots/Energy_L_20_T_2.4.pgf")
-    # plt.clf()
+    plot_energy_per_spin(
+        "data/Energy_states_L_20_T_2.400000_1000000_positiv.txt", 20, 7, 0, 2.4
+    )
+    plt.grid()
+    plt.savefig("plots/Energy_L_20_T_2.4.pgf")
+    plt.clf()
 
-    # plot_magnetisation_per_spin(
-    #     "data/Magnetism_states_L_20_T_1.000000_1000000_random.txt", 20, 7, 1, 1
-    # )
-    # plot_magnetisation_per_spin(
-    #     "data/Magnetism_states_L_20_T_1.000000_1000000_positiv.txt", 20, 7, 0, 1
-    # )
-    # plt.grid()
-    # plt.savefig("plots/Magnet_L_20_T_1.pgf")
-    # plt.clf()
+    plot_magnetisation_per_spin(
+        "data/Magnetism_states_L_20_T_1.000000_1000000_random.txt", 20, 7, 1, 1
+    )
+    plot_magnetisation_per_spin(
+        "data/Magnetism_states_L_20_T_1.000000_1000000_positiv.txt", 20, 7, 0, 1
+    )
+    plt.grid()
+    plt.savefig("plots/Magnet_L_20_T_1.pgf")
+    plt.clf()
 
-    # plot_magnetisation_per_spin(
-    #     "data/Magnetism_states_L_20_T_2.400000_1000000_random.txt", 20, 7, 1, 2.4
-    # )
-    # plot_magnetisation_per_spin(
-    #     "data/Magnetism_states_L_20_T_2.400000_1000000_positiv.txt", 20, 7, 0, 2.4
-    # )
-    # plt.grid()
-    # plt.savefig("plots/Magnet_L_20_T_2.4.pgf")
-    # plt.clf()
+    plot_magnetisation_per_spin(
+        "data/Magnetism_states_L_20_T_2.400000_1000000_random.txt", 20, 7, 1, 2.4
+    )
+    plot_magnetisation_per_spin(
+        "data/Magnetism_states_L_20_T_2.400000_1000000_positiv.txt", 20, 7, 0, 2.4
+    )
+    plt.grid()
+    plt.savefig("plots/Magnet_L_20_T_2.4.pgf")
+    plt.clf()
 
     # Problem 6
-    # generate_historgram(
-    #     "data/Energy_states_L_20_T_1.000000_1000000_random.txt",
-    #     20,
-    #     1,
-    #     np.arange(-2, -1.9, 0.005),
-    #     1,
-    # )
-    # plt.show()
-    # plt.savefig("plots/Probs_L_20_T_1.pgf")
-    # plt.clf()
-    # generate_historgram(
-    #     "data/Energy_states_L_20_T_2.400000_1000000_random.txt",
-    #     20,
-    #     2.4,
-    #     np.arange(-1.9, -0.6, 0.005),
-    #     0,
-    # )
-    # # plt.show()
-    # plt.savefig("plots/Probs_L_20_T_2.4.pgf")
-    # plt.clf()
+    generate_historgram(
+        "data/Energy_states_L_20_T_1.000000_1000000_random.txt",
+        20,
+        1,
+        np.arange(-2, -1.9, 0.005),
+        1,
+    )
+    plt.savefig("plots/Probs_L_20_T_1.pgf")
+    plt.clf()
+
+    generate_historgram(
+        "data/Energy_states_L_20_T_2.400000_1000000_random.txt",
+        20,
+        2.4,
+        np.arange(-1.9, -0.6, 0.005),
+        0,
+    )
+    plt.savefig("plots/Probs_L_20_T_2.4.pgf")
+    plt.clf()
+
     # Problem 8
     plot_by_temp()
+    plt.clf()
+    estimate_T_inf()
+    plt.savefig("plots/Critical_temperature_L_inf.pgf")

@@ -22,6 +22,10 @@ Run command:
 Run command:  
 `./main.exe <Length of grid> <Start temperature> <End temperature> <Increase in temperature for each simulation> <Number of cycles> <Number of Markov Chains> <Bool indicating random or ordered initial state>`
 
+### Time running time
+Run command  
+`time ./main.exe <Desired input>`
+
 ## Run tests
 Run command:   
 `c++ test.cpp src/system.cpp -I include/ -larmadillo -O2 -o test.exe && ./test.exe`
@@ -34,3 +38,6 @@ The code was run on Ubuntu 20.04.5 LTS, with a Intel® Core™ i7-9750H CPU @ 2.
 * Armadillo version: 9.800.4 (Horizon Scraper), `sudo apt-get install libarmadillo-dev`
 * Python3 3.8.10, `sudo apt install python3.8`
 * c++ (Ubuntu 9.4.0-1ubuntu1~20.04.1) 9.4.0, `sudo apt install build-essential`
+* Numpy version 1.23.3, `pip install numpy`
+* Matplotlib version 3.4.3, `pip install matplotlib`
+* Scipy version 1.91, `pip install scipy`
