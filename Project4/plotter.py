@@ -254,10 +254,10 @@ def plot_by_temp():
     runs = 2000000
     file_runs = 200000
 
-    # compute_energy(sizes, temps, file_runs, runs)
-    # compute_magnetism(sizes, temps, file_runs, runs)
-    # compute_HC(sizes, temps, file_runs, runs)
-    # compute_susc(sizes, temps, file_runs, runs)
+    compute_energy(sizes, temps, file_runs, runs)
+    compute_magnetism(sizes, temps, file_runs, runs)
+    compute_HC(sizes, temps, file_runs, runs)
+    compute_susc(sizes, temps, file_runs, runs)
 
     energy = []
     magnet = []
