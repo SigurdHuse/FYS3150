@@ -183,9 +183,7 @@ def generate_historgram(filename, l, T, bins, log):
         plt.yscale("log")
 
     plt.grid()
-    plt.title(
-        f"Estimated probability distribution of <$\epsilon$> when T = {T}, L = {l}"
-    )
+    plt.title(f"Estimated probability distribution of $\epsilon$ when T = {T}, L = {l}")
     plt.ylabel("Probability [1]")
     plt.xlabel("Expected energy per spin [J]")
 
