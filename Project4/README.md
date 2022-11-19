@@ -1,6 +1,6 @@
 # Simulating the The Ising model using the Metropolis algorithm
 
-The Ising model is a model which describes ferromagnetic properties, uses quantized spin, and limits each "particle" to only interact with its nearest neighbours in a static lattice. It consits of a LxL-grid filled with particles which have either +1 or -1 spin. To simulate such a system the program in this repository uses the Metropolis algorithm, which simulates a Markov chain describing the system. Running enough cycles of simulation the Chain reaches equilibrium, and we get good approximations of the analytical solution for energy and magnetization of the system.
+The Ising model consists of a static square grid filled with "particles", which can only interact with the particles to the: left, right, up and down of it. The model is used to describe ferromagnetic properties, and uses quantized spin. It consits of a LxL-grid filled with particles which have either +1 or -1 spin. To simulate such a system the program in this repository uses the Metropolis algorithm, which simulates a Markov chain describing the system. Running enough cycles of simulation the Chain reaches equilibrium, and we get a good approximations of the distribution of the states of the system.
 
 ## How to build
 ### With parallelization
@@ -12,6 +12,7 @@ Run command:
 `c++ main.cpp src/system.cpp -I include/ -o main.exe -larmadillo -O2`
 
 ## How to run main.exe
+If running with parallelization, make sure to specifiy number of cores to be used by running command `export OMP_NUM_THREADS= <number of cores>`
 ## Generate data from report
 Run command 
 `./main.exe -a`

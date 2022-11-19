@@ -271,10 +271,10 @@ def plot_by_temp():
     runs = 2000000
     file_runs = 200000
 
-    # compute_energy(sizes, temps, file_runs, runs)
-    # compute_magnetism(sizes, temps, file_runs, runs)
-    # compute_HC(sizes, temps, file_runs, runs)
-    # compute_susc(sizes, temps, file_runs, runs)
+    compute_energy(sizes, temps, file_runs, runs)
+    compute_magnetism(sizes, temps, file_runs, runs)
+    compute_HC(sizes, temps, file_runs, runs)
+    compute_susc(sizes, temps, file_runs, runs)
 
     energy = []
     magnet = []
@@ -385,98 +385,98 @@ if __name__ == "__main__":
         os.makedirs(newpath)
     plt.rc("pgf", texsystem="pdflatex")
 
-    # # Problem 4
-    # plot_energy_per_spin(
-    #     "data/Energy_states_L_2_T_1.000000_1000000_random.txt", 2, 7, 1, 1
-    # )
-    # # plt.show()
-    # plt.savefig("plots/Energy_L_2_T_1.pgf")
-    # plt.clf()
+    # Problem 4
+    plot_energy_per_spin(
+        "data/Energy_states_L_2_T_1.000000_1000000_random.txt", 2, 7, 1, 1
+    )
+    # plt.show()
+    plt.savefig("plots/Energy_L_2_T_1.pgf")
+    plt.clf()
 
-    # plot_magnetisation_per_spin(
-    #     "data/Magnetism_states_L_2_T_1.000000_1000000_random.txt", 2, 7, 1, 1
-    # )
-    # plt.savefig("plots/Magnet_L_2_T_1.pgf")
-    # plt.clf()
+    plot_magnetisation_per_spin(
+        "data/Magnetism_states_L_2_T_1.000000_1000000_random.txt", 2, 7, 1, 1
+    )
+    plt.savefig("plots/Magnet_L_2_T_1.pgf")
+    plt.clf()
 
-    # plot_specific_heat_capacity(
-    #     "data/Energy_states_L_2_T_1.000000_1000000_random.txt", 2, 7, 1, 1
-    # )
-    # plt.savefig("plots/HC_L_2_T_1.pgf")
-    # plt.clf()
+    plot_specific_heat_capacity(
+        "data/Energy_states_L_2_T_1.000000_1000000_random.txt", 2, 7, 1, 1
+    )
+    plt.savefig("plots/HC_L_2_T_1.pgf")
+    plt.clf()
 
-    # plot_susceptibility(
-    #     "data/Magnetism_states_L_2_T_1.000000_1000000_random.txt", 2, 7, 1, 1
-    # )
-    # plt.savefig("plots/susceptibility_L_2_T_1.pgf")
-    # plt.clf()
+    plot_susceptibility(
+        "data/Magnetism_states_L_2_T_1.000000_1000000_random.txt", 2, 7, 1, 1
+    )
+    plt.savefig("plots/susceptibility_L_2_T_1.pgf")
+    plt.clf()
 
-    # # Problem 5
-    # plot_energy_per_spin(
-    #     "data/Energy_states_L_20_T_1.000000_1000000_random.txt", 20, 7, 1, 1
-    # )
+    # Problem 5
+    plot_energy_per_spin(
+        "data/Energy_states_L_20_T_1.000000_1000000_random.txt", 20, 7, 1, 1
+    )
 
-    # plot_energy_per_spin(
-    #     "data/Energy_states_L_20_T_1.000000_1000000_positiv.txt", 20, 7, 0, 1
-    # )
-    # plt.grid()
-    # plt.savefig("plots/Energy_L_20_T_1.pgf")
-    # plt.clf()
+    plot_energy_per_spin(
+        "data/Energy_states_L_20_T_1.000000_1000000_positiv.txt", 20, 7, 0, 1
+    )
+    plt.grid()
+    plt.savefig("plots/Energy_L_20_T_1.pgf")
+    plt.clf()
 
-    # plot_energy_per_spin(
-    #     "data/Energy_states_L_20_T_2.400000_1000000_random.txt", 20, 7, 1, 2.4
-    # )
+    plot_energy_per_spin(
+        "data/Energy_states_L_20_T_2.400000_1000000_random.txt", 20, 7, 1, 2.4
+    )
 
-    # plot_energy_per_spin(
-    #     "data/Energy_states_L_20_T_2.400000_1000000_positiv.txt", 20, 7, 0, 2.4
-    # )
-    # plt.grid()
-    # plt.savefig("plots/Energy_L_20_T_2.4.pgf")
-    # plt.clf()
+    plot_energy_per_spin(
+        "data/Energy_states_L_20_T_2.400000_1000000_positiv.txt", 20, 7, 0, 2.4
+    )
+    plt.grid()
+    plt.savefig("plots/Energy_L_20_T_2.4.pgf")
+    plt.clf()
 
-    # plot_magnetisation_per_spin(
-    #     "data/Magnetism_states_L_20_T_1.000000_1000000_random.txt", 20, 7, 1, 1
-    # )
-    # plot_magnetisation_per_spin(
-    #     "data/Magnetism_states_L_20_T_1.000000_1000000_positiv.txt", 20, 7, 0, 1
-    # )
-    # plt.grid()
-    # plt.savefig("plots/Magnet_L_20_T_1.pgf")
-    # plt.clf()
+    plot_magnetisation_per_spin(
+        "data/Magnetism_states_L_20_T_1.000000_1000000_random.txt", 20, 7, 1, 1
+    )
+    plot_magnetisation_per_spin(
+        "data/Magnetism_states_L_20_T_1.000000_1000000_positiv.txt", 20, 7, 0, 1
+    )
+    plt.grid()
+    plt.savefig("plots/Magnet_L_20_T_1.pgf")
+    plt.clf()
 
-    # plot_magnetisation_per_spin(
-    #     "data/Magnetism_states_L_20_T_2.400000_1000000_random.txt", 20, 7, 1, 2.4
-    # )
-    # plot_magnetisation_per_spin(
-    #     "data/Magnetism_states_L_20_T_2.400000_1000000_positiv.txt", 20, 7, 0, 2.4
-    # )
-    # plt.grid()
-    # plt.savefig("plots/Magnet_L_20_T_2.4.pgf")
-    # plt.clf()
+    plot_magnetisation_per_spin(
+        "data/Magnetism_states_L_20_T_2.400000_1000000_random.txt", 20, 7, 1, 2.4
+    )
+    plot_magnetisation_per_spin(
+        "data/Magnetism_states_L_20_T_2.400000_1000000_positiv.txt", 20, 7, 0, 2.4
+    )
+    plt.grid()
+    plt.savefig("plots/Magnet_L_20_T_2.4.pgf")
+    plt.clf()
 
-    # # Problem 6
-    # generate_historgram(
-    #     "data/Energy_states_L_20_T_1.000000_1000000_random.txt",
-    #     20,
-    #     1,
-    #     np.arange(-2, -1.9, 0.005),
-    #     1,
-    # )
-    # plt.savefig("plots/Probs_L_20_T_1.pgf")
-    # plt.clf()
+    # Problem 6
+    generate_historgram(
+        "data/Energy_states_L_20_T_1.000000_1000000_random.txt",
+        20,
+        1,
+        np.arange(-2, -1.9, 0.005),
+        1,
+    )
+    plt.savefig("plots/Probs_L_20_T_1.pgf")
+    plt.clf()
 
-    # generate_historgram(
-    #     "data/Energy_states_L_20_T_2.400000_1000000_random.txt",
-    #     20,
-    #     2.4,
-    #     np.arange(-1.9, -0.6, 0.005),
-    #     0,
-    # )
-    # plt.savefig("plots/Probs_L_20_T_2.4.pgf")
-    # plt.clf()
+    generate_historgram(
+        "data/Energy_states_L_20_T_2.400000_1000000_random.txt",
+        20,
+        2.4,
+        np.arange(-1.9, -0.6, 0.005),
+        0,
+    )
+    plt.savefig("plots/Probs_L_20_T_2.4.pgf")
+    plt.clf()
 
-    # # Problem 8
-    # plot_by_temp()
-    # plt.clf()
+    # Problem 8
+    plot_by_temp()
+    plt.clf()
     estimate_T_inf()
     plt.savefig("plots/Critical_temperature_L_inf.pgf")
