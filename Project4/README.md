@@ -15,7 +15,7 @@ Run command:
 If running with parallelization, make sure to specifiy number of cores to be used by running command `export OMP_NUM_THREADS= <number of cores>`
 ## Generate data from report
 Run command 
-`./main.exe -a`
+`./main.exe`
 
 ### One temperature
 Run command:  

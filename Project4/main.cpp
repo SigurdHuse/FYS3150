@@ -113,7 +113,7 @@ int main(int argc, const char *argv[])
     std::string folder_name = "data";
     mkdir(folder_name.c_str(), 0777);
 
-    if (argc == 1 && argv[1] == "-a")
+    if (argc == 1)
     {
         do_a_MC_simulation(2, 1.0, 1000000, 10, 1e6, 1);
         do_a_MC_simulation(20, 1.0, 1000000, 10, 1e6, 1);
@@ -129,7 +129,7 @@ int main(int argc, const char *argv[])
         }
         return 0;
     }
-    assert(argc == 6 || argc == 8);
+    // assert(argc == 6 || argc == 8);
     if (argc == 6)
     {
         int L = atoi(argv[1]), runs = atoi(argv[3]), walkers = atoi(argv[4]);
