@@ -1,10 +1,13 @@
 # Prerequisites
 *.d
 
+data_5_6/
+
 # Generated files
 *.txt
 *.pdf
 *.pgf
+*.bin
 .vscode
 
 # Compiled Object files

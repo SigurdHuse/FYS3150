@@ -56,6 +56,6 @@ void test_solver()
 
 int main()
 {
-    test_fill_matrix();
-    // test_solver();
+    // test_fill_matrix();
+    test_solver();
 }
