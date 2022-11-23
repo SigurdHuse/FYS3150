@@ -8,16 +8,18 @@
 class Grid
 {
 private:
-    int M, dim;
+    int M, M_squared;
     double T, h, delta_t;
     // Matrix optimised to contain mainly zeros
     // Should maybe be sp_cx_mat if larger than 100 x 100
-    arma::cx_mat matrix;
+    arma::sp_cx_mat matrix;
 
 public:
     // Constructor
-    Grid(int side_length, int dimension, double time, int time_steps);
+    Grid(int side_length, double time, int time_steps);
 
+    // Empty constructor to use in solver class
+    Grid();
     // Translates pair of indicies to single index
     int indicies_to_index(int i, int j);
 
@@ -33,8 +35,16 @@ public:
     // Prints matrix
     void print_matrix();
 
-    // Solves system of equations and gets next time step
-    arma::cx_colvec get_next_step(arma::cx_colvec cur);
+    // Multiplies matrix with a vector v
+    arma::cx_vec multiply_matrix_with_vector(arma::cx_vec v);
+
+    void set_side_length(int side_length);
+
+    void set_time(double time);
+
+    void set_time_step(int time_steps);
+
+    arma::sp_cx_mat get_matrix();
 };
 
 #endif
