@@ -13,9 +13,11 @@ Solver::Solver(int side_length, double time, int time_delta)
     B_matrix.set_time_step(time_delta);
 
     current_state = arma::cx_mat(side_length, side_length);
+    current_state_vec = arma::cx_colvec((side_length - 2) * (side_length - 2));
     states = arma::cx_cube(side_length, side_length, time_delta + 1);
 
     M = side_length;
+    M_squared = (side_length - 2) * (side_length - 2);
     h = 1.0 / side_length;
     time_steps = time_delta;
     V = arma::cx_mat(side_length - 2, side_length - 2);
@@ -24,10 +26,13 @@ Solver::Solver(int side_length, double time, int time_delta)
     fill_matrices();
 }
 
+// Fills A and B matrix
 void Solver::fill_matrices()
 {
     A_matrix.fill_matrix(V, 1);
+    // A_matrix.print_matrix();
     B_matrix.fill_matrix(V, 0);
+    // B_matrix.print_matrix();
 }
 
 // Sets inital state of system with Dirichlet boundary conditions
@@ -55,29 +60,32 @@ void Solver::set_initial_state(double x_c, double y_c, double sigma_x, double si
 }
 
 // Converts current state to vector
-arma::cx_vec Solver::convert_current_state_to_vector()
+void Solver::convert_current_state_to_vector()
 {
-    arma::cx_vec ans = arma::cx_vec((M - 2) * (M - 2));
+    // arma::cx_mat inner_mat = current_state.submat(1, 1, M - 2, M - 2);
+    // current_state_vec = inner_mat.as_col();
 
     for (int y = 1; y < M - 1; ++y)
     {
         for (int x = 1; x < M - 1; ++x)
         {
-            ans[indicies_to_index(y, x)] = current_state(y, x);
+            current_state_vec[indicies_to_index(y, x)] = current_state(y, x);
         }
     }
-    return ans;
 }
 
+// Updates current state of system from vector
 void Solver::update_current_state(arma::cx_vec v)
 {
+    // v.raw_print();
     for (int y = 1; y < M - 1; ++y)
     {
         for (int x = 1; x < M - 1; ++x)
         {
-            current_state(y, x) = v[indicies_to_index(y, x)];
+            current_state(y, x) = v(indicies_to_index(y, x));
         }
     }
+    // print_current();
 }
 
 // Translates pair of indicies to single index
@@ -86,15 +94,16 @@ int Solver::indicies_to_index(int y, int x)
     return y - 1 + (M - 2) * (x - 1);
 }
 
+// Computes b in Crank-Nicolson method
 arma::cx_vec Solver::compute_b()
 {
-    return B_matrix.multiply_matrix_with_vector(convert_current_state_to_vector());
+    convert_current_state_to_vector();
+    return B_matrix.multiply_matrix_with_vector(current_state_vec);
 }
 
 // Finds next state using Crank-Nicolson
 void Solver::find_next_state()
 {
-
     arma::cx_vec b = compute_b();
 
     arma::cx_vec ans;
@@ -106,6 +115,13 @@ void Solver::find_next_state()
 void Solver::print_current()
 {
     current_state.raw_print();
+}
+
+// Prints current state of system as vector
+void Solver::print_current_state_vector()
+{
+    convert_current_state_to_vector();
+    current_state_vec.raw_print();
 }
 
 // Simulates the system

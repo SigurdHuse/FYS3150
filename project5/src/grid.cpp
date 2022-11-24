@@ -19,9 +19,9 @@ void Grid::set_side_length(int side_length)
 {
     M = side_length;
     M_squared = pow(side_length - 2, 2);
-    matrix = arma::sp_cx_mat(M_squared, M_squared);
+    matrix = arma::sp_cx_mat((side_length - 2) * (side_length - 2), (side_length - 2) * (side_length - 2));
     h = 1.0 / side_length;
-    std::cout << "h : " << h << "\n";
+    // std::cout << "h : " << h << "\n";
 }
 
 void Grid::set_time(double time)
@@ -32,7 +32,7 @@ void Grid::set_time(double time)
 void Grid::set_time_step(int time_steps)
 {
     delta_t = (double)T / time_steps;
-    std::cout << "delta_t:" << delta_t << "\n";
+    // std::cout << "delta_t:" << delta_t << "\n";
 }
 
 arma::sp_cx_mat Grid::get_matrix()
@@ -45,14 +45,14 @@ void Grid::fill_matrix_with_r(std::complex<double> r)
 {
     for (int i = 0; i < M_squared - 1; ++i)
     {
-        if ((i + 1) % 3 == 0)
+        if ((i + 1) % (M - 2) == 0)
         {
             continue;
         }
         matrix(i, i + 1) = r;
         matrix(i + 1, i) = r;
     }
-    for (int i = 0; i < M_squared - 3; ++i)
+    for (int i = 0; i < M_squared - M - 2; ++i)
     {
         matrix(i, i + 3) = r;
         matrix(i + 3, i) = r;
@@ -62,7 +62,8 @@ void Grid::fill_matrix_with_r(std::complex<double> r)
 // Prints matrix
 void Grid::print_matrix()
 {
-    matrix.raw_print();
+    arma::mat tmp(matrix.imag());
+    tmp.brief_print();
 }
 
 // Translates pair of indicies to single index
@@ -72,7 +73,7 @@ int Grid::indicies_to_index(int i, int j)
 }
 
 // Fills matrix with values from a vector
-void Grid::fill_matrix_from_vector(std::vector<std::complex<double>> v)
+void Grid::fill_matrix_from_vector(arma::cx_vec v)
 {
     for (int i = 0; i < M_squared; ++i)
     {
@@ -83,7 +84,7 @@ void Grid::fill_matrix_from_vector(std::vector<std::complex<double>> v)
 // r = i * delta_t / 2 / h / h by definition
 void Grid::fill_matrix(arma::cx_mat V, bool A_matrix)
 {
-    std::vector<std::complex<double>> v(M_squared);
+    arma::cx_vec v(M_squared);
     std::complex<double> r(0, delta_t / 2 / h / h);
     std::complex<double> r4(0.0, 4 * r.imag());
     // V.raw_print();
@@ -118,7 +119,7 @@ void Grid::fill_matrix(arma::cx_mat V, bool A_matrix)
     fill_matrix_from_vector(v);
 }
 
-arma::cx_vec Grid::multiply_matrix_with_vector(arma::cx_vec v)
+arma::cx_vec Grid::multiply_matrix_with_vector(arma::cx_colvec v)
 {
     return matrix * v;
 }

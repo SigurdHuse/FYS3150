@@ -12,11 +12,12 @@ private:
     Grid B_matrix;
 
     std::string filename;
-    int M, time_steps;
+    int M, M_squared, time_steps;
     double h;
     arma::cx_mat current_state;
     arma::cx_mat V;
     arma::cx_cube states;
+    arma::cx_colvec current_state_vec;
 
 public:
     // Constructor
@@ -29,7 +30,7 @@ public:
     void set_initial_state(double x_c, double y_c, double sigma_x, double sigma_y, double p_x, double p_y);
 
     // Converts current state to vector
-    arma::cx_vec convert_current_state_to_vector();
+    void convert_current_state_to_vector();
 
     // Translates pair of indicies to single index
     int indicies_to_index(int y, int x);
@@ -53,6 +54,9 @@ public:
 
     // Writes current state to file
     void write_states_to_file();
+
+    // Prints current state of system as vector
+    void print_current_state_vector();
 };
 
 #endif
