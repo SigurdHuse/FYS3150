@@ -11,7 +11,7 @@ fig, ax = plt.subplots()
 
 A.load("Data_M_200_dt_320.bin")
 length = 320
-size = 5
+size = 200
 value = np.zeros((size, size), dtype="complex")
 
 fig = plt.figure()

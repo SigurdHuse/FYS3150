@@ -52,18 +52,19 @@ void Grid::fill_matrix_with_r(std::complex<double> r)
         matrix(i, i + 1) = r;
         matrix(i + 1, i) = r;
     }
-    for (int i = 0; i < M_squared - M - 2; ++i)
+    int offset = M - 2;
+    for (int i = 0; i < M_squared - offset; ++i)
     {
-        matrix(i, i + 3) = r;
-        matrix(i + 3, i) = r;
+        matrix(i, i + offset) = r;
+        matrix(i + offset, i) = r;
     }
 }
 
 // Prints matrix
 void Grid::print_matrix()
 {
-    arma::mat tmp(matrix.imag());
-    tmp.brief_print();
+    arma::cx_mat tmp(matrix);
+    tmp.print();
 }
 
 // Translates pair of indicies to single index

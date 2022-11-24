@@ -75,7 +75,7 @@ void Solver::convert_current_state_to_vector()
 }
 
 // Updates current state of system from vector
-void Solver::update_current_state(arma::cx_vec v)
+void Solver::update_current_state(arma::cx_vec &v)
 {
     // v.raw_print();
     for (int y = 1; y < M - 1; ++y)

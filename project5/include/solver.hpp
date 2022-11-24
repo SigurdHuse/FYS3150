@@ -42,7 +42,7 @@ public:
     void find_next_state();
 
     // Updates current state from vector
-    void update_current_state(arma::cx_vec v);
+    void update_current_state(arma::cx_vec &v);
 
     // Simulates system using Crank-Nicolson
     void simulate();
