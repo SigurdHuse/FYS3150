@@ -83,7 +83,7 @@ void Grid::fill_matrix_from_vector(arma::cx_vec v)
 }
 
 // r = i * delta_t / 2 / h / h by definition
-void Grid::fill_matrix(arma::cx_mat V, bool A_matrix)
+void Grid::fill_matrix(arma::mat V, bool A_matrix)
 {
     arma::cx_vec v(M_squared);
     std::complex<double> r(0, delta_t / 2 / h / h);
@@ -95,7 +95,7 @@ void Grid::fill_matrix(arma::cx_mat V, bool A_matrix)
         {
             for (int j = 0; j < M - 2; ++j)
             {
-                std::complex<double> tmp(V(i, j) * delta_t / 2.0);
+                std::complex<double> tmp(0.0, V(i, j) * delta_t / 2.0);
                 std::complex<double> val(1.0 + tmp.real(), r4.imag() + tmp.imag());
 
                 v[indicies_to_index(i, j)] = val;

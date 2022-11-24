@@ -2,7 +2,7 @@
 #include "grid.hpp"
 
 // Constructor
-Solver::Solver(int side_length, double time, int time_delta)
+Solver::Solver(int side_length, double time, int time_delta, long double v0)
 {
     A_matrix.set_side_length(side_length);
     A_matrix.set_time(time);
@@ -20,10 +20,71 @@ Solver::Solver(int side_length, double time, int time_delta)
     M_squared = (side_length - 2) * (side_length - 2);
     h = 1.0 / side_length;
     time_steps = time_delta;
-    V = arma::cx_mat(side_length - 2, side_length - 2);
+    v_0 = v0;
+
+    initialise_V();
 
     filename = "Data_M_" + std::to_string(side_length) + "_dt_" + std::to_string(time_delta) + ".bin";
     fill_matrices();
+}
+
+void get_values_from_file(double &thickness, double &x_pos, double &y_pos, double &seperation, double &aperture, double &slits)
+{
+    std::string line;
+    std::ifstream infile("config.txt");
+    std::getline(infile, line);
+    std::getline(infile, line);
+    thickness = std::atof(line.c_str());
+    std::getline(infile, line);
+    std::getline(infile, line);
+    x_pos = std::atof(line.c_str());
+    std::getline(infile, line);
+    std::getline(infile, line);
+    y_pos = std::atof(line.c_str());
+    std::getline(infile, line);
+    std::getline(infile, line);
+    seperation = std::atof(line.c_str());
+    std::getline(infile, line);
+    std::getline(infile, line);
+    aperture = std::atof(line.c_str());
+    std::getline(infile, line);
+    std::getline(infile, line);
+    slits = std::atof(line.c_str());
+}
+
+// Initialises the potential V
+void Solver::initialise_V()
+{
+    double thickness, x_pos, y_pos, seperation, aperture, slits;
+    V = arma::mat(M - 2, M - 2);
+    get_values_from_file(thickness, x_pos, y_pos, seperation, aperture, slits);
+    // std::cout << thickness << x_pos << y_pos << seperation << aperture << slits << "\n";
+    int start_x = x_pos / h, start_y = y_pos / h;
+    int length_of_slit_gap = seperation / h;
+    int wall_thickness = thickness / h;
+    int opening = aperture / h;
+
+    for (int y = 0; y < M - 2; ++y)
+    {
+        for (int x = start_x; x < start_x + wall_thickness; ++x)
+        {
+            V(y, x) = v_0;
+        }
+    }
+    std::cout << slits << "\n";
+    for (int slit = 1; slit <= slits; ++slit)
+    {
+        std::cout << start_y << "\n";
+        for (int y = start_y; y < start_y + opening; ++y)
+        {
+            for (int x = start_x; x < start_x + wall_thickness; ++x)
+            {
+                V(y, x) = 0;
+            }
+        }
+        start_y += length_of_slit_gap + opening;
+    }
+    V.save("test.txt", arma::raw_ascii);
 }
 
 // Fills A and B matrix

@@ -28,7 +28,7 @@ void test_fill_matrix()
     Grid A(M, 1, 100), B(M, 1, 100);
 
     double delta_t = 0.1, h = 0.1;
-    arma::cx_mat V = arma::cx_mat(M - 2, M - 2);
+    arma::mat V = arma::mat(M - 2, M - 2);
 
     A.fill_matrix(V, 1);
     B.fill_matrix(V, 0);
@@ -40,7 +40,7 @@ void test_fill_matrix()
 
 void test_solver()
 {
-    Solver solver(200, 0.008, 320);
+    Solver solver(200, 0.008, 320, 1e10);
     solver.set_initial_state(0.25, 0.5, 0.05, 0.05, 200, 0);
     // solver.print_current();
     // solver.print_current_state_vector();

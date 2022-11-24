@@ -3,6 +3,8 @@
 
 #include "grid.hpp"
 #include <iostream>
+#include <fstream>
+#include <stdlib.h>
 #include <string>
 
 class Solver
@@ -14,14 +16,15 @@ private:
     std::string filename;
     int M, M_squared, time_steps;
     double h;
+    long double v_0;
     arma::cx_mat current_state;
-    arma::cx_mat V;
+    arma::mat V;
     arma::cx_cube states;
     arma::cx_colvec current_state_vec;
 
 public:
     // Constructor
-    Solver(int side_length, double time, int time_delta);
+    Solver(int side_length, double time, int time_delta, long double v0);
 
     // Computes b component of Crank-Nicolson method
     arma::cx_vec compute_b();
@@ -57,6 +60,9 @@ public:
 
     // Prints current state of system as vector
     void print_current_state_vector();
+
+    // Initialises the potential V
+    void initialise_V();
 };
 
 #endif

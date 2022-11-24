@@ -6,7 +6,7 @@ Wall position of lowest slit in y direction:
 0.5
 Length of the wall piece separating the two slits (the distance between the inner edges of the two slits)
 0.05
-Slit aperture (opening i the direction):
+Slit aperture (opening i the y direction):
 0.05
 Number of slits
 2

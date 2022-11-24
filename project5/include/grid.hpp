@@ -30,7 +30,7 @@ public:
     void fill_matrix_from_vector(arma::cx_vec v);
 
     // Fills matrix with values to compute Crank-Nicolson
-    void fill_matrix(arma::cx_mat V, bool A_matrix);
+    void fill_matrix(arma::mat V, bool A_matrix);
 
     // Prints matrix
     void print_matrix();
