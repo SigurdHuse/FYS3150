@@ -23,7 +23,7 @@ Solver::Solver(int side_length, double time, int time_delta, double v0, std::str
     v_0 = v0;
     name = file_name;
 
-    filename = file_name + "_" + std::to_string(side_length) + "_dt_" + std::to_string(time_delta);
+    filename = file_name + "_M_" + std::to_string(side_length) + "_dt_" + std::to_string(time_delta);
 }
 
 void get_values_from_file(double &thickness, double &x_pos, double &seperation, double &aperture, double &slits)
@@ -61,7 +61,8 @@ void Solver::initialise_V()
     int wall_thickness = thickness / h;
     int opening = aperture / h;
 
-    int start_y = (ypos - (slits - 1) * seperation - ((slits - 1) * aperture) / 2) / h;
+    // Plus one as V is of size (M-2)x(M-2)
+    int start_y = (ypos - (slits - 1) * seperation - ((slits - 1) * aperture) / 2) / h - 2;
     std::cout << start_y << "\n";
     for (int y = 0; y < M - 2; ++y)
     {

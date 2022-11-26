@@ -18,9 +18,10 @@ int main(int argc, const char *argv[])
     y_c = atof(argv[8]);
     p_y = atof(argv[9]);
 
-    v0 = atof(argv[10]);
+    v0 = std::stod(argv[10]);
     name = argv[11];
 
+    std::cout << v0 + 1 << "\n";
     Solver solver(side_length, T, time_steps, v0, name);
     solver.set_initial_state(x_c, y_c, sigma_x, sigma_y, p_x, p_y);
     solver.initialise_V();

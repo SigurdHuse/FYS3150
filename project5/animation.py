@@ -4,13 +4,16 @@ from matplotlib.animation import FuncAnimation
 import matplotlib
 import numpy as np
 
+plt.rcParams["animation.ffmpeg_path"] = "/usr/bin/ffmpeg"
 
-def create_animation(M, time_steps, slits, filename):
+
+def create_animation(Name, M, time_steps, slits, filename):
     A = pa.cx_cube()
 
     fig, ax = plt.subplots()
 
-    A.load(f"Data_M_{M}_dt_{time_steps}_slits_{slits}.bin")
+    A.load(Name + f"_M_{M}_dt_{time_steps}_slits_{slits}.bin")
+
     length = time_steps + 1
     size = M
     value = np.zeros((size, size), dtype="complex")
@@ -31,6 +34,8 @@ def create_animation(M, time_steps, slits, filename):
         norm=norm,
     )
 
+    cbar = fig.colorbar(img, ax=ax)
+
     def animation(idx):
         # Normalize the colour scale to the current frame?
         value = np.zeros((size, size), dtype="complex")
@@ -39,6 +44,7 @@ def create_animation(M, time_steps, slits, filename):
                 value[i, j] = A[i, j, idx]
 
         value = np.power(np.abs(value), 2)
+        print(idx)
         # print(np.sum(value))
         norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(value))
 
@@ -53,13 +59,13 @@ def create_animation(M, time_steps, slits, filename):
         fig,
         animation,
         interval=1000,
-        frames=np.arange(0, length, 1),
+        frames=np.arange(0, length - 1, 1),
         repeat=False,
         blit=0,
     )
-
+    # plt.show()
     anim.save(filename, writer="ffmpeg", bitrate=-1, fps=60)
 
 
 if __name__ == "__main__":
-    create_animation(200, 320, 2, "twoslits.mp4")
+    create_animation("T008Bigsigmay", 200, 320, 2, "twoslits.mp4")
