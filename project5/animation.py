@@ -5,13 +5,13 @@ import matplotlib
 import numpy as np
 
 
-def create_animation(M, time_steps, filename):
+def create_animation(M, time_steps, slits, filename):
     A = pa.cx_cube()
 
     fig, ax = plt.subplots()
 
-    A.load(f"Data_M_{M}_dt_{time_steps}.bin")
-    length = time_steps
+    A.load(f"Data_M_{M}_dt_{time_steps}_slits_{slits}.bin")
+    length = time_steps + 1
     size = M
     value = np.zeros((size, size), dtype="complex")
 
@@ -62,4 +62,4 @@ def create_animation(M, time_steps, filename):
 
 
 if __name__ == "__main__":
-    create_animation(200, 320, "animation1.mp4")
+    create_animation(200, 320, 2, "twoslits.mp4")

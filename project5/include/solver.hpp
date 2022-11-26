@@ -15,16 +15,17 @@ private:
 
     std::string filename;
     int M, M_squared, time_steps;
-    double h;
-    long double v_0;
+    double h, ypos;
+    double v_0;
     arma::cx_mat current_state;
     arma::mat V;
     arma::cx_cube states;
     arma::cx_colvec current_state_vec;
+    std::string name;
 
 public:
     // Constructor
-    Solver(int side_length, double time, int time_delta, long double v0);
+    Solver(int side_length, double time, int time_delta, double v0, std::string file_name);
 
     // Computes b component of Crank-Nicolson method
     arma::cx_vec compute_b();

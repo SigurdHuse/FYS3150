@@ -2,7 +2,7 @@
 #include "grid.hpp"
 
 // Constructor
-Solver::Solver(int side_length, double time, int time_delta, long double v0)
+Solver::Solver(int side_length, double time, int time_delta, double v0, std::string file_name)
 {
     A_matrix.set_side_length(side_length);
     A_matrix.set_time(time);
@@ -21,14 +21,12 @@ Solver::Solver(int side_length, double time, int time_delta, long double v0)
     h = 1.0 / side_length;
     time_steps = time_delta;
     v_0 = v0;
+    name = file_name;
 
-    initialise_V();
-
-    filename = "Data_M_" + std::to_string(side_length) + "_dt_" + std::to_string(time_delta) + ".bin";
-    fill_matrices();
+    filename = file_name + "_" + std::to_string(side_length) + "_dt_" + std::to_string(time_delta);
 }
 
-void get_values_from_file(double &thickness, double &x_pos, double &y_pos, double &seperation, double &aperture, double &slits)
+void get_values_from_file(double &thickness, double &x_pos, double &seperation, double &aperture, double &slits)
 {
     std::string line;
     std::ifstream infile("config.txt");
@@ -40,9 +38,6 @@ void get_values_from_file(double &thickness, double &x_pos, double &y_pos, doubl
     x_pos = std::atof(line.c_str());
     std::getline(infile, line);
     std::getline(infile, line);
-    y_pos = std::atof(line.c_str());
-    std::getline(infile, line);
-    std::getline(infile, line);
     seperation = std::atof(line.c_str());
     std::getline(infile, line);
     std::getline(infile, line);
@@ -50,20 +45,24 @@ void get_values_from_file(double &thickness, double &x_pos, double &y_pos, doubl
     std::getline(infile, line);
     std::getline(infile, line);
     slits = std::atof(line.c_str());
+    infile.close();
 }
 
 // Initialises the potential V
 void Solver::initialise_V()
 {
-    double thickness, x_pos, y_pos, seperation, aperture, slits;
+    double thickness, x_pos, seperation, aperture, slits;
     V = arma::mat(M - 2, M - 2);
-    get_values_from_file(thickness, x_pos, y_pos, seperation, aperture, slits);
+    get_values_from_file(thickness, x_pos, seperation, aperture, slits);
+    filename += "_slits_" + std::to_string((int)slits) + ".bin";
     // std::cout << thickness << x_pos << y_pos << seperation << aperture << slits << "\n";
-    int start_x = x_pos / h, start_y = y_pos / h;
-    int length_of_slit_gap = seperation / h;
+    int start_x = x_pos / h;
+    int length_of_slit = seperation / h;
     int wall_thickness = thickness / h;
     int opening = aperture / h;
 
+    int start_y = (ypos - (slits - 1) * seperation - ((slits - 1) * aperture) / 2) / h;
+    std::cout << start_y << "\n";
     for (int y = 0; y < M - 2; ++y)
     {
         for (int x = start_x; x < start_x + wall_thickness; ++x)
@@ -71,20 +70,20 @@ void Solver::initialise_V()
             V(y, x) = v_0;
         }
     }
-    std::cout << slits << "\n";
+
     for (int slit = 1; slit <= slits; ++slit)
     {
-        std::cout << start_y << "\n";
-        for (int y = start_y; y < start_y + opening; ++y)
+        for (int y = start_y; y < start_y + length_of_slit; ++y)
         {
             for (int x = start_x; x < start_x + wall_thickness; ++x)
             {
                 V(y, x) = 0;
             }
         }
-        start_y += length_of_slit_gap + opening;
+        start_y += length_of_slit + opening;
     }
     V.save("test.txt", arma::raw_ascii);
+    fill_matrices();
 }
 
 // Fills A and B matrix
@@ -103,6 +102,7 @@ void Solver::set_initial_state(double x_c, double y_c, double sigma_x, double si
     double real_comp, imag_comp;
     double sigma_x_squared_2 = 2 * sigma_x * sigma_x;
     double sigma_y_squared_2 = 2 * sigma_y * sigma_y;
+    ypos = y_c;
 
     long double normalization_factor = 0;
     for (int y = 1; y < M - 1; ++y)

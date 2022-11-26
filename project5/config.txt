@@ -2,11 +2,9 @@ Wall thickness
 0.02
 Wall position in the x direction:
 0.5
-Wall position of lowest slit in y direction:
-0.5
 Length of the wall piece separating the two slits (the distance between the inner edges of the two slits)
 0.05
-Slit aperture (opening i the y direction):
+Slit aperture (opening in the y direction):
 0.05
 Number of slits
 2

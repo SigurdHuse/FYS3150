@@ -42,6 +42,7 @@ void test_solver()
 {
     Solver solver(200, 0.008, 320, 1e10);
     solver.set_initial_state(0.25, 0.5, 0.05, 0.05, 200, 0);
+    solver.initialise_V();
     // solver.print_current();
     // solver.print_current_state_vector();
     //    solver.print_current();
