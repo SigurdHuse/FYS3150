@@ -9,10 +9,12 @@ Run command:
 Run command 
 `./main.exe`
 
-### Own simulation
+## Own simulation
 Run command:  
-`./main.exe <side length of system> <Total time> <Number of time steps> <Initial width of wave packet in x-directin> <Initial x-position of wave packet> <Wave packet momenta in x-direction> <Initial width of wave packet in y-directin> <Initial y-position of wave packet> <Wave packet momenta in y-direction> <Value of barrier> <Name of simulation>` 
+`./main.exe <side length of system> <Total time> <Number of time steps> <Initial width of wave packet in x-direction> <Initial x-position of wave packet> <Wave packet momenta in x-direction> <Initial width of wave packet in y-direction> <Initial y-position of wave packet> <Wave packet momenta in y-direction> <Value of barrier> <Name of simulation>` 
 
+## Change barrier configuration
+Can be done by changing `config.txt`.
 
 ## Run tests
 Run command:   
