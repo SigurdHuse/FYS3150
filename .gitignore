@@ -8,6 +8,7 @@ data_5_6/
 *.pdf
 *.pgf
 *.bin
+*.mp4
 .vscode
 
 # Compiled Object files

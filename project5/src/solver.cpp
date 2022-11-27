@@ -65,7 +65,7 @@ void Solver::initialise_V(std::string name)
     int opening = aperture / h;
 
     // Subtract one as V is of size (M-1)x(M-1)
-    int start_y = ypos / h - 1;
+    int start_y = ypos / h - 2;
 
     if (slits & 1)
     {
