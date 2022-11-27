@@ -29,7 +29,7 @@ public:
     // Fills matrix with values from a vector
     void fill_matrix_from_vector(arma::cx_vec v);
 
-    // Fills matrix with values to compute Crank-Nicolson
+    // Fills matrix with values to do the Crank-Nicolson method
     void fill_matrix(arma::mat V, bool A_matrix);
 
     // Prints matrix
@@ -44,6 +44,7 @@ public:
 
     void set_time_step(int time_steps);
 
+    // Returns the sp_cx_mat matrix
     arma::sp_cx_mat get_matrix();
 };
 

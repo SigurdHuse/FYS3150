@@ -7,6 +7,7 @@ Grid::Grid(int side_length, double time, int time_steps)
     M_squared = pow(side_length - 2, 2);
     h = 1.0 / side_length;
     delta_t = (double)time / time_steps;
+
     matrix = arma::sp_cx_mat(M_squared, M_squared);
 }
 
@@ -83,13 +84,15 @@ void Grid::fill_matrix_from_vector(arma::cx_vec v)
     }
 }
 
-// r = i * delta_t / 2 / h / h by definition
+// Fills matrix with values to do the Crank-Nicolson method
 void Grid::fill_matrix(arma::mat V, bool A_matrix)
 {
     arma::cx_vec v(M_squared);
+
+    // r = i * delta_t / 2 / h / h by definition
     std::complex<double> r(0, delta_t / 2 / h / h);
     std::complex<double> r4(0.0, 4 * r.imag());
-    // V.raw_print();
+
     if (A_matrix)
     {
         for (int i = 0; i < M - 2; ++i)
@@ -121,6 +124,7 @@ void Grid::fill_matrix(arma::mat V, bool A_matrix)
     fill_matrix_from_vector(v);
 }
 
+// Returns the sp_cx_mat matrix
 arma::cx_vec Grid::multiply_matrix_with_vector(arma::cx_colvec v)
 {
     return matrix * v;

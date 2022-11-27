@@ -59,11 +59,19 @@ void generate_all_data()
     solver5.set_initial_state(x_c, y_c, sigma_x, sigma_y, p_x, p_y);
     solver5.initialise_V("configs/config5.txt");
 
-    solver1.simulate();
-    solver2.simulate();
-    solver3.simulate();
-    solver4.simulate();
-    solver5.simulate();
+    T = 0.2;
+    time_steps = 8000;
+
+    Solver solver6(side_length, T, time_steps, v0, "Seven_slits_sigma_y_0.2");
+    solver6.set_initial_state(x_c, y_c, sigma_x, sigma_y, p_x, p_y);
+    solver6.initialise_V("configs/config6.txt");
+
+    // solver1.simulate();
+    // solver2.simulate();
+    // solver3.simulate();
+    // solver4.simulate();
+    // solver5.simulate();
+    solver6.simulate();
 }
 
 int main(int argc, const char *argv[])

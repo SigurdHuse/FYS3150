@@ -40,7 +40,6 @@ def create_animation(Name, M, time_steps, slits, filename):
     cbar = fig.colorbar(img, ax=ax)
 
     def animation(idx):
-        # Normalize the colour scale to the current frame?
         value = np.zeros((size, size), dtype="complex")
 
         for i in range(size):
@@ -48,8 +47,6 @@ def create_animation(Name, M, time_steps, slits, filename):
                 value[i, j] = A[i, j, idx]
 
         value = np.power(np.abs(value), 2)
-        # print(idx)
-        # print(np.sum(value))
         norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(value))
 
         ax.set_xticks(np.linspace(0, M - 1, 6))
@@ -59,7 +56,6 @@ def create_animation(Name, M, time_steps, slits, filename):
 
         img.set_norm(norm)
 
-        # Update z data
         img.set_data(value)
 
         return img
@@ -72,7 +68,7 @@ def create_animation(Name, M, time_steps, slits, filename):
         repeat=False,
         blit=0,
     )
-    # plt.show()
+
     anim.save(filename, writer="ffmpeg", bitrate=-1, fps=60)
 
 
@@ -80,19 +76,22 @@ if __name__ == "__main__":
     newpath = r"animations"
     if not os.path.exists(newpath):
         os.makedirs(newpath)
+
+    # create_animation(
+    #     "Two_slits_sigma_y_0.1", 200, 320, 2, newpath + "/two_slits_sigma_y_01.mp4"
+    # )
+    # create_animation(
+    #     "No_slit_sigma_y_005", 200, 320, 0, newpath + "/No_slit_sigma_y_005.mp4"
+    # )
+    # create_animation(
+    #     "One_slit_sigma_y_0.2", 200, 80, 1, newpath + "/one_slits_sigma_y_02.mp4"
+    # )
+    # create_animation(
+    #     "Two_slits_sigma_y_0.2", 200, 80, 2, newpath + "/two_slits_sigma_y_02.mp4"
+    # )
+    # create_animation(
+    #     "Three_slits_sigma_y_0.2", 200, 80, 3, newpath + "/three_slits_sigma_y_02.mp4"
+    # )
     create_animation(
-        "Two_slits_sigma_y_0.1", 200, 320, 2, newpath + "/two_slits_sigma_y_01.mp4"
+        "Seven_slits_sigma_0.2", 200, 320, 7, newpath + "/seven_slits_sigma_y_02.mp4"
     )
-    create_animation(
-        "No_slit_sigma_y_005", 200, 320, 0, newpath + "/No_slit_sigma_y_005.mp4"
-    )
-    create_animation(
-        "One_slit_sigma_y_0.2", 200, 80, 1, newpath + "/one_slits_sigma_y_02.mp4"
-    )
-    create_animation(
-        "Two_slits_sigma_y_0.2", 200, 80, 2, newpath + "/two_slits_sigma_y_02.mp4"
-    )
-    create_animation(
-        "Three_slits_sigma_y_0.2", 200, 80, 3, newpath + "/three_slits_sigma_y_02.mp4"
-    )
-    # create_animation("4FUN", 200, 320, 10, newpath + "/ten_slits.mp4")

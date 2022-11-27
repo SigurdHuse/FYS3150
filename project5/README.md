@@ -11,7 +11,20 @@ Run command
 
 ### Run your own simulation
 Run command:  
-`./main.exe <side length of system> <Total time> <Number of time steps> <Initial width of wave packet in x-direction> <Initial x-position of wave packet> <Wave packet momenta in x-direction> <Initial width of wave packet in y-direction> <Initial y-position of wave packet> <Wave packet momenta in y-direction> <Value of barrier> <Name of simulation>` 
+`./main.exe <M> <T> <steps> <sigma_x> <x_c> <p_x> <sigma_y> <y_c> <p_y> <v0> <Name of simulation>` 
+
+Where:  
+* M = Side length of system
+* T = Total time
+* steps = Number of time steps
+* sigma_x = Initial width of wave packet in x-direction
+* x_c = Initial x-position of wave packet
+* p_x = Wave packet momenta in x-direction
+* sigma_y = Initial width of wave packet in y-direction
+* y_c = Initial y-position of wave packet
+* p_y = Wave packet momenta in y-direction
+* v0 = Potential value the barrier has
+
 
 ### How to change barrier configuration
 Can be done by changing `config.txt`, explanations of parameters are in file.
@@ -21,7 +34,10 @@ Run command:
 `c++ test.cpp src/system.cpp -I include/ -larmadillo -O2 -o test.exe && ./test.exe`
 
 ## Generate plots and compute estimated values from report
-Run command  `python3 plotter.py`  
+Run command  `python3 plotter.py`.  
+
+## Generate animations of data from report
+Run command `python3 animation.py`.  
 
 ## Dependecies
 The code was run on Ubuntu 20.04.5 LTS, with a Intel® Core™ i7-9750H CPU @ 2.60GHz × 12. The dependecies and how to install are:  
