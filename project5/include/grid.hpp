@@ -10,15 +10,15 @@ class Grid
 private:
     int M, M_squared;
     double T, h, delta_t;
-    // Matrix optimised to contain mainly zeros
-    // Should maybe be sp_cx_mat if larger than 100 x 100
+
+    // Matrix optimized to contain mainly zeros
     arma::sp_cx_mat matrix;
 
 public:
     // Constructor
     Grid(int side_length, double time, int time_steps);
 
-    // Empty constructor to use in solver class
+    // Empty constructor to use in solver.cpp class
     Grid();
     // Translates pair of indicies to single index
     int indicies_to_index(int i, int j);

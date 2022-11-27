@@ -34,25 +34,46 @@ void generate_all_data()
     double sigma_y = 0.05, y_c = 0.5, p_y = 0, v0 = 0;
 
     Solver solver1(side_length, T, time_steps, v0, "No_slit_sigma_y_005");
+    solver1.set_initial_state(x_c, y_c, sigma_x, sigma_y, p_x, p_y);
+    solver1.initialise_V("configs/config1.txt");
 
     v0 = 1e10;
     sigma_y = 0.1;
     Solver solver2(side_length, T, time_steps, v0, "Two_slits_sigma_y_0.1");
+    solver2.set_initial_state(x_c, y_c, sigma_x, sigma_y, p_x, p_y);
+    solver2.initialise_V("configs/config2.txt");
 
     T = 0.002;
     time_steps = 80;
     sigma_y = 0.2;
+
     Solver solver3(side_length, T, time_steps, v0, "Two_slits_sigma_y_0.2");
+    solver3.set_initial_state(x_c, y_c, sigma_x, sigma_y, p_x, p_y);
+    solver3.initialise_V("configs/config3.txt");
+
     Solver solver4(side_length, T, time_steps, v0, "One_slit_sigma_y_0.2");
+    solver4.set_initial_state(x_c, y_c, sigma_x, sigma_y, p_x, p_y);
+    solver4.initialise_V("configs/config4.txt");
+
     Solver solver5(side_length, T, time_steps, v0, "Three_slits_sigma_y_0.2");
+    solver5.set_initial_state(x_c, y_c, sigma_x, sigma_y, p_x, p_y);
+    solver5.initialise_V("configs/config5.txt");
+
+    solver1.simulate();
+    solver2.simulate();
+    solver3.simulate();
+    solver4.simulate();
+    solver5.simulate();
 }
 
 int main(int argc, const char *argv[])
 {
     std::string folder_name = "data";
     mkdir(folder_name.c_str(), 0777);
+
     if (argc == 1)
     {
+        std::cout << "Generating all data from report!\n";
         generate_all_data();
     }
     else

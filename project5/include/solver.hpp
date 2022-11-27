@@ -13,15 +13,17 @@ private:
     Grid A_matrix;
     Grid B_matrix;
 
-    std::string filename;
     int M, M_squared, time_steps;
     double h, ypos;
     double v_0;
+
     arma::cx_mat current_state;
     arma::mat V;
     arma::cx_cube states;
     arma::cx_colvec current_state_vec;
+
     std::string name;
+    std::string filename;
 
 public:
     // Constructor
@@ -51,6 +53,7 @@ public:
     // Simulates system using Crank-Nicolson
     void simulate();
 
+    // Computes the sum of probabilities in the system
     double compute_sum_of_probabilities();
 
     // Fills A_matrix and B_matrix

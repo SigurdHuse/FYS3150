@@ -9,6 +9,8 @@ plt.rcParams["animation.ffmpeg_path"] = "/usr/bin/ffmpeg"
 
 
 def create_animation(Name, M, time_steps, slits, filename):
+    """Creates animation of data from simulation"""
+
     A = pa.cx_cube()
 
     fig, ax = plt.subplots()
@@ -78,8 +80,19 @@ if __name__ == "__main__":
     newpath = r"animations"
     if not os.path.exists(newpath):
         os.makedirs(newpath)
-    # create_animation("T008Bigsigmay", 200, 320, 2, "twoslits.mp4")
-    # create_animation("PROB8", 200, 80, 1, newpath + "/one_slits.mp4")
-    # create_animation("PROB8", 200, 80, 2, newpath + "/two_slits.mp4")
-    # create_animation("PROB8", 200, 80, 3, newpath + "/three_slits.mp4")
-    create_animation("4FUN", 200, 320, 10, newpath + "/ten_slits.mp4")
+    create_animation(
+        "Two_slits_sigma_y_0.1", 200, 320, 2, newpath + "/two_slits_sigma_y_01.mp4"
+    )
+    create_animation(
+        "No_slit_sigma_y_005", 200, 320, 0, newpath + "/No_slit_sigma_y_005.mp4"
+    )
+    create_animation(
+        "One_slit_sigma_y_0.2", 200, 80, 1, newpath + "/one_slits_sigma_y_02.mp4"
+    )
+    create_animation(
+        "Two_slits_sigma_y_0.2", 200, 80, 2, newpath + "/two_slits_sigma_y_02.mp4"
+    )
+    create_animation(
+        "Three_slits_sigma_y_0.2", 200, 80, 3, newpath + "/three_slits_sigma_y_02.mp4"
+    )
+    # create_animation("4FUN", 200, 320, 10, newpath + "/ten_slits.mp4")

@@ -7,4 +7,4 @@ Length of the wall piece separating the two slits (the distance between the inne
 Slit aperture (opening in the y direction):
 0.05
 Number of slits
-10
+2

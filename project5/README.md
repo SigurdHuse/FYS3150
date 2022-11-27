@@ -5,16 +5,16 @@ Run command:
 `make`
 
 ## How to run main.exe
-## Generate data from report
+### Generate data from report
 Run command 
 `./main.exe`
 
-## Own simulation
+### Run your own simulation
 Run command:  
 `./main.exe <side length of system> <Total time> <Number of time steps> <Initial width of wave packet in x-direction> <Initial x-position of wave packet> <Wave packet momenta in x-direction> <Initial width of wave packet in y-direction> <Initial y-position of wave packet> <Wave packet momenta in y-direction> <Value of barrier> <Name of simulation>` 
 
-## Change barrier configuration
-Can be done by changing `config.txt`.
+### How to change barrier configuration
+Can be done by changing `config.txt`, explanations of parameters are in file.
 
 ## Run tests
 Run command:   

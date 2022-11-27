@@ -10,6 +10,7 @@ Grid::Grid(int side_length, double time, int time_steps)
     matrix = arma::sp_cx_mat(M_squared, M_squared);
 }
 
+// Empty constructor to use in solver.cpp
 Grid::Grid()
 {
     ;

@@ -36,7 +36,7 @@ def plot_probability(name, M, steps, T, slits):
 
     np.savetxt(f"probs_{slits}.txt", values)
     """
-    # print(1 - values)
+
     plt.plot(
         times,
         np.abs(1.0 - values),
@@ -53,6 +53,8 @@ def plot_probability(name, M, steps, T, slits):
 
 
 def plot_color_map(delta_T, M, T, name, slits):
+    """Plots color map at different time steps"""
+
     A = pa.cx_cube()
     A.load(f"data/{name}_M_{M}_dt_{int(T/delta_T)}_slits_{slits}.bin")
 
@@ -113,6 +115,8 @@ def plot_color_map(delta_T, M, T, name, slits):
 
 
 def plot_screen(delta_T, M, T, name, slits):
+    """Plots one line of the grid at x = 0.8 for different time steps with probability normalized to one"""
+
     A = pa.cx_cube()
 
     # values = np.loadtxt(f"probs_{slits}.txt")
@@ -148,17 +152,17 @@ if __name__ == "__main__":
         os.makedirs(newpath)
     plt.rc("pgf", texsystem="pdflatex")
 
-    plot_probability("T008", 200, 320, 0.008, 0)
+    plot_probability("No_slit_sigma_y_005", 200, 320, 0.008, 0)
     plt.savefig("plots/Probs_slits_0.pgf")
     plt.clf()
-    plot_probability("T008Bigsigmay", 200, 320, 0.008, 2)
+    plot_probability("Two_slits_sigma_y_0.1", 200, 320, 0.008, 2)
     plt.savefig("plots/Probs_slits_2.pgf")
     plt.clf()
 
-    plot_color_map(2.5 * 10 ** (-5), 200, 0.002, "PROB8", 2)
+    plot_color_map(2.5 * 10 ** (-5), 200, 0.002, "Two_slits_sigma_y_0.2", 2)
     plt.clf()
-    plot_screen(2.5 * 10 ** (-5), 200, 0.002, "PROB8", 2)
+    plot_screen(2.5 * 10 ** (-5), 200, 0.002, "Two_slits_sigma_y_0.2", 2)
     plt.clf()
-    plot_screen(2.5 * 10 ** (-5), 200, 0.002, "PROB8", 1)
+    plot_screen(2.5 * 10 ** (-5), 200, 0.002, "One_slit_sigma_y_0.2", 1)
     plt.clf()
-    plot_screen(2.5 * 10 ** (-5), 200, 0.002, "PROB8", 3)
+    plot_screen(2.5 * 10 ** (-5), 200, 0.002, "Three_slits_sigma_y_0.2", 3)

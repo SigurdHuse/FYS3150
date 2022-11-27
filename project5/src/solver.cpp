@@ -55,16 +55,17 @@ void Solver::initialise_V(std::string name)
     double thickness, x_pos, seperation, aperture;
     int slits;
     V = arma::mat(M - 2, M - 2);
+
     get_values_from_file(thickness, x_pos, seperation, aperture, slits, name);
     filename += "_slits_" + std::to_string((int)slits) + ".bin";
-    // std::cout << thickness << x_pos << y_pos << seperation << aperture << slits << "\n";
+
     int start_x = x_pos / h;
     int wall_thickness = thickness / h;
 
     int length_of_wall = seperation / h;
     int opening = aperture / h;
 
-    // Subtract one as V is of size (M-1)x(M-1)
+    // Subtract two as V is of size (M-1)x(M-1)
     int start_y = ypos / h - 2;
 
     if (slits & 1)
@@ -117,9 +118,7 @@ void Solver::initialise_V(std::string name)
 void Solver::fill_matrices()
 {
     A_matrix.fill_matrix(V, 1);
-    // A_matrix.print_matrix();
     B_matrix.fill_matrix(V, 0);
-    // B_matrix.print_matrix();
 }
 
 // Sets inital state of system with Dirichlet boundary conditions
@@ -143,16 +142,13 @@ void Solver::set_initial_state(double x_c, double y_c, double sigma_x, double si
             normalization_factor += norm(current_state(y, x));
         }
     }
-    // std::cout << "NOrmal:" << normalization_factor << "\n";
+    // We take the sqrt as we are taking the sum of each value squared
     current_state /= sqrt(normalization_factor);
 }
 
 // Converts current state to vector
 void Solver::convert_current_state_to_vector()
 {
-    // arma::cx_mat inner_mat = current_state.submat(1, 1, M - 2, M - 2);
-    // current_state_vec = inner_mat.as_col();
-
     for (int y = 1; y < M - 1; ++y)
     {
         for (int x = 1; x < M - 1; ++x)
@@ -195,6 +191,8 @@ void Solver::find_next_state()
     arma::cx_vec b = compute_b();
 
     arma::cx_vec ans;
+
+    // Solves the matrix equation
     arma::spsolve(ans, A_matrix.get_matrix(), b, "superlu");
     update_current_state(ans);
 }
@@ -215,6 +213,7 @@ void Solver::print_current_state_vector()
 // Simulates the system
 void Solver::simulate()
 {
+    // Loops over all time steps and saves the current state in a cube
     for (int i = 0; i < time_steps; ++i)
     {
         states.slice(i) = current_state;
