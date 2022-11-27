@@ -23,7 +23,7 @@ def plot_probability(name, M, steps, T, slits):
     times = np.arange(0, steps + 1)
 
     """
-    A.load(f"{name}_M_{M}_dt_{steps}_slits_{slits}.bin")
+    A.load(f"data/{name}_M_{M}_dt_{steps}_slits_{slits}.bin")
 
     for idx in times:
         matrix = np.zeros((M, M), dtype="complex")
@@ -36,7 +36,6 @@ def plot_probability(name, M, steps, T, slits):
 
     np.savetxt(f"probs_{slits}.txt", values)
     """
-
     # print(1 - values)
     plt.plot(
         times,
@@ -55,7 +54,7 @@ def plot_probability(name, M, steps, T, slits):
 
 def plot_color_map(delta_T, M, T, name, slits):
     A = pa.cx_cube()
-    A.load(f"{name}_M_{M}_dt_{int(T/delta_T)}_slits_{slits}.bin")
+    A.load(f"data/{name}_M_{M}_dt_{int(T/delta_T)}_slits_{slits}.bin")
 
     fig, axs = plt.subplots(2, 2)
     fig.tight_layout(pad=1.0)
@@ -121,8 +120,26 @@ def plot_screen(delta_T, M, T, name, slits):
     # times = np.arange(0, steps + 1)
 
     desired_x_idx = int(0.8 * M)
+    time = int(T / delta_T)
 
-    A.load(f"{name}_M_{M}_dt_{int(T/delta_T)}_slits_{slits}.bin")
+    A.load(f"data/{name}_M_{M}_dt_{time}_slits_{slits}.bin")
+
+    values = np.zeros((M, time), dtype="complex")
+
+    for idx in range(time):
+        for i in range(M):
+            values[i, idx] = A[i, desired_x_idx, idx]
+
+        values[:, idx] /= np.sum(np.abs(values[:, idx]))
+
+    plt.imshow(np.abs(values))
+    plt.yticks(np.linspace(0, M - 1, 6), [i / 10 for i in range(0, 12, 2)])
+    plt.xticks([0, 40, 80])
+    plt.ylabel("Position")
+    plt.xlabel("Time step[1]")
+    # plt.xticklabels()
+    plt.colorbar()
+    plt.savefig(f"plots/Time_evolution_slits{slits}.pdf")
 
 
 if __name__ == "__main__":
@@ -134,8 +151,14 @@ if __name__ == "__main__":
     plot_probability("T008", 200, 320, 0.008, 0)
     plt.savefig("plots/Probs_slits_0.pgf")
     plt.clf()
-    plot_probability("plots/T008Bigsigmay", 200, 320, 0.008, 2)
+    plot_probability("T008Bigsigmay", 200, 320, 0.008, 2)
     plt.savefig("plots/Probs_slits_2.pgf")
     plt.clf()
 
     plot_color_map(2.5 * 10 ** (-5), 200, 0.002, "PROB8", 2)
+    plt.clf()
+    plot_screen(2.5 * 10 ** (-5), 200, 0.002, "PROB8", 2)
+    plt.clf()
+    plot_screen(2.5 * 10 ** (-5), 200, 0.002, "PROB8", 1)
+    plt.clf()
+    plot_screen(2.5 * 10 ** (-5), 200, 0.002, "PROB8", 3)

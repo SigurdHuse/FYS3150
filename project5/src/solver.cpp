@@ -23,13 +23,14 @@ Solver::Solver(int side_length, double time, int time_delta, double v0, std::str
     v_0 = v0;
     name = file_name;
 
-    filename = file_name + "_M_" + std::to_string(side_length) + "_dt_" + std::to_string(time_delta);
+    filename = "data/" + file_name + "_M_" + std::to_string(side_length) + "_dt_" + std::to_string(time_delta);
 }
 
-void get_values_from_file(double &thickness, double &x_pos, double &seperation, double &aperture, double &slits)
+// Reads values from file
+void get_values_from_file(double &thickness, double &x_pos, double &seperation, double &aperture, int &slits, std::string filename)
 {
     std::string line;
-    std::ifstream infile("config.txt");
+    std::ifstream infile(filename);
     std::getline(infile, line);
     std::getline(infile, line);
     thickness = std::atof(line.c_str());
@@ -44,26 +45,48 @@ void get_values_from_file(double &thickness, double &x_pos, double &seperation, 
     aperture = std::atof(line.c_str());
     std::getline(infile, line);
     std::getline(infile, line);
-    slits = std::atof(line.c_str());
+    slits = std::atoi(line.c_str());
     infile.close();
 }
 
 // Initialises the potential V
-void Solver::initialise_V()
+void Solver::initialise_V(std::string name)
 {
-    double thickness, x_pos, seperation, aperture, slits;
+    double thickness, x_pos, seperation, aperture;
+    int slits;
     V = arma::mat(M - 2, M - 2);
-    get_values_from_file(thickness, x_pos, seperation, aperture, slits);
+    get_values_from_file(thickness, x_pos, seperation, aperture, slits, name);
     filename += "_slits_" + std::to_string((int)slits) + ".bin";
     // std::cout << thickness << x_pos << y_pos << seperation << aperture << slits << "\n";
     int start_x = x_pos / h;
-    int length_of_slit = seperation / h;
     int wall_thickness = thickness / h;
+
+    int length_of_wall = seperation / h;
     int opening = aperture / h;
 
-    // Plus one as V is of size (M-2)x(M-2)
-    int start_y = (ypos - (slits - 1) * seperation - ((slits - 1) * aperture) / 2) / h - 2;
-    std::cout << start_y << "\n";
+    // Subtract one as V is of size (M-1)x(M-1)
+    int start_y = ypos / h - 1;
+
+    if (slits & 1)
+    {
+        // Goes half a space down as centre is a space
+        start_y -= opening / 2;
+
+        // number of walls and slits below center
+        start_y -= (slits - 1) / 2 * length_of_wall;
+        start_y -= (slits - 1) / 2 * opening;
+    }
+    else
+    {
+        // Goes half a wall down as centre is wall
+        start_y -= length_of_wall / 2;
+
+        // Number of slits and walls below center
+        start_y -= slits / 2 * opening;
+        start_y -= (slits - 2) / 2 * length_of_wall;
+    }
+
+    // Initialises wall
     for (int y = 0; y < M - 2; ++y)
     {
         for (int x = start_x; x < start_x + wall_thickness; ++x)
@@ -72,18 +95,21 @@ void Solver::initialise_V()
         }
     }
 
+    // Makes slits in the wall
     for (int slit = 1; slit <= slits; ++slit)
     {
-        for (int y = start_y; y < start_y + length_of_slit; ++y)
+        for (int y = start_y; y < start_y + opening; ++y)
         {
             for (int x = start_x; x < start_x + wall_thickness; ++x)
             {
                 V(y, x) = 0;
             }
         }
-        start_y += length_of_slit + opening;
+        start_y += length_of_wall + opening;
     }
-    V.save("test.txt", arma::raw_ascii);
+    // V.save(std::to_string(slits) + "slit.txt", arma::raw_ascii);
+
+    // Fills A and B matrix using V
     fill_matrices();
 }
 

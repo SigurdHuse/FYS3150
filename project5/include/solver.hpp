@@ -62,8 +62,8 @@ public:
     // Prints current state of system as vector
     void print_current_state_vector();
 
-    // Initialises the potential V
-    void initialise_V();
+    // Initialises the potential V from file
+    void initialise_V(std::string filename);
 };
 
 #endif
