@@ -86,12 +86,12 @@ if __name__ == "__main__":
     # create_animation(
     #     "One_slit_sigma_y_0.2", 200, 80, 1, newpath + "/one_slits_sigma_y_02.mp4"
     # )
-    # create_animation(
-    #     "Two_slits_sigma_y_0.2", 200, 80, 2, newpath + "/two_slits_sigma_y_02.mp4"
-    # )
+    create_animation(
+        "Two_slits_sigma_y_0.2", 201, 80, 2, newpath + "/two_slits_sigma_y_02.mp4"
+    )
     # create_animation(
     #     "Three_slits_sigma_y_0.2", 200, 80, 3, newpath + "/three_slits_sigma_y_02.mp4"
     # )
-    create_animation(
-        "Seven_slits_sigma_0.2", 200, 320, 7, newpath + "/seven_slits_sigma_y_02.mp4"
-    )
+    # create_animation(
+    #     "Seven_slits_sigma_y_0.2", 200, 8000, 7, newpath + "/seven_slits_sigma_y_02.mp4"
+    # )

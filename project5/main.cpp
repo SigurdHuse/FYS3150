@@ -29,7 +29,7 @@ void simulate(int side_length, double T, int time_steps, double sigma_x, double 
 
 void generate_all_data()
 {
-    int side_length = 200, time_steps = 320;
+    int side_length = 201, time_steps = 320;
     double T = 0.008, x_c = 0.25, sigma_x = 0.05, p_x = 200;
     double sigma_y = 0.05, y_c = 0.5, p_y = 0, v0 = 0;
 
@@ -62,16 +62,16 @@ void generate_all_data()
     T = 0.2;
     time_steps = 8000;
 
-    Solver solver6(side_length, T, time_steps, v0, "Seven_slits_sigma_y_0.2");
-    solver6.set_initial_state(x_c, y_c, sigma_x, sigma_y, p_x, p_y);
-    solver6.initialise_V("configs/config6.txt");
+    // Solver solver6(side_length, T, time_steps, v0, "Seven_slits_sigma_y_0.2");
+    // solver6.set_initial_state(x_c, y_c, sigma_x, sigma_y, p_x, p_y);
+    // solver6.initialise_V("configs/config6.txt");
 
-    // solver1.simulate();
-    // solver2.simulate();
-    // solver3.simulate();
-    // solver4.simulate();
-    // solver5.simulate();
-    solver6.simulate();
+    solver1.simulate();
+    solver2.simulate();
+    solver3.simulate();
+    solver4.simulate();
+    solver5.simulate();
+    // solver6.simulate();
 }
 
 int main(int argc, const char *argv[])

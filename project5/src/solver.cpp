@@ -18,7 +18,7 @@ Solver::Solver(int side_length, double time, int time_delta, double v0, std::str
 
     M = side_length;
     M_squared = (side_length - 2) * (side_length - 2);
-    h = 1.0 / side_length;
+    h = 1.0 / (side_length - 1);
     time_steps = time_delta;
     v_0 = v0;
     name = file_name;
@@ -61,7 +61,7 @@ void Solver::initialise_V(std::string name)
 
     int start_x = x_pos / h;
     int wall_thickness = thickness / h;
-
+    start_x -= wall_thickness / 2;
     int length_of_wall = seperation / h;
     int opening = aperture / h;
 
@@ -90,7 +90,7 @@ void Solver::initialise_V(std::string name)
     // Initialises wall
     for (int y = 0; y < M - 2; ++y)
     {
-        for (int x = start_x; x < start_x + wall_thickness; ++x)
+        for (int x = start_x; x <= start_x + wall_thickness; ++x)
         {
             V(y, x) = v_0;
         }
@@ -99,15 +99,17 @@ void Solver::initialise_V(std::string name)
     // Makes slits in the wall
     for (int slit = 1; slit <= slits; ++slit)
     {
-        for (int y = start_y; y < start_y + opening; ++y)
+        for (int y = start_y; y <= start_y + opening; ++y)
         {
-            for (int x = start_x; x < start_x + wall_thickness; ++x)
+            for (int x = start_x; x <= start_x + wall_thickness; ++x)
             {
                 V(y, x) = 0;
             }
         }
-        start_y += length_of_wall + opening;
+        start_y += length_of_wall + opening + 1;
     }
+
+    // Used for debugging
     // V.save(std::to_string(slits) + "slit.txt", arma::raw_ascii);
 
     // Fills A and B matrix using V

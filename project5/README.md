@@ -6,8 +6,7 @@ Run command:
 
 ## How to run main.exe
 ### Generate data from report
-Run command 
-`./main.exe`
+Run command  `./main.exe`.
 
 ### Run your own simulation
 Run command:  
