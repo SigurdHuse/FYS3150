@@ -1,4 +1,5 @@
 # Simulating a Wave packet with zero or more slits
+The schrodinger equation can be used to describe the movement of a wave packet. To able to simulate such a wave packet it is placed inside a square box with side length 1 which dirichlet boundary conditions. Using the Crank-Nicolson method it is then possible to numerically solve the schrodinger equation, and simulate the movement of a wave packet. Additionally, it is possible to add a wall with slits inside the box, and simulate how this affects the wave packet's movement. 
 
 ## How to build
 Run command:  
