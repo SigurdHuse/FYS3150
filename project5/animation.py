@@ -63,7 +63,7 @@ def create_animation(Name, M, time_steps, slits, filename):
     anim = FuncAnimation(
         fig,
         animation,
-        interval=1000,
+        interval=1,
         frames=np.arange(0, length, 1),
         repeat=False,
         blit=0,
@@ -83,15 +83,12 @@ if __name__ == "__main__":
     # create_animation(
     #     "No_slit_sigma_y_005", 200, 320, 0, newpath + "/No_slit_sigma_y_005.mp4"
     # )
-    # create_animation(
-    #     "One_slit_sigma_y_0.2", 200, 80, 1, newpath + "/one_slits_sigma_y_02.mp4"
-    # )
+    create_animation(
+        "One_slit_sigma_y_0.2", 201, 80, 1, newpath + "/one_slits_sigma_y_02.mp4"
+    )
     create_animation(
         "Two_slits_sigma_y_0.2", 201, 80, 2, newpath + "/two_slits_sigma_y_02.mp4"
     )
-    # create_animation(
-    #     "Three_slits_sigma_y_0.2", 200, 80, 3, newpath + "/three_slits_sigma_y_02.mp4"
-    # )
-    # create_animation(
-    #     "Seven_slits_sigma_y_0.2", 200, 8000, 7, newpath + "/seven_slits_sigma_y_02.mp4"
-    # )
+    create_animation(
+        "Three_slits_sigma_y_0.2", 201, 80, 3, newpath + "/three_slits_sigma_y_02.mp4"
+    )

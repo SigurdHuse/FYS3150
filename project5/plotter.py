@@ -18,12 +18,11 @@ def plot_probability(name, M, steps, T, slits):
 
     A = pa.cx_cube()
 
-    values = np.loadtxt(f"probs_{slits}.txt")
-    # values = np.zeros(steps + 1)
+    # values = np.loadtxt(f"probs_{slits}.txt")
+    values = np.zeros(steps + 1)
     times = np.arange(0, steps + 1)
     A.load(f"data/{name}_M_{M}_dt_{steps}_slits_{slits}.bin")
 
-    """
     for idx in times:
         matrix = np.zeros((M, M), dtype="complex")
         for i in range(M):
@@ -33,8 +32,7 @@ def plot_probability(name, M, steps, T, slits):
         matrix = np.power(np.abs(matrix), 2)
         values[idx] = np.sum(matrix)
 
-    np.savetxt(f"probs_{slits}.txt", values)
-    """
+    # np.savetxt(f"probs_{slits}.txt", values)
 
     plt.plot(
         times,

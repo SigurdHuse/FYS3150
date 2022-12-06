@@ -11,9 +11,6 @@ void test_fill_matrix_from_vector()
     A.fill_matrix_from_vector(a);
     B.fill_matrix_from_vector(a);
 
-    A.fill_matrix_with_r(r);
-    B.fill_matrix_with_r(r);
-
     std::cout << "A matrix filled from vector: \n";
     A.print_matrix();
 
