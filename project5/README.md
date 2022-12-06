@@ -1,5 +1,5 @@
 # Simulating a Wave packet with zero or more slits
-The schrodinger equation can be used to describe the movement of a wave packet. To able to simulate such a wave packet it is placed inside a square box with side length 1 which dirichlet boundary conditions. Using the Crank-Nicolson method it is then possible to numerically solve the schrodinger equation, and simulate the movement of a wave packet. Additionally, it is possible to add a wall with slits inside the box, and simulate how this affects the wave packet's movement. 
+The schrodinger equation can be used to describe the movement of a wave packet. To able to simulate such a wave packet it is placed inside a square box with side length 1 with dirichlet boundary conditions. Using the Crank-Nicolson method it is then possible to numerically solve the schrodinger equation, and simulate the movement of a wave packet. Additionally, it is possible to add a wall with slits inside the box, and simulate how this affects the wave packet's movement. 
 
 ## How to build
 Run command:  
@@ -27,11 +27,11 @@ Where:
 
 
 ### How to change barrier configuration
-Can be done by changing `config.txt`, explanations of parameters are in file.
+Can be done by changing `config.txt`, explanations of parameters are in file. IMPORTANT! Do not change the structure of the file, the program reads line for line so only change numerical values in the file. 
 
 ## Run tests
 Run command:   
-`c++ test.cpp src/system.cpp -I include/ -larmadillo -O2 -o test.exe && ./test.exe`
+`c++ test.cpp src/grid.cpp src/solver.cpp -I include/ -larmadillo -O2 -o test.exe && ./test.exe`
 
 ## Generate plots and compute estimated values from report
 Run command  `python3 plotter.py`.  

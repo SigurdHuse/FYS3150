@@ -14,10 +14,10 @@ void test_fill_matrix_from_vector()
     A.fill_matrix_with_r(r);
     B.fill_matrix_with_r(r);
 
-    std::cout << "A matrix: \n";
+    std::cout << "A matrix filled from vector: \n";
     A.print_matrix();
 
-    std::cout << "\nB matrix: \n";
+    std::cout << "\nB matrix filled from vector: \n";
     B.print_matrix();
 }
 
@@ -32,14 +32,14 @@ void test_fill_matrix()
 
     A.fill_matrix(V, 1);
     B.fill_matrix(V, 0);
-    std::cout << "A matrix: \n";
+    std::cout << "A matrix filled from V: \n";
     A.print_matrix();
-    std::cout << "\nB matrix: \n";
+    std::cout << "\nB matrix filled from V: \n";
     B.print_matrix();
 }
 
 int main()
 {
+    test_fill_matrix_from_vector();
     test_fill_matrix();
-    // test_solver();
 }

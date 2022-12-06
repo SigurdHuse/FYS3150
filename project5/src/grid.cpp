@@ -66,7 +66,7 @@ void Grid::fill_matrix_with_r(std::complex<double> r)
 void Grid::print_matrix()
 {
     arma::cx_mat tmp(matrix);
-    tmp.print();
+    matrix.print();
 }
 
 // Translates pair of indicies to single index
