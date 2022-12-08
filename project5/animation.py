@@ -8,7 +8,7 @@ import os
 plt.rcParams["animation.ffmpeg_path"] = "/usr/bin/ffmpeg"
 
 
-def create_animation(Name, M, time_steps, slits, filename):
+def create_animation(Name, M, time_steps, slits, filename, delta_t):
     """Creates animation of data from simulation"""
 
     A = pa.cx_cube()
@@ -31,12 +31,8 @@ def create_animation(Name, M, time_steps, slits, filename):
     value = np.power(np.abs(value), 2)
     norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(value))
 
-    img = ax.imshow(
-        value,
-        cmap=plt.get_cmap("viridis"),
-        norm=norm,
-    )
-
+    img = ax.imshow(value, cmap=plt.get_cmap("viridis"), norm=norm)
+    ax.text(5, 5, "t = 0.000", bbox={"facecolor": "white", "pad": 10})
     cbar = fig.colorbar(img, ax=ax)
 
     def animation(idx):
@@ -48,7 +44,7 @@ def create_animation(Name, M, time_steps, slits, filename):
 
         value = np.power(np.abs(value), 2)
         norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(value))
-
+        ax.text(5, 5, f"t = {delta_t*idx:e}", bbox={"facecolor": "white", "pad": 10})
         ax.set_xticks(np.linspace(0, M - 1, 6))
         ax.set_xticklabels([i / 10 for i in range(0, 12, 2)])
         ax.set_yticks(np.linspace(0, M - 1, 6))
@@ -63,13 +59,13 @@ def create_animation(Name, M, time_steps, slits, filename):
     anim = FuncAnimation(
         fig,
         animation,
-        interval=1,
+        interval=1000,
         frames=np.arange(0, length, 1),
         repeat=False,
         blit=0,
     )
 
-    anim.save(filename, writer="ffmpeg", bitrate=-1, fps=60)
+    anim.save(filename, writer="ffmpeg", bitrate=-1, fps=30)
 
 
 if __name__ == "__main__":
@@ -84,11 +80,26 @@ if __name__ == "__main__":
     #     "No_slit_sigma_y_005", 200, 320, 0, newpath + "/No_slit_sigma_y_005.mp4"
     # )
     create_animation(
-        "One_slit_sigma_y_0.2", 201, 80, 1, newpath + "/one_slits_sigma_y_02.mp4"
+        "One_slit_sigma_y_0.2",
+        201,
+        80,
+        1,
+        newpath + "/one_slits_sigma_y_02.mp4",
+        2.5 * 10 ** (-5),
     )
     create_animation(
-        "Two_slits_sigma_y_0.2", 201, 80, 2, newpath + "/two_slits_sigma_y_02.mp4"
+        "Two_slits_sigma_y_0.2",
+        201,
+        80,
+        2,
+        newpath + "/two_slits_sigma_y_02.mp4",
+        2.5 * 10 ** (-5),
     )
     create_animation(
-        "Three_slits_sigma_y_0.2", 201, 80, 3, newpath + "/three_slits_sigma_y_02.mp4"
+        "Three_slits_sigma_y_0.2",
+        201,
+        80,
+        3,
+        newpath + "/three_slits_sigma_y_02.mp4",
+        2.5 * 10 ** (-5),
     )
