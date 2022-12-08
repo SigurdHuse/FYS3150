@@ -4,6 +4,7 @@
 // Constructor
 Solver::Solver(int side_length, double time, int time_delta, double v0, std::string file_name)
 {
+    // Initialises A and B matrix as defined in the report
     A_matrix.set_side_length(side_length);
     A_matrix.set_time(time);
     A_matrix.set_time_step(time_delta);
@@ -26,7 +27,7 @@ Solver::Solver(int side_length, double time, int time_delta, double v0, std::str
     filename = "data/" + file_name + "_M_" + std::to_string(side_length) + "_dt_" + std::to_string(time_delta);
 }
 
-// Reads values from file
+// Reads values from config.txt
 void get_values_from_file(double &thickness, double &x_pos, double &seperation, double &aperture, int &slits, std::string filename)
 {
     std::string line;

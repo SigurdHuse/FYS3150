@@ -62,7 +62,7 @@ void Grid::fill_matrix_with_r(std::complex<double> r)
     }
 }
 
-// Prints matrix
+// Prints matrix in readable format, by making the sparse matrix a normal matrix
 void Grid::print_matrix()
 {
     arma::cx_mat tmp(matrix);
@@ -124,7 +124,7 @@ void Grid::fill_matrix(arma::mat V, bool A_matrix)
     fill_matrix_from_vector(v);
 }
 
-// Returns the sp_cx_mat matrix
+// Returns the product of multiplying the matrix with a vector
 arma::cx_vec Grid::multiply_matrix_with_vector(arma::cx_colvec v)
 {
     return matrix * v;

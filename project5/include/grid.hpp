@@ -20,6 +20,7 @@ public:
 
     // Empty constructor to use in solver.cpp class
     Grid();
+
     // Translates pair of indicies to single index
     int indicies_to_index(int i, int j);
 
@@ -38,6 +39,7 @@ public:
     // Multiplies matrix with a vector v
     arma::cx_vec multiply_matrix_with_vector(arma::cx_colvec v);
 
+    // Setters meant to be used with empty constructor in grid.cpp
     void set_side_length(int side_length);
 
     void set_time(double time);

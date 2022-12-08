@@ -14,7 +14,7 @@ mpl.rcParams["ytick.labelsize"] = 12
 
 
 def plot_probability(name, M, steps, T, slits):
-    """Plots sum of probabilities deviation from 1"""
+    """Plots sum of probabilities absolute deviation from 1"""
 
     A = pa.cx_cube()
 

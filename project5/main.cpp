@@ -4,7 +4,7 @@
 
 /**
  * @brief Simulates the time evolution of the probability of a wave packet using the Crank-Nicolson method to
- * approximate the Schrodinger equation.
+ * numerically solve the Schrodinger equation simplfied as specified in the report.
  *
  * @param side_length Integer, number of points along x- and y-axis with length 1
  * @param T Double, total time of simulation
@@ -29,10 +29,12 @@ void simulate(int side_length, double T, int time_steps, double sigma_x, double 
 
 void generate_all_data()
 {
+    // Initalises initial conditions
     int side_length = 201, time_steps = 320;
     double T = 0.008, x_c = 0.25, sigma_x = 0.05, p_x = 200;
     double sigma_y = 0.05, y_c = 0.5, p_y = 0, v0 = 0;
 
+    // Initalises all systems from report
     Solver solver1(side_length, T, time_steps, v0, "No_slit_sigma_y_005");
     solver1.set_initial_state(x_c, y_c, sigma_x, sigma_y, p_x, p_y);
     solver1.initialise_V("configs/config1.txt");
@@ -62,6 +64,7 @@ void generate_all_data()
     T = 0.2;
     time_steps = 8000;
 
+    // Simulates all system from report
     solver1.simulate();
     solver2.simulate();
     solver3.simulate();
