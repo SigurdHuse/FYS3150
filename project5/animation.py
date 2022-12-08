@@ -44,7 +44,7 @@ def create_animation(Name, M, time_steps, slits, filename, delta_t):
 
         value = np.power(np.abs(value), 2)
         norm = matplotlib.cm.colors.Normalize(vmin=0.0, vmax=np.max(value))
-        ax.text(5, 5, f"t = {delta_t*idx:e}", bbox={"facecolor": "white", "pad": 10})
+        ax.text(5, 5, f"t = {delta_t*idx:.4e}", bbox={"facecolor": "white", "pad": 10})
         ax.set_xticks(np.linspace(0, M - 1, 6))
         ax.set_xticklabels([i / 10 for i in range(0, 12, 2)])
         ax.set_yticks(np.linspace(0, M - 1, 6))
