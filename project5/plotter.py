@@ -6,11 +6,11 @@ import numpy as np
 import os
 
 mpl.rcParams["figure.titlesize"] = 16
-mpl.rcParams["axes.labelsize"] = 14
+mpl.rcParams["axes.labelsize"] = 10
 mpl.rcParams["axes.titlesize"] = 12
 mpl.rcParams["legend.fontsize"] = "medium"
-mpl.rcParams["xtick.labelsize"] = 12
-mpl.rcParams["ytick.labelsize"] = 12
+mpl.rcParams["xtick.labelsize"] = 10
+mpl.rcParams["ytick.labelsize"] = 10
 
 
 def plot_probability(name, M, steps, T, slits):
@@ -21,6 +21,7 @@ def plot_probability(name, M, steps, T, slits):
     # values = np.loadtxt(f"probs_{slits}.txt")
     values = np.zeros(steps + 1)
     times = np.arange(0, steps + 1)
+
     A.load(f"data/{name}_M_{M}_dt_{steps}_slits_{slits}.bin")
 
     for idx in times:
@@ -43,8 +44,9 @@ def plot_probability(name, M, steps, T, slits):
     print(f"Final deviation from 1 for {slits} slits is {np.abs(1 - values[-1]):.2e}")
     plt.yscale("log")
 
-    plt.xlabel("Time step [1]")
-    plt.ylabel("Deviation from 1 [1]")
+    plt.xticks([0, 50, 100, 150, 200, 250, 300, 320])
+    plt.xlabel("Time step [1]", fontsize=14)
+    plt.ylabel("Absolute deviation from 1 [1]", fontsize=14)
     plt.legend()
 
     plt.grid()
@@ -85,7 +87,7 @@ def plot_color_map(delta_T, M, T, name, slits):
     axs[1, 1].set_xlabel("x-position")
 
     cbar = fig.colorbar(im, ax=axs[:, :], format="%.0e")
-    cbar.ax.set_ylabel("p(x, y)")
+    cbar.ax.set_ylabel("p(x, y| t)")
 
     plt.savefig("plots/Time_evolution_norm.pdf")
     plt.clf()
@@ -176,7 +178,7 @@ def plot_screen(delta_T, M, T, name, slits, offset):
     plt.xlabel("Time t [1]")
 
     cbar = plt.colorbar(location="left", pad=0.2)
-    cbar.ax.set_ylabel("p(x = 0.8, y, t)")
+    cbar.ax.set_ylabel("p(y|t, x = 0.8)")
 
     plt.tick_params(labelright=True)
     plt.tick_params(labelleft=False)
@@ -195,7 +197,7 @@ def plot_screen(delta_T, M, T, name, slits, offset):
 
     plt.xlabel("y-position [1]")
     plt.ylabel(
-        f"p(x = 0,8, y, t = {desired_time})",
+        f"p(y|x = 0.8, t = {desired_time})",
         labelpad=offset,
     )
     plt.xticks(np.linspace(0, M, 6), [i / 10 for i in range(0, 12, 2)])
@@ -205,18 +207,77 @@ def plot_screen(delta_T, M, T, name, slits, offset):
     plt.savefig(f"plots/Time_evolution_slits{slits}.pdf")
 
 
+def plot_evolution_of_real_and_imag(delta_T, M, T, name, slits):
+    """Plots evolution of imaginary and real values of a simulation, along a slice in the y-direction and a single point"""
+
+    A = pa.cx_cube()
+
+    time = int(T / delta_T)
+
+    A.load(f"data/{name}_M_{M}_dt_{int(T/delta_T)}_slits_{slits}.bin")
+
+    imag_values = np.zeros(M)
+    real_values = np.zeros(M)
+    norm_values = np.zeros(M)
+    point_imag_values = np.zeros(time + 1)
+    point_real_values = np.zeros(time + 1)
+
+    desired_y_idx = int(0.5 * M)
+    desired_x_idx = int(0.8 * M)
+    desired_time = int(0.002 * delta_T)
+
+    for i in range(M):
+        norm_values[i] = np.abs(A[desired_y_idx, i, desired_time])
+        imag_values[i] = np.imag(A[desired_y_idx, i, desired_time])
+        real_values[i] = np.real(A[desired_y_idx, i, desired_time])
+
+    for i in range(time + 1):
+        point_imag_values[i] = np.imag(A[desired_y_idx, desired_x_idx, i])
+        point_real_values[i] = np.real(A[desired_y_idx, desired_x_idx, i])
+
+    fig, ax = plt.subplots(2, 1)
+    plt.tight_layout(pad=2)
+
+    ax[0].plot(norm_values[20:80], color="g", label="absolute value")
+    ax[0].plot(imag_values[20:80], color="midnightblue", label="imaginary")
+    ax[0].plot(real_values[20:80], color="r", label="real")
+    ax[0].set_xticks([0, 20, 40, 60])
+    ax[0].set_xticklabels([0.1, 0.2, 0.3, 0.4])
+
+    ax[0].legend(bbox_to_anchor=(0.7, 0.7))
+    ax[0].grid()
+    ax[0].set_xlabel("x-position [1]")
+    ax[0].set_ylabel("u(x,y = 0.5, t = 0.002)")
+
+    ax[1].plot(
+        point_imag_values[50 : time + 1], color="midnightblue", label="imaginary"
+    )
+    ax[1].plot(point_real_values[50 : time + 1], color="r", label="real")
+
+    ax[1].grid()
+    ax[1].legend()
+    ax[1].set_xlabel("Time t [1]")
+
+    ax[1].set_xticks([0, 10, 20, 30])
+    ax[1].set_xticklabels(np.array([50, 60, 70, 80]) * delta_T)
+
+    ax[1].set_ylabel("u(x = 0.8,y = 0.5, t) [1]")
+    plt.subplots_adjust(left=0.15)
+    # plt.show()
+
+
 if __name__ == "__main__":
     newpath = r"plots"
     if not os.path.exists(newpath):
         os.makedirs(newpath)
     plt.rc("pgf", texsystem="pdflatex")
 
-    # plot_probability("No_slit_sigma_y_005", 201, 320, 0.008, 0)
-    # plt.savefig("plots/Probs_slits_0.pgf")
-    # plt.clf()
-    # plot_probability("Two_slits_sigma_y_0.1", 201, 320, 0.008, 2)
-    # plt.savefig("plots/Probs_slits_2.pgf")
-    # plt.clf()
+    plot_probability("No_slit_sigma_y_005", 201, 320, 0.008, 0)
+    plt.savefig("plots/Probs_slits_0.pgf")
+    plt.clf()
+    plot_probability("Two_slits_sigma_y_0.1", 201, 320, 0.008, 2)
+    plt.savefig("plots/Probs_slits_2.pgf")
+    plt.clf()
 
     plot_color_map(2.5 * 10 ** (-5), 201, 0.002, "Two_slits_sigma_y_0.2", 2)
     plt.clf()
@@ -226,3 +287,7 @@ if __name__ == "__main__":
     plot_screen(2.5 * 10 ** (-5), 201, 0.002, "Two_slits_sigma_y_0.2", 2, -205)
     plt.clf()
     plot_screen(2.5 * 10 ** (-5), 201, 0.002, "Three_slits_sigma_y_0.2", 3, -200)
+    plot_evolution_of_real_and_imag(
+        2.5 * 10 ** (-5), 201, 0.002, "Two_slits_sigma_y_0.2", 2
+    )
+    plt.savefig("plots/Evolution_of_real_and_imag.pdf")
