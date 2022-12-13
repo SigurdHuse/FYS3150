@@ -1,7 +1,24 @@
 #include "solver.hpp"
 #include "grid.hpp"
 
-// Constructor
+/*
+NOTE
+
+If reviewing code after reading the report, note that where coordinate of u_{ij}^n in the paper is (x_i,y_i).
+The opposite is true in this code as the elements (x_i, y_j) corresponds to U(j,i). This could be changed in the future,
+but as the code might seems weird without this information it is reported on. Hope it is not too confusing, as it is simply
+the way I think about matricies when coding them.
+*/
+
+/**
+* @brief Constructor for Solver class.
+
+* @param side_length Integer, determines the number points along the x-and y-axis in the discretised box.
+* @param time Double, sets the time for how long the system is to simulated for.
+* @param time_delta Double. sets how big the time step is.
+* @param v0 Double, value of walls in potenital.
+* @param file_name String, name of file to store data from simulation to.
+*/
 Solver::Solver(int side_length, double time, int time_delta, double v0, std::string file_name)
 {
     // Initialises A and B matrix as defined in the report
@@ -27,7 +44,16 @@ Solver::Solver(int side_length, double time, int time_delta, double v0, std::str
     filename = "data/" + file_name + "_M_" + std::to_string(side_length) + "_dt_" + std::to_string(time_delta);
 }
 
-// Reads values from config.txt
+/**
+ * @brief Reads values from specified file.
+ *
+ * @param thickness Reference to integer determining the thickness of the wall.
+ * @param x_pos Reference to integer determning x-coordinate to center wall around.
+ * @param seperation Reference to integer determining length of slits.
+ * @param aperture Reference to integer determining seperation between slits.
+ * @param slits Reference to integer determining number of slits.
+ * @param filename String, file to read data from.
+ */
 void get_values_from_file(double &thickness, double &x_pos, double &seperation, double &aperture, int &slits, std::string filename)
 {
     std::string line;
@@ -50,7 +76,11 @@ void get_values_from_file(double &thickness, double &x_pos, double &seperation, 
     infile.close();
 }
 
-// Initialises the potential V
+/**
+ * @brief Initialises the potenital matrix V, and has to be called as a class function for the system to be able to simulate.
+ *
+ * @param name String, file name for the file from which the configurations for potenital are read from using the get_values_from_file() function.
+ */
 void Solver::initialise_V(std::string name)
 {
     double thickness, x_pos, seperation, aperture;
@@ -124,8 +154,16 @@ void Solver::fill_matrices()
     B_matrix.fill_matrix(V, 0);
 }
 
-// Sets inital state of system with Dirichlet boundary conditions
-// and normalises all grid squares to have absolute value 1
+/**
+ * @brief Sets inital state of system with Dirichlet boundary conditions and normalises all grid squares to have absolute value 1.
+ *
+ * @param x_c Double determining initial x-coordinate of the wave packet.
+ * @param y_c Double determining initial y-coordinate of the wave packet.
+ * @param sigma_x Double determining initial width of the of the wave packet in x-direction.
+ * @param sigma_y Double determining initial width of the of the wave packet in y-direction.
+ * @param p_x Double determining wave packet momenta in x-direction.
+ * @param p_y Double determining wave packet momenta in y-direction.
+ */
 void Solver::set_initial_state(double x_c, double y_c, double sigma_x, double sigma_y, double p_x, double p_y)
 {
     double real_comp, imag_comp;
@@ -149,7 +187,7 @@ void Solver::set_initial_state(double x_c, double y_c, double sigma_x, double si
     current_state /= sqrt(normalization_factor);
 }
 
-// Converts current state to vector
+// Converts current state to vector using class function indicies_to_index().
 void Solver::convert_current_state_to_vector()
 {
     for (int y = 1; y < M - 1; ++y)
@@ -161,7 +199,14 @@ void Solver::convert_current_state_to_vector()
     }
 }
 
-// Updates current state of system from vector
+//
+
+/**
+ * @brief Updates current state of system from vector, given that the vector contains all interal points of the grid. The vector also
+ * needs to contain the columns of the matrix one after the other.
+ *
+ * @param v Complex arma vector, representing the system one colummn after another.
+ */
 void Solver::update_current_state(arma::cx_vec &v)
 {
     // v.raw_print();
@@ -175,7 +220,16 @@ void Solver::update_current_state(arma::cx_vec &v)
     // print_current();
 }
 
-// Translates pair of indicies to single index
+//
+
+/**
+ * @brief Translates pair of indicies to single index, to be able to go from matrix representation to vector representation.
+ * Might seem weird after reading the report, for clarification see NOTE on top of file.
+ *
+ * @param y Integer, y-coordinate in matrix
+ * @param x Integer, x-coordinate in matrix
+ * @return Integer, the index in the vector representation of the matrix.
+ */
 int Solver::indicies_to_index(int y, int x)
 {
     return y - 1 + (M - 2) * (x - 1);
