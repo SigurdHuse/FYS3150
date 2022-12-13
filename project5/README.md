@@ -7,7 +7,8 @@ Run command:
 
 ## How to run main.exe
 ### Generate data from report
-Run command  `./main.exe`.
+Run command   
+`./main.exe`.
 
 ### Run your own simulation
 Run command:  
@@ -25,8 +26,11 @@ Where:
 * p_y = Wave packet momenta in y-direction
 * v0 = Potential value the barrier has
 
+### Finding run time
+Run command   
+`time ./main.exe <Desired inputs>`
 
-### How to change barrier configuration
+## How to change barrier configuration
 Can be done by changing `config.txt`, explanations of parameters are in file. IMPORTANT! Do not change the structure of the file, the program reads line for line so only change numerical values in the file. 
 
 ## Run tests
