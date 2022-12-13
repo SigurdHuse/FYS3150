@@ -46,6 +46,6 @@ void test_fill_matrix()
 
 int main()
 {
-    // test_fill_matrix_from_vector();
+    test_fill_matrix_from_vector();
     test_fill_matrix();
 }
