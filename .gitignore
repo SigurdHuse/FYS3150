@@ -9,6 +9,7 @@ data_5_6/
 *.pgf
 *.bin
 *.mp4
+*.xcf
 .vscode
 
 # Compiled Object files
