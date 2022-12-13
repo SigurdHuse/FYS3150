@@ -64,12 +64,17 @@ void generate_all_data()
     T = 0.2;
     time_steps = 8000;
 
-    // Simulates all system from report
+    // Simulates all systems from report
     solver1.simulate();
+    std::cout << "Done with simulation 1 of 5\n";
     solver2.simulate();
+    std::cout << "Done with simulation 2 of 5\n";
     solver3.simulate();
+    std::cout << "Done with simulation 3 of 5\n";
     solver4.simulate();
+    std::cout << "Done with simulation 4 of 5\n";
     solver5.simulate();
+    std::cout << "Done with simulation 5 of 5\n";
 }
 
 int main(int argc, const char *argv[])

@@ -8,7 +8,7 @@ Grid::Grid(int side_length, double time, int time_steps)
     h = 1.0 / side_length;
     delta_t = (double)time / time_steps;
 
-    matrix = arma::sp_cx_mat(M_squared, M_squared);
+    matrix = arma::sp_cx_mat(pow(side_length - 2, 2), pow(side_length - 2, 2));
 }
 
 // Empty constructor to use in solver.cpp
@@ -72,7 +72,7 @@ void Grid::print_matrix()
 // Translates pair of indicies to single index
 int Grid::indicies_to_index(int i, int j)
 {
-    return i + (M - 2) * j;
+    return i + j * (M - 2);
 }
 
 // Fills matrix with values from a vector
@@ -100,7 +100,7 @@ void Grid::fill_matrix(arma::mat V, bool A_matrix)
             for (int j = 0; j < M - 2; ++j)
             {
                 std::complex<double> tmp(0.0, V(i, j) * delta_t / 2.0);
-                std::complex<double> val(1.0 + tmp.real(), r4.imag() + tmp.imag());
+                std::complex<double> val(1.0, r4.imag() + tmp.imag());
 
                 v[indicies_to_index(i, j)] = val;
             }
@@ -113,8 +113,8 @@ void Grid::fill_matrix(arma::mat V, bool A_matrix)
         {
             for (int j = 0; j < M - 2; ++j)
             {
-                std::complex<double> tmp(V(i, j) * delta_t / 2.0);
-                std::complex<double> val(1.0 - tmp.real(), -r4.imag() - tmp.imag());
+                std::complex<double> tmp(0.0, V(i, j) * delta_t / 2.0);
+                std::complex<double> val(1.0, -r4.imag() - tmp.imag());
 
                 v[indicies_to_index(i, j)] = val;
             }

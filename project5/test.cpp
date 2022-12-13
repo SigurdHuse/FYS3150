@@ -20,7 +20,7 @@ void test_fill_matrix_from_vector()
 
 void test_fill_matrix()
 {
-    int M = 5;
+    int M = 7;
     double r = 1;
     Grid A(M, 1, 100), B(M, 1, 100);
 
@@ -33,10 +33,15 @@ void test_fill_matrix()
     A.print_matrix();
     std::cout << "\nB matrix filled from V: \n";
     B.print_matrix();
+
+    // arma::cx_mat tmp1(A.get_matrix());
+    // tmp1.save("A3.txt", arma::raw_ascii);
+    // arma::cx_mat tmp2(B.get_matrix());
+    // tmp2.save("B3.txt", arma::raw_ascii);
 }
 
 int main()
 {
-    test_fill_matrix_from_vector();
+    // test_fill_matrix_from_vector();
     test_fill_matrix();
 }
