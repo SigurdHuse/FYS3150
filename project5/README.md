@@ -26,9 +26,9 @@ Where:
 * p_y = Wave packet momenta in y-direction
 * v0 = Potential value the barrier has
 
-### Finding run time
+### Find run time for all simulations
 Run command   
-`time ./main.exe <Desired inputs>`
+`time ./main.exe`
 
 ## How to change barrier configuration
 Can be done by changing `config.txt`, explanations of parameters are in file. IMPORTANT! Do not change the structure of the file, the program reads line for line so only change numerical values in the file. 
