@@ -20,7 +20,7 @@ void test_fill_matrix_from_vector()
 
 void test_fill_matrix()
 {
-    int M = 7;
+    int M = 5;
     double r = 1;
     Grid A(M, 1, 100), B(M, 1, 100);
 
