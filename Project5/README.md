@@ -25,6 +25,7 @@ Where:
 * y_c = Initial y-position of wave packet
 * p_y = Wave packet momenta in y-direction
 * v0 = Potential value the barrier has
+* Name of simulation, self explanatory 
 
 ### Find run time for all simulations
 Run command   
