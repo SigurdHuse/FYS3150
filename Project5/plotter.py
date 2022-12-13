@@ -172,8 +172,8 @@ def plot_screen(delta_T, M, T, name, slits, offset):
     plt.subplot(121)
     plt.imshow(np.power(np.abs(values), 2))
 
-    plt.yticks(np.linspace(0, M, 6), [i / 10 for i in range(0, 12, 2)][::-1])
-    plt.xticks([0, 40, 80], [0, 0.001, 0.002])
+    plt.yticks(np.linspace(0, M - 1, 6), [i / 10 for i in range(0, 12, 2)][::-1])
+    plt.xticks([0, 40, 79], [0, 0.001, 0.002])
     plt.ylabel("y-position [1]")
     plt.xlabel("Time t [1]")
 
@@ -200,7 +200,7 @@ def plot_screen(delta_T, M, T, name, slits, offset):
         f"p(y|x = 0.8, t = {desired_time})",
         labelpad=offset,
     )
-    plt.xticks(np.linspace(0, M, 6), [i / 10 for i in range(0, 12, 2)])
+    plt.xticks(np.linspace(0, M - 1, 6), [i / 10 for i in range(0, 12, 2)])
 
     plt.tight_layout(pad=2.5)
     # plt.show()
@@ -272,13 +272,13 @@ if __name__ == "__main__":
         os.makedirs(newpath)
     plt.rc("pgf", texsystem="pdflatex")
 
-    plot_probability("No_slit_sigma_y_005", 201, 320, 0.008, 0)
-    plt.savefig("plots/Probs_slits_0.pgf")
-    plt.clf()
-    plot_probability("Two_slits_sigma_y_0.1", 201, 320, 0.008, 2)
-    plt.savefig("plots/Probs_slits_2.pgf")
-    # plt.show()
-    plt.clf()
+    # plot_probability("No_slit_sigma_y_005", 201, 320, 0.008, 0)
+    # plt.savefig("plots/Probs_slits_0.pgf")
+    # plt.clf()
+    # plot_probability("Two_slits_sigma_y_0.1", 201, 320, 0.008, 2)
+    # plt.savefig("plots/Probs_slits_2.pgf")
+    # # plt.show()
+    # plt.clf()
 
     plot_color_map(2.5 * 10 ** (-5), 201, 0.002, "Two_slits_sigma_y_0.2", 2)
     plt.clf()
