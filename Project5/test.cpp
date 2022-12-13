@@ -34,6 +34,10 @@ void test_fill_matrix()
     std::cout << "\nB matrix filled from V: \n";
     B.print_matrix();
 
+    int side_length = 6, time_steps = 320;
+    double T = 0.008, x_c = 0.25, sigma_x = 0.05, p_x = 200;
+    double sigma_y = 0.05, y_c = 0.5, p_y = 0, v0 = 0;
+
     // arma::cx_mat tmp1(A.get_matrix());
     // tmp1.save("A3.txt", arma::raw_ascii);
     // arma::cx_mat tmp2(B.get_matrix());
