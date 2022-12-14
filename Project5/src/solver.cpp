@@ -4,16 +4,16 @@
 /*
 NOTE (if you have read the report)
 
-If reviewing code after reading the report, note that where coordinate of u_{ij}^n in the paper is (x_i,y_i).
+If reviewing the code after reading the report, note that where as the coordinate of u_{ij}^n in the paper is (x_i,y_i).
 The opposite is true in this code as the elements (x_i, y_j) corresponds to U(j,i). This could be changed in the future,
-but as the code might seems weird without this information it is reported on. Hope it is not too confusing, as it is simply
+but as the code might seems weird without this information it is reported on. Hopefully it is not too confusing, as it is simply
 the way I think about matricies when coding them.
 */
 
 /*
 NOTE (if you have not read the report)
 
-You should read the report! All definitons come from there, and a more in depth explantation of the what is simulated is presented.
+You should read the report! All definitons come from there, and a more in depth explantation of what is simulated is presented.
 */
 
 /**

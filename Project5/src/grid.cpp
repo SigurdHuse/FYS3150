@@ -82,8 +82,6 @@ void Grid::print_matrix()
     matrix.print();
 }
 
-//
-
 /**
  * @brief Translates pair of indicies to single index, if this seems weird after reading report check NOTE at top solver solver.cpp.
  *
