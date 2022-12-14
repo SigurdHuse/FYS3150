@@ -20,10 +20,10 @@ You should read the report! All definitons come from there, and a more in depth 
 * @brief Constructor for Solver class.
 
 * @param side_length Integer, determines the number points along the x-and y-axis in the discretised box.
-* @param time Double, sets the time for how long the system is to simulated for.
+* @param time Double, sets the time for how long the system is to be simulated for.
 * @param time_delta Double. sets how big the time step is.
-* @param v0 Double, value of walls in potenital.
-* @param file_name String, name of file to store data from simulation to.
+* @param v0 Double, value of walls in potentital.
+* @param file_name String, name of file to store data from simulation too.
 */
 Solver::Solver(int side_length, double time, int time_delta, double v0, std::string file_name)
 {

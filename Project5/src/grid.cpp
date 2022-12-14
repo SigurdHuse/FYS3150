@@ -11,7 +11,7 @@ If unsure were defintions come from, refer to report.
  *
  * @param side_length Integer, defines the side length of the Grid.
  * @param time Double, defines the total time the system will be run for
- * @param time_steps Integer, number of time steps in the simulation. Defined as (total time / time step).
+ * @param time_steps Integer, number of time steps in the simulation. Defined as (total time / size of time step).
  */
 
 Grid::Grid(int side_length, double time, int time_steps)
